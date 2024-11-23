@@ -1,0 +1,26 @@
+{
+  "name": "binance-red-packet",
+  "version": "1.0.0",
+  "description": "This is a vide code generator which rewards the users with crypto.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JOAN-96/binance-red-packet.git"
+  },
+  "author": "Abolaji Nofiu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JOAN-96/binance-red-packet/issues"
+  },
+  "homepage": "https://github.com/JOAN-96/binance-red-packet#readme",
+  "dependencies": {
+    "@ljharb/tsconfig": "^0.2.0",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
