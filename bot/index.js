@@ -21,14 +21,19 @@ const requiredChannels = [
     {
         name: 'Crypto Levy',
         link: 'https://t.me/Cryptolevychannel'
-    }/*,
+    },
 
     //Channel 3
     {
-        name: 'Channel 3',
-        link: 'https://t.me/channel3'
+        name: 'Cash Megan',
+        link: 'https://t.me/Cashmegan'
+    },
+
+    //Channel 4
+    {
+        name: 'Red Packet',
+        link: 'https://t.me/BinanceredpacketBott'
     }
-    */
 ];
 
 //Required Groups
@@ -76,6 +81,24 @@ const keyboard = [
         */
     ],
 
+    //YouTube Channels
+    [
+        {
+            text: 'Queen Tech',
+            url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
+        },
+
+        {
+            text: 'Crypto Levy',
+            url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
+        },
+
+        {
+            text: 'Mega Cash',
+            url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
+        }
+    ]
+
     [
         {
             text: 'Start',
@@ -95,7 +118,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('Welcome to Binance Red Packet');
+    res.send('Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding—start earning cryptocurrency today!');
 });
 
 app.listen(port, () => {
@@ -119,7 +142,7 @@ bot.on('message', (msg) => {
     const text = msg.text;
 
     if (text === '/start') {
-        bot.sendMessage(chatID, 'Welcome to Binance Red Packet');
+        bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding—start earning cryptocurrency today!');
         //Show keyboard
         bot.sendMessage(chatID, 'Select an option:', {
             reply_markup: {
@@ -153,7 +176,7 @@ bot.on('message', (msg) => {
                 });
             } else {
             //User is not a member of all required channels and groups, show join channels and groups buttons
-                bot.sendMessage(chatID, 'Join all required channels and groups before accessing the mini web app!', {
+                bot.sendMessage(chatID, 'To use this bot, you must join the following channels:', {
                     reply_markup: {
                         inline_keyboard: [
                             [
@@ -221,7 +244,7 @@ bot.on('callback_query', (query) => {
             break;
 
         case 'join_channels':
-            bot.sendMessage(chatID, 'Kindly join all our channels as they are necessary in order to access the web: ' + requiredChannels.join(', '));
+            bot.sendMessage(chatID, 'To use this bot, you must join the following channels:' + requiredChannels.join(', '));
             break;
 
         /*case 'join_group':
@@ -229,7 +252,7 @@ bot.on('callback_query', (query) => {
             break;*/
 
         case 'start':
-            bot.sendMessage(chatID, 'Welcome to Binance Red Packet');
+            bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding—start earning cryptocurrency today!');
             bot.sendMessage(chatID, 'Select an option:', {
                 reply_markup: {
                     inline_keyboard: keyboard
@@ -282,7 +305,7 @@ function showChannels(chatID, channels) {
         }
     ]);
 
-    bot.sendMessage(chatID, 'Kindly join the following channels:', {
+    bot.sendMessage(chatID, 'Join the channels and subscribe to the YouTube channels', {
         reply_markup: {
             inline_keyboard: keyboard
         }

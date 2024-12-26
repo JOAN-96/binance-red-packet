@@ -1,0 +1,8 @@
+/* Global Styles */
+@import url(global/boilerplate.css);
+@import url(global/button.css);
+@import url(global/font.css);
+@import url(global/layout.css);
+
+
+@import url(pages/splash-screen.css);

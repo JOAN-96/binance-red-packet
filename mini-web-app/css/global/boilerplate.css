@@ -1,0 +1,39 @@
+:root {
+        /* Color */
+
+/* Primary */
+--primary-100: #FEE9E9;
+--primary-200: #FDA6A8;
+--primary-300: #FB6467;
+--primary-400: #F92126; /*Base Color */
+--primary-500: #AE171B;
+--primary-600: #640D0F;
+--primary-700: #190304;
+
+/* Secondary Color */
+--secondary-100: #EDEDED;
+--secondary-200: #B9B9B9;
+--secondary-300: #848484;
+--secondary-400: #4F4F4F; /* Base Color*/
+--secondary-500: #373737;
+--secondary-600: #202020;
+--secondary-700: #080808;
+
+/* Other Color */
+--background: (var(--secondary-700));
+--accent: #FFFFFF;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    font-weight: 700;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}

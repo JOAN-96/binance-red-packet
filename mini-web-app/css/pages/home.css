@@ -1,0 +1,84 @@
+/* Splash Screen CSS File */
+body {
+    margin: 0;
+    background-color: #080808;
+    font-family: 'Lato';
+    /*padding-top: 20px;*/
+}
+
+header {
+    display: flex;
+    height: 64px;
+    min-width: 375px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #080808;
+}
+
+header figure {
+    display: flex;
+    flex: 24px 1;
+    justify-content: flex-start;
+    align-content: center;
+    gap: 12px;
+    margin-left: 8px;
+}
+
+header figure figcaption {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    vertical-align: center;
+}
+
+.wallet-balance {
+    display: flex;
+    flex: 1;
+    align-content: center;
+    /*height: 88px;*/
+    min-width: 343px;
+    border-radius: 8px;
+    border-width: 0.5px;
+    border-style: solid;
+    border-color: #FEE9E9;
+    margin-right: 8px;
+    margin-top: 88px;
+}
+
+.wallet-balance .details {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wallet-balance .details .top {
+    width: fit-content;
+    display: flex;
+    flex: 16px 1;
+    gap: 8px;
+    margin-left: 16px;
+}
+
+.wallet-balance .details figcaption {
+    color: #848484;
+    /*font-size: 12px;*/
+}
+
+.wallet-balance .details .balance {
+    color: #EDEDED;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex: 1 1;
+    justify-content: space-between;
+    gap: auto;
+    margin-left: 16px;
+}
+
+.wallet-balance .details .balance p {
+    font-size: 22px;
+}
