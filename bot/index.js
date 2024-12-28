@@ -154,8 +154,8 @@ bot.on('message', (msg) => {
                 bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today!', {
                     reply_markup: {
                         inline_keyboard: keyboard
-                        }
-                    });
+                    }
+                })
                 .then((msg) => {
                     console.log(`Sent welcome message with keyboard: ${msg.message_id}`);
                 })
