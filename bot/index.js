@@ -118,7 +118,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding—start earning cryptocurrency today!');
+    res.send('Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today!');
 });
 
 app.listen(port, () => {
@@ -137,19 +137,38 @@ bot.on('error', (error) => {
 });
 
 bot.on('message', (msg) => {
-    console.log(msg);
+    console.log('Received message:', msg);
     const chatID = msg.chat.id;
     const text = msg.text;
 
     if (text === '/start') {
-        bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding—start earning cryptocurrency today!');
-        //Show keyboard
-        bot.sendMessage(chatID, 'Select an option:', {
+        /*bot.sendMessage(chatID, 'Hello!', {
             reply_markup: {
                 inline_keyboard: keyboard
             }
-        });
-    } else {
+        })*/
+        try {
+            bot.sendPhoto(chatID, 'https://imgur.com/kUTAtn1')
+            .then((msg) => {
+                console.log(`Sent welcome photo: ${msg.message_id}`);
+                bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today!', {
+                    reply_markup: {
+                        inline_keyboard: keyboard
+                        }
+                    });
+                .then((msg) => {
+                    console.log(`Sent welcome message with keyboard: ${msg.message_id}`);
+                })
+                .catch((error) => {
+                    console.error(`Error sending welcome message with keyboard: ${error}`);
+                });
+            })
+            .catch((error) => {
+                console.error(`Error sending welcome photo: ${error}`);
+            });  
+        } catch (errror) {
+            console.error(`Error sending welcome photo and message with keyboard: ${error}`);
+        } 
         //Check membership
         checkMembership(chatID, requiredChannels/*, requiredGroups*/)
         .then((isMember) => {
@@ -252,7 +271,7 @@ bot.on('callback_query', (query) => {
             break;*/
 
         case 'start':
-            bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding—start earning cryptocurrency today!');
+            bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding — start earning cryptocurrency today!');
             bot.sendMessage(chatID, 'Select an option:', {
                 reply_markup: {
                     inline_keyboard: keyboard
@@ -337,7 +356,7 @@ async function checkMembership(chatID, requiredChannels/*, requiredGroups*/) {
         try {
             const chat = await bot.getChatMember(channel.link.split('/').pop(), chatID);
             console.log(`Chat member status for ${channel.name}: ${chat.status}`);
-            if (!chat.status !== 'member' && chat.status !== 'administrator' && chat.status !== 'creator') {
+            if (chat.status !== 'member' && chat.status !== 'administrator' && chat.status !== 'creator') {
             isMember = false;
             break;
             }
