@@ -154,9 +154,27 @@ bot.on('error', (error) => {
 function sendWelcomeMessage(chatID) {
     const welcomeText = 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today! Join the channels and subscribe to the YouTube channels to get started.';
 
+    const telegramChannels = requiredChannels.map((channel) => [
+        {
+            text: channel.name,
+            url: channel.link
+        }
+    ]);
+
+    const youtubeButton = [
+        [
+            {
+                text: 'Subscribe to our YouTube channels',
+                callback_data: 'youtube_channels'
+            }
+        ]
+    ];
+
+    const combinedKeyboard = [...telegramChannels, ...youtubeButton];
+
     bot.sendMessage(chatID, welcomeText, {
         reply_markup: {
-             inline_keyboard: mainKeyboard
+             inline_keyboard: combinedKeyboard
          }
     });
 }
