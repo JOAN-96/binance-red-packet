@@ -19,72 +19,36 @@ const requiredChannels = [
     //Channel 1
     {
         name: 'Queen Tech',
-        link: 'CHANNEL_QUEEN_TECH'
+        link: CHANNEL_QUEEN_TECH
     },
     
     //Channel 2
     {
         name: 'Crypto Levy',
-        link: 'CHANNEL_CRYPTO_LEVY'
+        link: CHANNEL_CRYPTO_LEVY
     },
 
     //Channel 3
     {
         name: 'Cash Megan',
-        link: 'CHANNEL_CASH_MEGAN'
+        link: CHANNEL_CASH_MEGAN
     },
 
     //Channel 4
     {
         name: 'Red Packet',
-        link: 'CHANNEL_RED_PACKET'
+        link: CHANNEL_RED_PACKET
     }
 ];
-
-//Required Groups
-/*
-const requiredGroups = [
-
-    //Group 1
-    {
-        name: 'Group 1',
-        link: 'https://t.me/group1'
-    },
-
-    //Group 2
-    {
-        name: 'Group 2',
-        link: 'https://t.me/group2'
-    }
-];
-*/
 
 //Bot Function List
 // Main keyboard
 const mainKeyboard = [
-    /*[
-        {
-            text: 'Help',
-            callback_data: 'help'
-        },
-
-        {
-            text: 'About',
-            callback_data: 'about'
-        }
-    ],*/
-
     [
         {
             text: 'Channels',
             callback_data: 'channels'
-        }/*,
-
-        {
-            text: 'Groups',
-            callback_data: 'groups'
         }
-        */
     ],
 
     [
@@ -92,14 +56,7 @@ const mainKeyboard = [
             text: 'Start',
             callback_data: 'start'
         }
-    ]/*,
-
-    [
-        {
-            text: 'Refresh',
-            callback_data: 'refresh'
-        }
-    ]*/
+    ]
 ];
 
 //YouTube Channel Keyboard
@@ -180,68 +137,67 @@ function sendWelcomeMessage(chatID) {
 }
 
 bot.on('message', (msg) => {
-    console.log('Received message:', msg);
-    const chatID = msg.chat.id;
-    const text = msg.text;
+    try {
+        console.log('Received message:', msg);
+        const chatID = msg.chat.id;
+        const text = msg.text;
 
-    if (text === '/start') {
-        /*bot.sendMessage(chatID, 'Hello!', {
-            reply_markup: {
-                inline_keyboard: keyboard
-            }
-        })*/
-        try {
-            bot.sendPhoto(chatID, 'https://imgur.com/kUTAtn1')
-            .then((msg) => {
-                console.log(`Sent welcome photo: ${msg.message_id}`);
-                sendWelcomeMessage(chatID);
-                })
-                .catch((error) => {
-                    console.error(`Error sending welcome photo: ${error}`);
-                });
-            } catch (error) {
-                console.error(`Error sending welcome photo and message with keyboard: ${error}`);
-            };  
+        if (text === '/start') {
+            try {
+                bot.sendPhoto(chatID, 'https://imgur.com/kUTAtn1')
+                .then((msg) => {
+                    console.log(`Sent welcome photo: ${msg.message_id}`);
+                    sendWelcomeMessage(chatID);
+                    })
+                    .catch((error) => {
+                        console.error(`Error sending welcome photo: ${error}`);
+                    });
+                } catch (error) {
+                    console.error(`Error sending welcome photo and message with keyboard: ${error}`);
+                    }
+                }
 
-        //Check membership
-        checkMembership(chatID, requiredChannels/*, requiredGroups*/)
-        .then((isMember) => {
-            console.log (`Is member: ${isMember}`);
-            if (isMember) {
-                //User is a member of all required channels and groups, show keyboard
-                const webButton = [
-                    [
-                        {
-                            text: 'Open web',
-                            web_app: {
-                                url: 'https://your-web-app-url.com'
+            // Check membership
+            checkMembership(chatID, requiredChannels/*, requiredGroups*/)
+            .then((isMember) => {
+                console.log (`Is member: ${isMember}`);
+                if (isMember) {
+                    // User is a member of all required channels and groups, show keyboard
+                    const webButton = [
+                        [
+                            {
+                                text: 'Open web',
+                                web_app: {
+                                    url: 'https://your-web-app-url.com'
+                                }
                             }
+                        ]
+                    ];
+
+                    const combinedKeyboard = [...mainKeyboard, [webButton]];
+
+                    // Send the main keyboard and YouTube channels keyboard separately
+                    bot.sendMessage(chatID, 'Select an option:', {
+                        reply_markup: {
+                            inline_keyboard: combinedKeyboard
                         }
-                    ]
-                ];
+                    });
 
-                const combinedKeyboard = [...mainKeyboard, [webButton]];
-
-                // Send the main keyboard and YouTube channels keyboard separately
-                bot.sendMessage(chatID, 'Select an option:', {
-                    reply_markup: {
-                        inline_keyboard: combinedKeyboard
-                    }
-                });
-
-                bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
-                    reply_markup: {
-                        inline_keyboard: youtubeKeyboard
-                    }
-                });
-        } else {
-            // User is not a member of all required channels and groups, show join channels and groups buttons
-            showChannels(chatID, requiredChannels);
-        }
-    })
+                    bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
+                        reply_markup: {
+                            inline_keyboard: youtubeKeyboard
+                        }
+                    });
+            } else {
+                // User is not a member of all required channels and groups, show join channels and groups buttons
+                showChannels(chatID, requiredChannels);
+            }
+        })
         .catch((error) => {
             console.error(error);
         });
+    } catch (error) {
+        console.error(`Error handling message: ${error}`);
     }
 });
 
@@ -251,14 +207,6 @@ bot.on('callback_query', (query) => {
     const data = query.data;
 
     switch (data) {
-        /*case 'help':
-            bot.sendMessage(chatID, 'Need help in understanding the bot? Contact us');
-            break;
-
-        case 'about':
-            bot.sendMessage(chatID, 'With Binance Red Packet Video, you are rewarded for watching short video daily and earn other rewards by performing other tasks');
-            break;*/
-        
         case 'channels':
             showChannels(chatID, requiredChannels);
             checkMembership(chatID, requiredChannels)
@@ -290,10 +238,6 @@ bot.on('callback_query', (query) => {
         case 'join_channels':
             showChannels(chatID, requiredChannels);
             break;
-
-        /*case 'join_group':
-            bot.sendMessage(chatID, 'Kindly join all our groups as they are necessary in order to access the web: ' + requiredGroups.join(', '));
-            break;*/
 
         case 'youtube_channels':
             const youtubeChannels = [
@@ -331,36 +275,37 @@ bot.on('callback_query', (query) => {
             })
             break;
             
-        /*case 'refresh':
-            checkMembership(chatID, requiredChannels)
-            .then((isMember) => {
-                if (isMember) {
-                    const webButton = [
-                        [
-                            {
-                                text: 'Open Web',
-                                web_app: {
-                                    url: 'https://your-web-app-url.com'
+            case 'refresh':
+                const keyboard = mainKeyboard; // Define the keyboard variable
+                checkMembership(chatID, requiredChannels)
+                .then((isMember) => {
+                    if (isMember) {
+                        const webButton = [
+                            [
+                                {
+                                    text: 'Open Web',
+                                    web_app: {
+                                        url: 'https://your-web-app-url.com'
+                                    }
                                 }
+                            ]
+                        ];
+            
+                        const combinedKeyboard = [...keyboard, ...webButton];
+            
+                        bot.sendMessage(chatID, 'Select an option:', {
+                            reply_markup: {
+                                inline_keyboard: combinedKeyboard
                             }
-                        ]
-                    ];
-
-                    const combinedKeyboard = [...keyboard, ...webButton];
-
-                    bot.sendMessage(chatID, 'Select an option:', {
-                        reply_markup: {
-                            inline_keyboard: combinedKeyboard
-                        }
-                    });
-                } else {
-                    bot.sendMessage(chatID, 'You have not joined all required channels!');
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-            break;*/
+                        });
+                    } else {
+                        bot.sendMessage(chatID, 'You have not joined all required channels!');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+                break;
 
         default:
             bot.sendMessage(chatID, 'Invalid option');
@@ -389,61 +334,24 @@ function showChannels(chatID, channels) {
 
     bot.sendMessage(chatID, 'Join the following Telegram channels:', {
         reply_markup: {
-            inline_keyboard: telegramChannels
+            inline_keyboard: combinedKeyboard
         }
     });
 }
-/*
-//Function to show groups
-function showGroups(chatID, groups) {
-    const keyboard = groups.map((group) => [
-        {
-            text: group.name,
-            url: group.link
-        }
-    ]);
-
-    bot.sendMessage(chatID, 'Kindly join the following groups:', {
-        reply_markup: {
-            inline_keyboard: keyboard
-        }
-    });
-}*/
 
 //Function to check if user is a member of all required channels and groups
-async function checkMembership(chatID, requiredChannels/*, requiredGroups*/) {
-    let isMember = true;
-
-    //Check membership in channels
-    for (const channel of requiredChannels) {
-        try {
+async function checkMembership(chatID, requiredChannels) {
+    try {
+        for (const channel of requiredChannels) {
             const chat = await bot.getChatMember(channel.link.split('/').pop(), chatID);
-            /*console.log(`Chat member status for ${channel.name}: ${chat.status}`);*/
             if (chat.status !== 'member' && chat.status !== 'administrator' && chat.status !== 'creator') {
-            isMember = false;
-            break;
+                return false;
             }
-        } catch (error) {
-            console.error(`Error checking memebership in ${channel.name}: ${error.message}`);
-            isMember = false;
-            break;
         }
-    }
-/*
-    //Check membership in groups
-    for (const group of requiredGroups) {
-        try {
-            const chatMember = await bot.getChatMember(group.link.split('/').pop(), chatID);
-            if (!chatMember.status !== 'member' && chatMember.status !== 'administrator' && chatMember.status !== 'creator') {
-            isMember = false;
-            break;
-            }
-        } catch (error) {
-        console.error(error);
-        isMember = false;
-        break;
-        }
-    }*/
 
-    return isMember;
+        return true;
+    } catch (error) {
+        console.error(`Error checking membership: ${error.message}`);
+        throw error; // Rethrow the error
+    }
 }
