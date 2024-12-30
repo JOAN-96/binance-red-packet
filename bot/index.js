@@ -178,11 +178,11 @@ bot.on('message', (msg) => {
         .then((isMember) => {
             console.log (`Is member: ${isMember}`);
             if (isMember) {
-            //User is a member of all required channels and groups, show keyboard
+                //User is a member of all required channels and groups, show keyboard
                 const webButton = [
                     [
                         {
-                            text: 'Open Web',
+                            text: 'Open web',
                             web_app: {
                                 url: 'https://your-web-app-url.com'
                             }
@@ -190,27 +190,27 @@ bot.on('message', (msg) => {
                     ]
                 ];
 
-                const combinedKeyboard = [...keyboard, [webButton]];
+                const combinedKeyboard = [...mainKeyboard, [webButton]];
 
-            // Send the main keyboard and YouTube channels keyboard separately
-            bot.sendMessage(chatID, 'Select an option:', {
-                reply_markup: {
-                    inline_keyboard: mainKeyboard
+                // Send the main keyboard and YouTube channels keyboard separately
+                bot.sendMessage(chatID, 'Select an option:', {
+                    reply_markup: {
+                        inline_keyboard: combinedKeyboard
                     }
                 });
 
-            bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
-                reply_markup: {
-                    inline_keyboard: youtubeKeyboard
-                }
-            });
-            } else {
-            //User is not a member of all required channels and groups, show join channels and groups buttons
-                showChannels(chatID, requiredChannels);
-            }
-        })
+                bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
+                    reply_markup: {
+                        inline_keyboard: youtubeKeyboard
+                    }
+                });
+        } else {
+            // User is not a member of all required channels and groups, show join channels and groups buttons
+            showChannels(chatID, requiredChannels);
+        }
+    })
         .catch((error) => {
-        console.error(error);
+            console.error(error);
         });
     }
 });
@@ -265,6 +265,33 @@ bot.on('callback_query', (query) => {
             bot.sendMessage(chatID, 'Kindly join all our groups as they are necessary in order to access the web: ' + requiredGroups.join(', '));
             break;*/
 
+        case 'youtube_channels':
+            const youtubeChannels = [
+                [
+                    {
+                        text: 'Queen Tech',
+                        url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
+                    },
+            
+                    {
+                        text: 'Crypto Levy',
+                        url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
+                    },
+            
+                    {
+                        text: 'Mega Cash',
+                        url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
+                    }
+                ]
+            ];
+
+            bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
+                reply_markup: {
+                    inline_keyboard: youtubeChannels
+                }
+            });
+            break;
+
         case 'start':
             bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding — start earning cryptocurrency today!');
             bot.sendMessage(chatID, 'Select an option:', {
@@ -312,16 +339,27 @@ bot.on('callback_query', (query) => {
 
 //Function to show channels
 function showChannels(chatID, channels) {
-    const keyboard = channels.map((channel) => [
+    const telegramChannels = channels.map((channel) => [
         {
             text: channel.name,
             url: channel.link 
         }
     ]);
 
+    const youtubeButton = [
+        [
+            {
+                text: 'YouTube Channels',
+                callback_data: 'youtube_channels'
+            }
+        ]
+    ];
+
+    const combinedKeyboard = [...telegramChannels, ...youtubeButton];
+
     bot.sendMessage(chatID, 'Join the channels and subscribe to the YouTube channels', {
         reply_markup: {
-            inline_keyboard: keyboard
+            inline_keyboard: combinedKeyboard
         }
     });
 }
