@@ -358,12 +358,6 @@ function showChannels(chatID, channels) {
         }
     ]);
 
-    bot.sendMessage(chatID, 'Join the following Telegram channels:', {
-        reply_markup: {
-            inline_keyboard: telegramChannels
-        }
-    });
-
     const youtubeButton = [
         [
             {
@@ -373,17 +367,11 @@ function showChannels(chatID, channels) {
         ]
     ];
 
-    bot.sendMessage(chatID, 'And subscribe to our YouTube channels:', {
-        reply_markup: {
-            inline_keyboard: youtubeButton
-        }
-    })
-
     const combinedKeyboard = [...telegramChannels, ...youtubeButton];
 
-    bot.sendMessage(chatID, 'Join the channels and subscribe to the YouTube channels', {
+    bot.sendMessage(chatID, 'Join the following Telegram channels:', {
         reply_markup: {
-            inline_keyboard: combinedKeyboard
+            inline_keyboard: telegramChannels
         }
     });
 }
