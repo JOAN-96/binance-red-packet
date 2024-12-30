@@ -8,31 +8,36 @@ const token = process.env.Telegram_Token;
 
 const bot = new TelegramBot(token, {polling:true});
 
+const CHANNEL_QUEEN_TECH = 'https://t.me/Queenteac';
+const CHANNEL_CRYPTO_LEVY = 'https://t.me/Cryptolevychannel';
+const CHANNEL_CASH_MEGAN = 'https://t.me/Cashmegan';
+const CHANNEL_RED_PACKET = 'https://t.me/BinanceredpacketBott';
+
 //Required Channels
 const requiredChannels = [
     
     //Channel 1
     {
         name: 'Queen Tech',
-        link: 'https://t.me/Queenteac'
+        link: 'CHANNEL_QUEEN_TECH'
     },
     
     //Channel 2
     {
         name: 'Crypto Levy',
-        link: 'https://t.me/Cryptolevychannel'
+        link: 'CHANNEL_CRYPTO_LEVY'
     },
 
     //Channel 3
     {
         name: 'Cash Megan',
-        link: 'https://t.me/Cashmegan'
+        link: 'CHANNEL_CASH_MEGAN'
     },
 
     //Channel 4
     {
         name: 'Red Packet',
-        link: 'https://t.me/BinanceredpacketBott'
+        link: 'CHANNEL_RED_PACKET'
     }
 ];
 
@@ -140,6 +145,22 @@ bot.on('error', (error) => {
     }
 });
 
+// Function to send welcome message with keyboard
+/**
+ * Send a welcome message to the user with a keyboard.
+ * 
+ * @param {number} chatID - The ID of the chat to send the message to.
+ */
+function sendWelcomeMessage(chatID) {
+    const welcomeText = 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today! Join the channels and subscribe to the YouTube channels to get started.';
+
+    bot.sendMessage(chatID, welcomeText, {
+        reply_markup: {
+             inline_keyboard: mainKeyboard
+         }
+    });
+}
+
 bot.on('message', (msg) => {
     console.log('Received message:', msg);
     const chatID = msg.chat.id;
@@ -155,24 +176,15 @@ bot.on('message', (msg) => {
             bot.sendPhoto(chatID, 'https://imgur.com/kUTAtn1')
             .then((msg) => {
                 console.log(`Sent welcome photo: ${msg.message_id}`);
-                bot.sendMessage(chatID, 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today!', {
-                    reply_markup: {
-                        inline_keyboard: mainKeyboard
-                    }
-                })
-                .then((msg) => {
-                    console.log(`Sent welcome message with keyboard: ${msg.message_id}`);
+                sendWelcomeMessage(chatID);
                 })
                 .catch((error) => {
-                    console.error(`Error sending welcome message with keyboard: ${error}`);
+                    console.error(`Error sending welcome photo: ${error}`);
                 });
-            })
-            .catch((error) => {
-                console.error(`Error sending welcome photo: ${error}`);
-            });  
-        } catch (errror) {
-            console.error(`Error sending welcome photo and message with keyboard: ${error}`);
-        } 
+            } catch (error) {
+                console.error(`Error sending welcome photo and message with keyboard: ${error}`);
+            };  
+
         //Check membership
         checkMembership(chatID, requiredChannels/*, requiredGroups*/)
         .then((isMember) => {
@@ -243,7 +255,7 @@ bot.on('callback_query', (query) => {
                         }
                     ];
 
-                    const combinedKeyboard = [...keyboard, [webButton]];
+                    const combinedKeyboard = [...mainKeyboard, [webButton]];
 
                     bot.sendMessage(chatID, 'Select an option:', {
                         reply_markup: {
@@ -253,7 +265,7 @@ bot.on('callback_query', (query) => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                console.error(`Error checking membership: ${error.message}`);
             });
             break;
 
@@ -394,7 +406,7 @@ async function checkMembership(chatID, requiredChannels/*, requiredGroups*/) {
             break;
             }
         } catch (error) {
-            console.error(error);
+            console.error(`Error checking memebership in ${channel.name}: ${error.message}`);
             isMember = false;
             break;
         }
