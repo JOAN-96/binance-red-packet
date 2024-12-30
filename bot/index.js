@@ -170,10 +170,9 @@ function sendWelcomeMessage(chatID) {
         ]
     ];
 
-    const combinedKeyboard = [...telegramChannels, [youtubeButton]];
+    const combinedKeyboard = [...telegramChannels, ...youtubeButton];
 
-    bot.sendMessage(chatID, welcomeText);
-    bot.sendMessage(chatID, 'Join the following Telegram channels and subscribe to our YouTube channels:', {
+    bot.sendMessage(chatID, welcomeText + '\nJoin the following Telegram channels and subscribe to our YouTube channels:', {
         reply_markup: {
             inline_keyboard: combinedKeyboard
         }
