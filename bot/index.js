@@ -55,7 +55,8 @@ const requiredGroups = [
 */
 
 //Bot Function List
-const keyboard = [
+// Main keyboard
+const mainKeyboard = [
     /*[
         {
             text: 'Help',
@@ -81,16 +82,25 @@ const keyboard = [
         */
     ],
 
-    //Add a separator row
     [
         {
-            text: "---",
-            callback_data: ""
+            text: 'Start',
+            callback_data: 'start'
         }
-    ],
+    ]/*,
 
-    //YouTube Channels
     [
+        {
+            text: 'Refresh',
+            callback_data: 'refresh'
+        }
+    ]*/
+];
+
+//YouTube Channel Keyboard
+const youtubeKeyboard = [
+     //YouTube Channels
+     [
         {
             text: 'Queen Tech',
             url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
@@ -106,20 +116,6 @@ const keyboard = [
             url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
         }
     ]
-
-    [
-        {
-            text: 'Start',
-            callback_data: 'start'
-        }
-    ]/*,
-
-    [
-        {
-            text: 'Refresh',
-            callback_data: 'refresh'
-        }
-    ]*/
 ];
 
 const app = express();
@@ -196,11 +192,18 @@ bot.on('message', (msg) => {
 
                 const combinedKeyboard = [...keyboard, [webButton]];
 
+            // Send the main keyboard and YouTube channels keyboard separately
             bot.sendMessage(chatID, 'Select an option:', {
                 reply_markup: {
-                    inline_keyboard: combinedKeyboard
+                    inline_keyboard: mainKeyboard
                     }
                 });
+
+            bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
+                reply_markup: {
+                    inline_keyboard: youtubeKeyboard
+                }
+            });
             } else {
             //User is not a member of all required channels and groups, show join channels and groups buttons
                 showChannels(chatID, requiredChannels);
