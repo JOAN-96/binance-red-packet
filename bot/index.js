@@ -81,6 +81,14 @@ const keyboard = [
         */
     ],
 
+    //Add a separator row
+    [
+        {
+            text: "---",
+            callback_data: ""
+        }
+    ],
+
     //YouTube Channels
     [
         {
