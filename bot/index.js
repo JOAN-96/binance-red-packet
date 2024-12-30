@@ -358,14 +358,26 @@ function showChannels(chatID, channels) {
         }
     ]);
 
+    bot.sendMessage(chatID, 'Join the following Telegram channels:', {
+        reply_markup: {
+            inline_keyboard: telegramChannels
+        }
+    });
+
     const youtubeButton = [
         [
             {
-                text: 'YouTube Channels',
+                text: 'Subscribe to our YouTube channels',
                 callback_data: 'youtube_channels'
             }
         ]
     ];
+
+    bot.sendMessage(chatID, 'And subscribe to our YouTube channels:', {
+        reply_markup: {
+            inline_keyboard: youtubeButton
+        }
+    })
 
     const combinedKeyboard = [...telegramChannels, ...youtubeButton];
 
