@@ -56,7 +56,7 @@ const requiredGroups = [
 
 //Bot Function List
 const keyboard = [
-    [
+    /*[
         {
             text: 'Help',
             callback_data: 'help'
@@ -66,7 +66,7 @@ const keyboard = [
             text: 'About',
             callback_data: 'about'
         }
-    ],
+    ],*/
 
     [
         {
@@ -195,23 +195,7 @@ bot.on('message', (msg) => {
                 });
             } else {
             //User is not a member of all required channels and groups, show join channels and groups buttons
-                bot.sendMessage(chatID, 'To use this bot, you must join the following channels:', {
-                    reply_markup: {
-                        inline_keyboard: [
-                            [
-                                {
-                                    text: 'Join Channels',
-                                    callback_data: 'join_channels'
-                                }/*,
-
-                                {
-                                    text: 'Join Groups',
-                                    callback_data: 'join_groups'
-                                }*/
-                            ]
-                        ]
-                    }
-                });
+                showChannels(chatID, requiredChannels);
             }
         })
         .catch((error) => {
@@ -226,19 +210,19 @@ bot.on('callback_query', (query) => {
     const data = query.data;
 
     switch (data) {
-        case 'help':
+        /*case 'help':
             bot.sendMessage(chatID, 'Need help in understanding the bot? Contact us');
             break;
 
         case 'about':
             bot.sendMessage(chatID, 'With Binance Red Packet Video, you are rewarded for watching short video daily and earn other rewards by performing other tasks');
-            break;
+            break;*/
         
         case 'channels':
             showChannels(chatID, requiredChannels);
             checkMembership(chatID, requiredChannels)
             .then((isMember) => {
-                if (isMember) {
+                if (!isMember) {
                     const webButton = [
                         {
                             text: 'Open Web',
@@ -263,7 +247,7 @@ bot.on('callback_query', (query) => {
             break;
 
         case 'join_channels':
-            bot.sendMessage(chatID, 'To use this bot, you must join the following channels:' + requiredChannels.join(', '));
+            showChannels(chatID, requiredChannels);
             break;
 
         /*case 'join_group':
@@ -355,7 +339,7 @@ async function checkMembership(chatID, requiredChannels/*, requiredGroups*/) {
     for (const channel of requiredChannels) {
         try {
             const chat = await bot.getChatMember(channel.link.split('/').pop(), chatID);
-            console.log(`Chat member status for ${channel.name}: ${chat.status}`);
+            /*console.log(`Chat member status for ${channel.name}: ${chat.status}`);*/
             if (chat.status !== 'member' && chat.status !== 'administrator' && chat.status !== 'creator') {
             isMember = false;
             break;
