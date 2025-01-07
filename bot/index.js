@@ -84,7 +84,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today!');
+    res.send('Kindly join our Telegram channels and subscribe to our YouTube channels.');
 });
 
 app.listen(port, () => {
@@ -109,7 +109,7 @@ bot.on('error', (error) => {
  * @param {number} chatID - The ID of the chat to send the message to.
  */
 function sendWelcomeMessage(chatID) {
-    const welcomeText = 'Welcome to Binance Red Packet Bot! This bot helps you earn USDT and BTTC effortlessly by completing simple tasks like watching videos, engaging with content, and more. It\'s easy, fun, and rewarding - start earning cryptocurrency today! Join the channels and subscribe to the YouTube channels to get started.';
+    const welcomeText = 'Kindly join our Telegram channels and subscribe to our YouTube channels.';
 
     const telegramChannels = requiredChannels.map((channel) => [
         {
