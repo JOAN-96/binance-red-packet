@@ -1,3 +1,18 @@
+/* Hide desktop layout */
+@media (min-width: 375px) {
+    /* Desktop layout styles */
+    .desktop-layout {
+      display: none;
+    }
+  }
+  
+  /* Show mobile layout only */
+  @media only screen and (min-width: 769px) {
+    body {
+      display: none;
+    }
+  }
+
 /* Splash Screen CSS File */
 body {
     margin: 0;
@@ -6,6 +21,7 @@ body {
     /*padding-top: 20px;*/
 }
 
+/* Header - Title */
 header {
     display: flex;
     height: 64px;
@@ -15,6 +31,7 @@ header {
     left: 0;
     right: 0;
     background-color: #080808;
+    margin-left: 16px;
 }
 
 header figure {
@@ -33,6 +50,7 @@ header figure figcaption {
     vertical-align: center;
 }
 
+/* Wallet */
 .wallet-balance {
     display: flex;
     flex: 1;
@@ -43,7 +61,8 @@ header figure figcaption {
     border-width: 0.5px;
     border-style: solid;
     border-color: #FEE9E9;
-    margin-right: 8px;
+    margin-right: 16px;
+    margin-left: 16px;
     margin-top: 88px;
 }
 
@@ -51,8 +70,6 @@ header figure figcaption {
     width: fit-content;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .wallet-balance .details .top {
@@ -61,6 +78,7 @@ header figure figcaption {
     flex: 16px 1;
     gap: 8px;
     margin-left: 16px;
+    margin-bottom: 2px;
 }
 
 .wallet-balance .details figcaption {
@@ -71,14 +89,205 @@ header figure figcaption {
 .wallet-balance .details .balance {
     color: #EDEDED;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     flex: 1 1;
-    justify-content: space-between;
-    gap: auto;
+    gap: 96px;
     margin-left: 16px;
 }
 
 .wallet-balance .details .balance p {
     font-size: 22px;
+}
+
+.wallet-balance .details .balance p span {
+    font-size: 14px;
+}
+
+/* Red Packet Code */
+.red-packet-container {
+    margin-inline: 16px;
+    margin-top: 28px;
+}
+
+.red-packet-container p{
+    color: #EDEDED;
+    font-size: 12px;
+    font-style: italic;
+    margin: 0;
+}
+
+.red-packet-code {
+    display: flex;
+    flex: 1 60px;
+    align-items: center;
+    gap: 12px;
+    min-width: 375px;
+    height: 72px;
+}
+
+.red-packet-code input {
+    display: block;
+    height: 48px;
+    min-width: 280px;
+    padding-left: 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 0.5px solid #F92126;
+    background-color: #080808;
+}
+
+.red-packet-code button {
+    height: 48px;
+    border-radius: 8px;
+    background-color: #F92126;
+    color: #FEE9E9;
+    font-size: 16px;
+    border: none;
+    padding-block: 12px;
+    padding-inline: 8px;
+}
+
+/* Red Packet Body */
+.red-packet-body {
+    display: flexbox;
+    min-width: 375px;
+    margin-top: 28px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border: 1px solid #FEE9E9;
+    border-bottom: none;
+    border-inline: none;
+    padding-top: 18px;
+    padding-bottom: 40px;
+}
+
+.red-packet-body .details {
+    margin-inline: 16px;
+    display: grid;
+    /*grid-template-rows: 1fr 1fr;*/
+}
+
+/* User Referral Links */
+.red-packet-body .details .top {
+    margin-bottom: 20px;
+}
+
+.red-packet-body .details .top .top-details {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+}
+
+.red-packet-body .details .top .top-details figure {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 8px;
+    margin-inline: 4px;
+}
+.red-packet-body .details .top figcaption {
+    color: #EDEDED;
+    font-size: 14px;
+    margin: 0;
+}
+
+.red-packet-body .details .top .top-details .user-link {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    gap: 8px;
+}
+
+.red-packet-body .details .top .top-details .user-link .link {
+    display: block;
+    height: 48px;
+    min-width: 280px;
+    padding-left: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    background-color: #EDEDED;
+    border: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.red-packet-body .details .top .top-details .user-link .link .link-text {
+    color: #4F4F4F;
+}
+
+.red-packet-body .details .top .top-details .user-link button {
+    height: 48px;
+    border-radius: 8px;
+    background-color: #F92126;
+    color: #FEE9E9;
+    font-size: 16px;
+    border: none;
+    padding-block: 12px;
+    padding-inline: 8px;
+    align-items: center;
+}
+
+/* Red Packet Video Tasks */
+.red-packet-body .details .to-do {
+    margin-top: 20px;
+}
+
+.red-packet-body .details .to-do .header-text {
+    color: #EDEDED;
+    font-size: 14px;
+    margin: 0;
+    padding-bottom: 2px;
+}
+
+.red-packet-body .details .to-do .to-do-details {
+    display: grid;
+    grid-template-rows: 1fr;
+}
+
+.red-packet-body .details .to-do .to-do-details .to-do-list {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 40px;
+}
+
+/* Videos */
+.red-packet-body .details .to-do .to-do-details .to-do-list .video {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    height: 64px;
+}
+
+.red-packet-body .details .to-do .to-do-details .to-do-list .video .top {
+    display: flex;
+    flex: 1fr 60px;
+    justify-content: flex-start;
+    gap: 49%;
+    margin-bottom: 4px;
+}
+
+.red-packet-body .details .to-do .to-do-details .to-do-list .video .top figure {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 8px;
+    margin-inline-start: 0;
+}
+
+.red-packet-body .details .to-do .to-do-details .to-do-list .video .top figcaption {
+    color: #EDEDED;
+    font-size: 16px;
+}
+
+.red-packet-body .details .to-do .to-do-details .to-do-list .video .top button {
+    height: 40px;
+    border-radius: 8px;
+    background-color: #F92126;
+    color: #FEE9E9;
+    font-size: 16px;
+    border: none;
+    padding-block: 12px;
+    padding-inline: 8px;
+    align-items: center;
+}
+
+.red-packet-body .details .to-do .to-do-details .to-do-list .video .description {
+    color: #848484;
+    font-size: 12px;
+    margin: 0;
 }

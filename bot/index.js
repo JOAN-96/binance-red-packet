@@ -109,7 +109,7 @@ bot.on('error', (error) => {
  * @param {number} chatID - The ID of the chat to send the message to.
  */
 function sendWelcomeMessage(chatID) {
-    const welcomeText = 'Kindly join our Telegram channels and subscribe to our YouTube channels.';
+    const welcomeText = 'To use our bot you must join all channels and subscribe to all the YouTube channels. Click the buttons below to join the channels and subscribe to the YouTube channels.';
 
     const telegramChannels = requiredChannels.map((channel) => [
         {
