@@ -207,7 +207,7 @@ bot.on('message', (msg) => {
 bot.on('callback_query', (query) => {
     console.log('Received callback query:', query);
     const chatID = query.message.chat.id;
-    const messageID = query.message.chat.id;
+    const messageID = query.message.message_id;
     const data = query.data;
 
     // Handle the callback data and provide the necessary reponse
@@ -231,14 +231,14 @@ bot.on('callback_query', (query) => {
                         } 
                     ];
 
-                    const youtubeButton = [
+                    /*const youtubeButton = [
                         {
                             text: 'Subscribe to our YouTube channels',
                             callback_data: 'youtube_channels'
                         }
-                    ];
+                    ];*/
 
-                    const combinedKeyboard = [...mainKeyboard, [webButton], [youtubeButton]];
+                    const combinedKeyboard = [...mainKeyboard, [webButton]];
 
                     bot.sendMessage(chatID, 'Select an option:', {
                         reply_markup: {
@@ -338,7 +338,7 @@ function showChannels(chatID, channels) {
         }
     ]);
 
-    const youtubeButton = [
+    /*const youtubeButton = [
         [
             {
                 text: 'Subscribe to our YouTube channels',
@@ -347,11 +347,11 @@ function showChannels(chatID, channels) {
         ]
     ];
 
-    const combinedKeyboard = [...telegramChannels, ...youtubeButton];
+    const combinedKeyboard = [...telegramChannels, ...youtubeButton];*/
 
     bot.sendMessage(chatID, 'Join the following Telegram channels:', {
         reply_markup: {
-            inline_keyboard: combinedKeyboard
+            inline_keyboard: telegramChannels
         }
     });
 }
@@ -369,7 +369,7 @@ async function checkMembership(chatID, requiredChannels) {
         return true;
     } catch (error) {
         console.error(`Error checking membership: ${error.message}`);
-        bot.sendMessage(chatID, 'Error checking membership. Please try again later.');
+        bot.sendMessage(chatID, `Error checking membership. Please try again later.`);
         return false;
     }
 }
