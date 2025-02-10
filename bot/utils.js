@@ -1,9 +1,8 @@
-const bot = require('./index').bot;
 const channels = require('./channels');
 /*const keyboards = require('./keyboards');*/
 
 module.exports = {
-    sendWelcomeMessage: async (chatID) => {
+    sendWelcomeMessage: async (bot, chatID) => {
         try {
             const telegramChannels = channels.requiredChannels.map((channel) => [
                  {
@@ -43,7 +42,7 @@ module.exports = {
             }
     },
 
-    sendKeyboard: async (chatID, keyboard) => {
+    sendKeyboard: async (bot, chatID, keyboard) => {
         try {
             await bot.sendMessage(chatID, 'Select an option:', {
                 reply_markup: {

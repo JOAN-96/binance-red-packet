@@ -1,5 +1,6 @@
 const keyboards = require('./keyboards');
 const utils = require('./utils');
+const bot = require('./index').bot;
 
 module.exports = {
     messageHandler: async (msg) => {
@@ -8,7 +9,7 @@ module.exports = {
             const text = msg.text;
 
             if (text === '/start') {
-                utils.sendWelcomeMessage(chatID);
+                await utils.sendWelcomeMessage(bot, chatID);
             }
 
             /*const combinedKeyboards = [...keyboards.mainKeyboard, keyboards.webButton];
