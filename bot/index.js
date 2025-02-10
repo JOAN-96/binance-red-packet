@@ -206,6 +206,12 @@ bot.on('callback_query', (query) => {
     const chatID = query.message.chat.id;
     const data = query.data;
 
+    // Handle the callback data and provide the necessary reponse
+    bot.editMessageText(`Received callback data: ${data}`, {
+        chat_id: chatID,
+        message_id: messageID,
+    });
+
     switch (data) {
         case 'channels':
             showChannels(chatID, requiredChannels);
@@ -216,9 +222,9 @@ bot.on('callback_query', (query) => {
                         {
                             text: 'Open Web',
                             web_app: {
-                                url: 'https://your-web-app-url.com'
+                                url: 'https://github.com/JOAN-96/red-packet-web-app.git'
                             }
-                        }
+                        } 
                     ];
 
                     const combinedKeyboard = [...mainKeyboard, [webButton]];
