@@ -1,1 +1,1 @@
-worker: node bot-folder/index.js
+worker: node bot/index.js
