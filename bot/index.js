@@ -171,7 +171,7 @@ bot.on('message', (msg) => {
                             {
                                 text: 'Open web',
                                 web_app: {
-                                    url: 'https://dashboard.heroku.com/apps/cryptic-caverns-38004'
+                                    url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'
                                 }
                             }
                         ]
@@ -207,6 +207,7 @@ bot.on('message', (msg) => {
 bot.on('callback_query', (query) => {
     console.log('Received callback query:', query);
     const chatID = query.message.chat.id;
+    const messageID = query.message.chat.id;
     const data = query.data;
 
     // Handle the callback data and provide the necessary reponse
@@ -225,12 +226,19 @@ bot.on('callback_query', (query) => {
                         {
                             text: 'Open Web',
                             web_app: {
-                                url: 'https://github.com/JOAN-96/red-packet-web-app.git'
+                                url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'
                             }
                         } 
                     ];
 
-                    const combinedKeyboard = [...mainKeyboard, [webButton]];
+                    const youtubeButton = [
+                        {
+                            text: 'Subscribe to our YouTube channels',
+                            callback_data: 'youtube_channels'
+                        }
+                    ];
+
+                    const combinedKeyboard = [...mainKeyboard, [webButton], [youtubeButton]];
 
                     bot.sendMessage(chatID, 'Select an option:', {
                         reply_markup: {
@@ -294,7 +302,7 @@ bot.on('callback_query', (query) => {
                                 {
                                     text: 'Open Web',
                                     web_app: {
-                                        url: 'https://your-web-app-url.com'
+                                        url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'
                                     }
                                 }
                             ]
@@ -361,6 +369,7 @@ async function checkMembership(chatID, requiredChannels) {
         return true;
     } catch (error) {
         console.error(`Error checking membership: ${error.message}`);
-        throw error; // Rethrow the error
+        bot.sendMessage(chatID, 'Error checking membership. Please try again later.');
+        return false;
     }
 }
