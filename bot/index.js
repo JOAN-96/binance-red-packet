@@ -9,8 +9,18 @@ const token = process.env.Telegram_Token;
 const bot = new TelegramBot(token, {polling:true});
 
 const handlers = require('./handlers');;
-bot.on('message', handlers.messageHandler);
-bot.on('callback_query', handlers.callbackQueryHandler);
+bot.on('message', (msg) => {
+    if (msg.text === '/start') {
+        bot.sendMessage(msg.chat.id, 'Welcome Binance Red Packet.');
+    } else {
+        console.log('Received message:', msg);
+        handlers.messageHandler(msg);
+    }
+})
+bot.on('callback_query', (query) => {
+    console.log('Received callback query:', query);
+    handlers.callbackQueryHandler(query);
+  });
 
 const app = express();
 const port = process.env.PORT || 3000;

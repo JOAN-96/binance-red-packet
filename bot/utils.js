@@ -38,7 +38,7 @@ module.exports = {
                 }
             });
             } catch (error) {
-                console.error(`Error sending welcome message: ${error}`);
+                console.error(`Error sending welcome message to chat ${chatID}: ${error}`);
             }
     },
 
@@ -50,7 +50,7 @@ module.exports = {
                 }
             });
         } catch (error) {
-            console.error(`Error sending keyboard: ${error}`);
+            console.error(`Error sending keyboard to chat ${chatID}: ${error}`);
         }
     },
 
