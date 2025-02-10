@@ -2,7 +2,7 @@ const channels = require('./channels');
 /*const keyboards = require('./keyboards');*/
 
 module.exports = {
-    sendWelcomeMessage: async (bot, chatID, keyboard) => {
+    sendWelcomeMessage: async (bot, chatID) => {
         try {
             const telegramChannels = channels.requiredChannels.map((channel) => [
                  {
@@ -11,30 +11,20 @@ module.exports = {
                 }
             ]);
         
-            const youtubeChannels = [
+            const youtubeButton = [
                 [
                     {
-                        text: 'Queen Tech',
-                        url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
-                    },
-        
-                    {
-                        text: 'Crypto Levy',
-                        url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
-                    },
-        
-                    {
-                        text: 'Mega Cash',
-                        url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
+                        text: 'Subscribe to our YouTube channels',
+                        callback_data: 'youtube_channels'
                     }
                 ]
             ];
         
-            const combinedKeyboard = [...telegramChannels, youtubeChannels];
+            const combinedKeyboard = [...telegramChannels, youtubeButton];
         
-            await bot.sendMessage(chatID, 'Please join the channels and subscribe to the YouTube channels:', {
+            await bot.sendMessage(chatID, 'Join our Telegram channels and subscribe to the YouTube channels:', {
                 reply_markup: {
-                    inline_keyboard: keyboard
+                    inline_keyboard: combinedKeyboard
                 }
             });
             } catch (error) {
