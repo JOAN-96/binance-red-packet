@@ -10,11 +10,11 @@ module.exports = {
 
             if (text === '/start') {
                 await utils.sendWelcomeMessage(bot, chatID);
+                utils.sendKeyboard(chatID, keyboards.mainKeyboard);
             }
 
             /*const combinedKeyboards = [...keyboards.mainKeyboard, keyboards.webButton];
             utils.sendKeyboard(chatID, combinedKeyboards);*/
-            utils.sendKeyboard(chatID, keyboards.mainKeyboard);
 
             // Check membership
             /*const isMember = await utils.checkMembership(chatID);
