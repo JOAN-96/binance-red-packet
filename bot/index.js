@@ -91,6 +91,9 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 
+// New route for mini web app
+app.use('/mini-web-app', express.static('/mini-web-app'));
+
 bot.on('error', (error) => {
     console.error(error);
     if (error.code === 'ECONNREST' || error.code === 'ETIMEDOUT') {
@@ -168,7 +171,7 @@ bot.on('message', (msg) => {
                             {
                                 text: 'Open web',
                                 web_app: {
-                                    url: 'https://your-web-app-url.com'
+                                    url: 'https://dashboard.heroku.com/apps/cryptic-caverns-38004'
                                 }
                             }
                         ]
