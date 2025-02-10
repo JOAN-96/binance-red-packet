@@ -11,7 +11,8 @@ const bot = new TelegramBot(token, {polling:true});
 const handlers = require('./handlers');;
 bot.on('message', (msg) => {
     if (msg.text === '/start') {
-        bot.sendMessage(msg.chat.id, 'Welcome Binance Red Packet.');
+        const utils = require('./utils');
+        utils.sendWelcomeMessage(bot, msg.chat.id);
     } else {
         console.log('Received message:', msg);
         handlers.messageHandler(msg);

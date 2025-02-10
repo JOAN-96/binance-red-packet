@@ -21,6 +21,7 @@ module.exports = {
             ];
         
             const combinedKeyboard = [...telegramChannels, youtubeButton];
+            console.log('Combined Keyboard:', combinedKeyboard);
         
             await bot.sendMessage(chatID, 'Join our Telegram channels and subscribe to the YouTube channels:', {
                 reply_markup: {
