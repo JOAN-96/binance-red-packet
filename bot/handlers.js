@@ -9,8 +9,7 @@ module.exports = {
             const text = msg.text;
 
             if (text === '/start') {
-                await utils.sendWelcomeMessage(bot, chatID);
-                utils.sendKeyboard(chatID, keyboards.mainKeyboard);
+                await utils.sendWelcomeMessage(bot, chatID, keyboards.mainKeyboard);
             }
 
             /*const combinedKeyboards = [...keyboards.mainKeyboard, keyboards.webButton];

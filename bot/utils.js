@@ -2,7 +2,7 @@ const channels = require('./channels');
 /*const keyboards = require('./keyboards');*/
 
 module.exports = {
-    sendWelcomeMessage: async (bot, chatID) => {
+    sendWelcomeMessage: async (bot, chatID, keyboard) => {
         try {
             const telegramChannels = channels.requiredChannels.map((channel) => [
                  {
@@ -34,7 +34,7 @@ module.exports = {
         
             await bot.sendMessage(chatID, 'Please join the channels and subscribe to the YouTube channels:', {
                 reply_markup: {
-                    inline_keyboard: combinedKeyboard
+                    inline_keyboard: keyboard
                 }
             });
             } catch (error) {
