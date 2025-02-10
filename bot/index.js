@@ -10,6 +10,7 @@ const bot = new TelegramBot(token, {polling:true});
 
 const handlers = require('./handlers');;
 bot.on('message', (msg) => {
+    console.log('Received message:', msg);
     if (msg.text === '/start') {
         console.log('Received /start command from chatID:', msg.chat.id);
         const utils = require('./utils');
@@ -21,7 +22,6 @@ bot.on('message', (msg) => {
             console.error('Error sending welcome message to chatID:', msg.chat.id, error);
         });
     } else {
-        console.log('Received message:', msg);
         handlers.messageHandler(msg);
     }
 })
