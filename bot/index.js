@@ -20,10 +20,10 @@ bot.setMyCommands([
     }, 
     {
         command: 'webapp',
-        description: 'Open the web app',
-        web_app: {
+        description: 'Open the web app'
+        /* web_app: {
             url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'  // Replace with your Heroku app URL 
-        } 
+        } */
     }
 ]);
 
@@ -204,7 +204,7 @@ app.listen(port, () => {
 // Telegram Web App 
 bot.onText(/\/webapp/, (msg) => {
     const chatID = msg.chat.id;
-    /* const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
+    const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
     bot.sendMessage(chatID, 'Open Web App', {
         reply_markup: {
             inline_keyboard: [
@@ -218,5 +218,5 @@ bot.onText(/\/webapp/, (msg) => {
                 ]
             ]
         }
-    }); */
+    });
 });
