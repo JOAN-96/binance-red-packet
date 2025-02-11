@@ -267,6 +267,8 @@ bot.on('message', (msg) => {
         bot.sendMessage(chatID, `${channelListText}\n\n` + channelList.map((channel) => channel[0].text).join('\n'), {
             reply_markup: { inline_keyboard: [...channelList, youtubeButton] }
         });
+    } else {
+        handlers.messageHandler(msg);
     }
 });
 
