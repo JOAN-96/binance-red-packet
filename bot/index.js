@@ -1,37 +1,45 @@
-/* const TelegramBot = require('node-telegram-bot-api');
+const TelegramBot = require('node-telegram-bot-api');
 const axios =require('axios');
 const express = require('express');
 require('dotenv').config();
 
 //Token gotten from BotFather
-const token = process.env.Telegram_Token; */
+const token = process.env.Telegram_Token; 
 /* const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc'; */
-/*
-const bot = new TelegramBot(token, { polling: true });
+
+const bot = new TelegramBot(token, {polling:true});
 
 const keyboards = require('./keyboards')(bot);
 const utils = require('./utils')(bot, keyboards);
 const handlers = require('./handlers')(bot, keyboards, utils);
 
  bot.on('message', (msg) => {
-    console.log('Received message:', msg);
-    handlers.messageHandler(msg);
+    try {
+        console.log('Received message:', msg);
+        handlers.messageHandler(msg);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 bot.on('callback_query', (query) => {
-    console.log('Received callback query:', query);
-    handlers.callbackQueryHandler(query);
+    try {
+        console.log('Received callback query:', query);
+        handlers.callbackQueryHandler(query);
+    } catch (error) {
+        console.error(error);
+    }
 }); 
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.static('public')); */
+app.use(express.static('public')); 
 
 /*app.get('/', (req, res) => {
     res.send('Kindly join our Telegram channels and subscribe to our YouTube channels.');
 });*/
-/*
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
@@ -39,7 +47,7 @@ app.listen(port, () => {
 // New route for mini web app
 app.use('/mini-web-app', express.static('../mini-web-app'));
 
-bot.on('error', (error) => {
+/* bot.on('error', (error) => {
     console.error(error);
     if (error.code === 'ECONNREST' || error.code === 'ETIMEDOUT') {
         console.log('Retrying connection...');
@@ -48,9 +56,12 @@ bot.on('error', (error) => {
             bot.startPolling();
         }, 1000);
     }
+}); */
+bot.on('error', (error) => {
+    console.error(error);
 });
-*/
 
+/*
 const TelegramBot = require('node-telegram-bot-api');
 const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc';
 
@@ -65,3 +76,4 @@ bot.on('message', (msg) => {
 bot.on('error', (error) => {
     console.error(error);
 });
+*/
