@@ -239,10 +239,10 @@ const handlers = {
     }
 }); */
 
-bot.onText(/\/start/, (msg) => {
-    const chatID = msg.chat.id;
+bot.command('start', (ctx) => {
+    const chatID = ctx.chat.id;
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
-    const channelListText = 'Join our Telegram channels:';
+    const channelListText = 'Join our Telegram channels:\n\n';
     
 
     // Channels
@@ -263,8 +263,12 @@ bot.onText(/\/start/, (msg) => {
     ];
 
     const text = `${welcomeText}\n\n${channelListText}${channelList.map((channel) => channel[0].text).join('\n')}`;
-    bot.sendMessage(chatID, text, {
-        reply_markup: { inline_keyboard: [...channelList, [youtubeButton]] }
+    ctx.reply(text, {
+        reply_markup: { 
+            inline_keyboard: [
+                ...channelList, [youtubeButton]
+            ] 
+        }
     });
 });
 
