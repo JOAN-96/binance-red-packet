@@ -6,8 +6,8 @@ const port = process.env.PORT || 3000;
 require('dotenv').config();
 
 //Token gotten from BotFather
-const token = process.env.Telegram_Token; 
-/* const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc'; */
+/* const token = process.env.Telegram_Token; */
+const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc'; 
 
 const bot = new TelegramBot(token, {polling:true});
 
@@ -229,10 +229,12 @@ const handlers = {
 
 // Events Listener
 bot.on('message', (msg) => {
+    console.log('Received message:', msg);
     handlers.messageHandler(msg);
 });
 
 bot.on('callback_query', (query) => {
+    console.log('Received callback query:', query);
     handlers.callbackQueryHandler(query);
 });
 
