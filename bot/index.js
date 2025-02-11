@@ -14,10 +14,10 @@ const bot = new TelegramBot(token, { polling: true });
 
 // Set bot commands
 bot.setMyCommands([
-    /* {
+    {
         command: 'start',
         description: 'Start the bot'
-    }, */
+    }, 
     {
         command: 'webapp',
         description: 'Open the web app',
@@ -73,8 +73,7 @@ const utils = {
                 ],
             ];
 
-            const mainKeyboard = keyboards.mainKeyboard;
-            const combinedKeyboard = [...telegramChannels, youtubeButton, mainKeyboard];
+            const combinedKeyboard = [...telegramChannels, youtubeButton];
 
             await bot.sendMessage(chatID, 'Join our Telegram channels:', {
                 reply_markup: { inline_keyboard: combinedKeyboard },
@@ -141,6 +140,7 @@ const utils = {
         await bot.sendMessage(chatID, `Here are our YouTube channels:\n\n${youtubeChannelList.join('\n')}`);
     }
 };
+
 
 
 // Events Listener
@@ -220,25 +220,3 @@ bot.onText(/\/webapp/, (msg) => {
         }
     }); */
 });
-
-
-
-
-
-
-/* // Testing the bot
-const TelegramBot = require('node-telegram-bot-api');
-const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc';
-
-const bot = new TelegramBot(token, {polling: true});
-
-bot.on('message', (msg) => {
-    if (msg.text === '/start') {
-        bot.sendMessage(msg.chat.id, 'Welcome!');
-    }
-});
-
-bot.on('error', (error) => {
-    console.error(error);
-});
-*/
