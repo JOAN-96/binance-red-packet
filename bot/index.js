@@ -12,6 +12,22 @@ const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc';
 const bot = new TelegramBot(token, { polling: true });
 
 
+// Set bot commands
+bot.setMyCommands([
+    {
+        command: 'start',
+        description: 'Start the bot'
+    },
+    {
+        command: 'webapp',
+        description: 'Open the web app',
+        web_app: {
+            url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/' // Replace with your Heroku app URL
+        }
+    }
+]);
+
+
 // Channels
 const channelLinks = {
     CHANNEL_QUEEN_TECH: 'https://t.me/Queenteac',
@@ -242,6 +258,22 @@ const handlers = {
 bot.onText(/\/start/, (msg) => {
     const chatID = msg.chat.id;
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+    const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'; // Replace with your Heroku app URL
+
+    bot.sendMessage(chatID, welcomeText, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Open Web App',
+                        web_app: {
+                            url: webAppURL
+                        }
+                    }
+                ]
+            ]
+        }
+    });
 
     bot.sendMessage(chatID, welcomeText);
 
