@@ -7,9 +7,9 @@
   }
   
   /* Show mobile layout only */
-  @media only screen and (min-width: 769px) {
+  @media only screen and (max-width: 768px) {
     body {
-      display: none;
+      display: block;
     }
   }
 
@@ -19,35 +19,6 @@ body {
     background-color: #080808;
     font-family: 'Lato';
     /*padding-top: 20px;*/
-}
-
-/* Header - Title */
-header {
-    display: flex;
-    height: 64px;
-    min-width: 375px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: #080808;
-    margin-left: 16px;
-}
-
-header figure {
-    display: flex;
-    flex: 24px 1;
-    justify-content: flex-start;
-    align-content: center;
-    gap: 12px;
-    margin-left: 8px;
-}
-
-header figure figcaption {
-    color: #ffffff;
-    font-size: 22px;
-    font-weight: 700;
-    vertical-align: center;
 }
 
 /* Wallet */
@@ -125,9 +96,8 @@ header figure figcaption {
 }
 
 .red-packet-code input {
-    display: block;
+    width: 100%; /* Use relative units */
     height: 48px;
-    min-width: 280px;
     padding-left: 8px;
     font-size: 12px;
     border-radius: 4px;
@@ -161,9 +131,9 @@ header figure figcaption {
 }
 
 .red-packet-body .details {
-    margin-inline: 16px;
     display: grid;
-    /*grid-template-rows: 1fr 1fr;*/
+    grid-template-columns: 1fr; /* Define grid template */
+    margin-inline: 16px;
 }
 
 /* User Referral Links */
@@ -243,7 +213,7 @@ header figure figcaption {
 
 .red-packet-body .details .to-do .to-do-details .to-do-list {
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr; /* Define grid template */
     gap: 40px;
 }
 

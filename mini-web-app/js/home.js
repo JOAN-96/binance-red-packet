@@ -24,15 +24,17 @@ videoButtons.forEach((button) => {
     iframe.allowFullScreen = true;
 
     // Replace the button with the iframe
-    e.target.parentNode.replaceWith(iframe);
+    e.target.parentNode.innerHTML = ''; // Clear the parent element's content
+    e.target.parentNode.appendChild(iframe); // Append the iframe
 
     // Update the button text to "Done" after the video has finished playing
-    iframe.addEventListener('load', () => {
-      const doneButton = document.createElement('button');
+    iframe.addEventListener('load', () => { // Use contentWindow instead of iframe
+      iframe.contentWindow.addEventListener('ended', () => { // Add event listener for the video end
+        const doneButton = document.createElement('button');
       doneButton.textContent = 'Done';
       doneButton.style.backgroundColor = 'green'; // Change the button color
       doneButton.style.color = 'white'; // Change the button text color
-      iframe.parentNode.appendChild(doneButton);
+      iframe.parentNode.appendChild(doneButton);})
     });
 
     // Update the wallet balance
