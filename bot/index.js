@@ -4,14 +4,14 @@ const express = require('express');
 require('dotenv').config();
 
 //Token gotten from BotFather
-/* const token = process.env.Telegram_Token; */
-const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc';
+const token = process.env.Telegram_Token;
+/* const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc'; */
 
-const bot = new TelegramBot(token, { polling: true});
+const bot = new TelegramBot(token, { polling: true });
 
-const keyboards = require('./keyboards') (bot, {}, require('./utils'));
-const utils = require('./utils');
-const handlers = require('./handlers') (bot, keyboards, utils);
+const keyboards = require('./keyboards')(bot);
+const utils = require('./utils')(bot, keyboards);
+const handlers = require('./handlers')(bot, keyboards, utils);
 
 bot.on('message', (msg) => {
     console.log('Received message:', msg);

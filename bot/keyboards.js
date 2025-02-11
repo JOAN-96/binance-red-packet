@@ -1,8 +1,6 @@
-const bot = require('./index').bot;
-const handlers = require('./handlers');
 const requiredChannels = require('./channels').requiredChannels;
 
-module.exports = (bot, handlers, requiredChannels) => {
+module.exports = (bot) => {
     return {
         mainKeyboard: [
             [

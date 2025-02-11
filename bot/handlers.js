@@ -66,11 +66,10 @@ module.exports = (bot, keyboards, utils) => {
 }; 
 */
 
-const keyboards = require('./keyboards');
 const utils = require('./utils');
 const bot = require('./index').bot;
 
-module.exports = (bot, keyboards, utils) => {
+module.exports = (bot, utils) => {
     return {
         messageHandler: async (msg) => {
             try {
