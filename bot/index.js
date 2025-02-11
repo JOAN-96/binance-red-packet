@@ -52,7 +52,7 @@ bot.on('error', (error) => {
 */
 
 const TelegramBot = require('node-telegram-bot-api');
-const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pcbot';
+const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc';
 
 const bot = new TelegramBot(token, {polling: true});
 
