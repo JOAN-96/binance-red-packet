@@ -1,2 +1,2 @@
-worker: node bot/index.js
-web: npm start
+worker: node bot/index.js --polling
+web: node mini-web-app/js/server.js

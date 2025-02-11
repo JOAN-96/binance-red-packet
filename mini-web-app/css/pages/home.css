@@ -1,24 +1,22 @@
-/* Hide desktop layout */
-@media (min-width: 375px) {
-    /* Desktop layout styles */
-    .desktop-layout {
-      display: block;
-    }
+/* Hide desktop layout by default */
+.desktop-layout {
+    display: none;
   }
   
   /* Show mobile layout only */
   @media only screen and (max-width: 768px) {
-    body {
+    .desktop-layout {
       display: block;
     }
   }
 
-/* Splash Screen CSS File */
+
 body {
+    font-family: 'Lato';
     margin: 0;
     background-color: #080808;
-    font-family: 'Lato';
-    /*padding-top: 20px;*/
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Wallet */
@@ -32,19 +30,16 @@ body {
     border-width: 0.5px;
     border-style: solid;
     border-color: #FEE9E9;
-    margin-right: 16px;
-    margin-left: 16px;
-    margin-top: 88px;
+    margin-inline: 16px;
+    margin-top: 20px;
 }
 
 .wallet-balance .details {
-    width: fit-content;
     display: flex;
     flex-direction: column;
 }
 
 .wallet-balance .details .top {
-    width: fit-content;
     display: flex;
     flex: 16px 1;
     gap: 8px;
