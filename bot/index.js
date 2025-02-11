@@ -14,16 +14,16 @@ const bot = new TelegramBot(token, { polling: true });
 
 // Set bot commands
 bot.setMyCommands([
-    {
+    /* {
         command: 'start',
         description: 'Start the bot'
-    },
+    }, */
     {
         command: 'webapp',
         description: 'Open the web app',
-        web_app: {
+        /* web_app: {
             url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/' // Replace with your Heroku app URL
-        }
+        } */
     }
 ]);
 
@@ -54,49 +54,6 @@ const requiredChannels = [
         link: channelLinks.CHANNEL_RED_PACKET
     },
 ];
-
-
-// Keyboards
-const keyboards = {
-    mainKeyboard: [
-        [
-            {
-                text: 'Channels',
-                callback_data: 'channels'
-            },
-        ],
-        [
-            {
-                text: 'Start',
-                callback_data: 'start'
-            },
-        ],
-        [
-            {
-                text: 'Open web',
-                web_app: {
-                    url: `http://localhost:${port}/mini-web-app`
-                },
-            },
-        ],
-    ],
-    youtubeKeyboard: [
-        [
-            {
-                text: 'Queen Tech',
-                url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
-            },
-            {
-                text: 'Crypto Levy',
-                url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
-            },
-            {
-                text: 'Mega Cash',
-                url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
-            }
-        ]
-    ]
-};
 
 
 // Utils
@@ -172,95 +129,26 @@ const utils = {
             console.error(`Error checking membership: ${error.message}`);
             return false;
         }
+    },
+
+    sendYouTubeChannelsList: async (chatID) => {
+        const youtubeChannelList = [
+            'Queen Tech: https://www.youtube.com/watch?v=hmSSQv4AyGU',
+            'Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu',
+            'Mega Cash: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
+        ];
+
+        await bot.sendMessage(chatID, `Here are our YouTube channels:\n\n${youtubeChannelList.join('\n')}`);
     }
-};
-
-
-// Handlers
-const handlers = {
-    messageHandler: async (msg) => {
-        console.log('Message handler called:', msg);
-        try {
-            const chatID = msg.chat.id;
-            const text = msg.text;
-
-            if (text === '/start') {
-                await utils.sendWelcomeMessage(chatID);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    },
-
-    callbackQueryHandler: async (query) => {
-        console.log('Callback query handler called:', query);
-        try {
-            const chatID = query.message.chat.id;
-            const data = query.data;
-    
-            switch (data) {
-                case 'start':
-                    await bot.sendMessage(chatID, 'Welcome!');
-                    break;
-    
-                case 'channels':
-                    await utils.showChannels(chatID);
-                    break;
-    
-                case 'youtube_channels':
-                    const youtubeChannels = [
-                        [
-                            {
-                                text: 'Queen Tech',
-                                url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
-                            },
-                        ],
-                        [
-                            {
-                                text: 'Crypto Levy',
-                                url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
-                            },
-                        ],
-                        [
-                            {
-                                text: 'Mega Cash',
-                                url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
-                            },
-                        ],
-                    ];
-    
-                    await bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
-                        reply_markup: {
-                            inline_keyboard: youtubeChannels
-                        }
-                    });
-                    break;
-    
-                // Handle other callback queries
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    },
 };
 
 
 // Events Listener
-/* bot.on('message', (msg) => {
-    if (msg.text === '/start') {
-        const chatID = msg.chat.id;
-        utils.sendWelcomeMessage(chatID);
-    } else {
-        handlers.messageHandler(msg);
-    }
-}); */
-
 bot.onText(/\/start/, (msg) => {
     const chatID = msg.chat.id;
-    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
-    const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'; // Replace with your Heroku app URL
 
-    bot.sendMessage(chatID, welcomeText, {
+    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+   /*  bot.sendMessage(chatID, welcomeText, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -273,25 +161,23 @@ bot.onText(/\/start/, (msg) => {
                 ]
             ]
         }
-    });
-
+    }); */
     bot.sendMessage(chatID, welcomeText);
 
     // Telegram Channels
-    const channelListText = 'Join our Telegram channels:\n\n';
-    
-    const channelList = [
+    const telegramChannelsText = '*Telegram Channels List:*';
+    const telegramChannels = [
         'Queen Tech: https://t.me/Queenteac',
         'Crypto Levy: https://t.me/Cryptolevychannel',
         'Cash Megan: https://t.me/Cashmegan',
         'Red Packet: https://t.me/BinanceredpacketBott'
     ];
-
-    bot.sendMessage(chatID, `${channelListText}${channelList.join('\n')}`);
+    bot.sendMessage(chatID, `${telegramChannelsText}\n\n${telegramChannels.join('\n')}`);
 
     //YouTube channels
+    const youtubeChannelsText = '*YouTube Channels List:*';
     const youtubeButtonText = 'Subscribe to our YouTube channels';
-    bot.sendMessage(chatID, youtubeButtonText, {
+    bot.sendMessage(chatID, youtubeChannelsText, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -303,18 +189,14 @@ bot.onText(/\/start/, (msg) => {
             ]
         }
     });
+    // Send YouTube Channels List
+    /* sendYouTubeChannelsList(chatID); */
 });
 
 
 bot.on('callback_query', (query) => {
     if (query.data === 'youtube_channels') {
-        const youtubeChannelList = [
-            'Queen Tech: https://www.youtube.com/watch?v=hmSSQv4AyGU',
-            'Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu',
-            'Mega Cash: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
-        ];
-
-        bot.sendMessage(query.message.chat.id, `Here are our YouTube channels:\n\n${youtubeChannelList.join('\n')}`);
+        utils.sendYouTubeChannelsList(query.message.chat.id);
     }
 });
 
@@ -338,22 +220,8 @@ app.listen(port, () => {
 // Telegram Web App 
 bot.onText(/\/webapp/, (msg) => {
     const chatID = msg.chat.id;
-    const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'; // Replace with your Heroku app URL
-
-    bot.sendMessage(chatID, 'Open Web App', {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    {
-                        text: 'Open',
-                        web_app: {
-                            url: webAppURL
-                        }
-                    }
-                ]
-            ]
-        }
-    });
+    const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
+    bot.sendMessage(chatID, webAppURL);
 });
 
 
