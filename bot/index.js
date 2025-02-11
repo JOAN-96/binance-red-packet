@@ -8,12 +8,15 @@ const token = process.env.Telegram_Token;
 
 const bot = new TelegramBot(token, {polling:true});
 
-const handlers = require('./handlers');;
+const keyboards = require('./keyboards') (bot, {}, require('./utils'));
+const utils = require('./utils');
+const handlers = require('./handlers') (bot, keyboards, utils);
+
+
 bot.on('message', (msg) => {
     console.log('Received message:', msg);
     if (msg.text === '/start') {
         console.log('Received /start command from chatID:', msg.chat.id);
-        const utils = require('./utils');
         utils.sendWelcomeMessage(bot, msg.chat.id)
         .then (() => {
             console.log('Welcome message sent successfully to chatID:', msg.chat.id);
@@ -22,11 +25,17 @@ bot.on('message', (msg) => {
             console.error('Error sending welcome message to chatID:', msg.chat.id, error);
         });
     } else {
-        handlers.messageHandler(msg);
+        console.log('Calling handlers.messsageHandler(msg)');
+        try {
+            handlers.messageHandler(msg);
+        } catch (error) {
+            console.error('Error handling message:', error);
+        }
     }
-})
+});
 bot.on('callback_query', (query) => {
     console.log('Received callback query:', query);
+    console.log('Calling handlers.callbackQueryHandler(query)');
     handlers.callbackQueryHandler(query);
   });
 
