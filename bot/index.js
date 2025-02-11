@@ -264,7 +264,7 @@ bot.onText(/\/start/, (msg) => {
 
     const text = `${welcomeText}\n\n${channelListText}${channelList.map((channel) => channel[0].text).join('\n')}`;
     bot.sendMessage(chatID, text, {
-        reply_markup: { inline_keyboard: [...channelList, youtubeButton] }
+        reply_markup: { inline_keyboard: [...channelList, [youtubeButton]] }
     });
 });
 
