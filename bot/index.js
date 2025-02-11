@@ -243,7 +243,7 @@ bot.onText(/\/start/, (msg) => {
     const chatID = msg.chat.id;
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
     const channelListText = 'Join our Telegram channels:';
-    const youtubeButtonText = 'Subscribe to our YouTube channels';
+    
 
     // Channels
     const channelList = [
@@ -256,14 +256,14 @@ bot.onText(/\/start/, (msg) => {
     const youtubeButton = [
         [
             {
-                text: youtubeButtonText,
+                text: 'Subscribe to our YouTube channels',
                 callback_data: 'youtube_channels'
             }
         ]
     ];
 
-    bot.sendMessage(chatID, welcomeText);
-    bot.sendMessage(chatID, `${channelListText}\n\n` + channelList.map((channel) => channel[0].text).join('\n'), {
+    const text = `${welcomeText}\n\n${channelListText}${channelList.map((channel) => channel[0].text).join('\n')}`;
+    bot.sendMessage(chatID, text, {
         reply_markup: { inline_keyboard: [...channelList, youtubeButton] }
     });
 });
