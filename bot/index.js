@@ -163,6 +163,7 @@ const utils = {
 // Handlers
 const handlers = {
     messageHandler: async (msg) => {
+        console.log('Message handler called:', msg);
         try {
             const chatID = msg.chat.id;
             const text = msg.text;
@@ -176,6 +177,7 @@ const handlers = {
     },
 
     callbackQueryHandler: async (query) => {
+        console.log('Callback query handler called:', query);
         try {
             const chatID = query.message.chat.id;
             const data = query.data;
