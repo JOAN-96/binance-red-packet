@@ -239,37 +239,33 @@ const handlers = {
     }
 }); */
 
-bot.on('message', (msg) => {
-    if (msg.text === '/start') {
-        const chatID = msg.chat.id;
-        const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
-        const channelListText = 'Join our Telegram channels:';
-        const youtubeButtonText = 'Subscribe to our YouTube channels';
+bot.onText(/\/start/, (msg) => {
+    const chatID = msg.chat.id;
+    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+    const channelListText = 'Join our Telegram channels:';
+    const youtubeButtonText = 'Subscribe to our YouTube channels';
 
-        // Channels
-        const channelList = [
-            [{ text: 'Queen Tech', url: 'https://t.me/Queenteac' }],
-            [{ text: 'Crypto Levy', url: 'https://t.me/Cryptolevychannel' }],
-            [{ text: 'Cash Megan', url: 'https://t.me/Cashmegan' }],
-            [{ text: 'Red Packet', url: 'https://t.me/BinanceredpacketBott' }],
-        ];
+    // Channels
+    const channelList = [
+        [{ text: 'Queen Tech', url: 'https://t.me/Queenteac' }],
+        [{ text: 'Crypto Levy', url: 'https://t.me/Cryptolevychannel' }],
+        [{ text: 'Cash Megan', url: 'https://t.me/Cashmegan' }],
+        [{ text: 'Red Packet', url: 'https://t.me/BinanceredpacketBott' }],
+    ];
 
-        const youtubeButton = [
-            [
-                {
-                    text: youtubeButtonText,
-                    callback_data: 'youtube_channels'
-                }
-            ]
-        ];
+    const youtubeButton = [
+        [
+            {
+                text: youtubeButtonText,
+                callback_data: 'youtube_channels'
+            }
+        ]
+    ];
 
-        bot.sendMessage(chatID, welcomeText);
-        bot.sendMessage(chatID, `${channelListText}\n\n` + channelList.map((channel) => channel[0].text).join('\n'), {
-            reply_markup: { inline_keyboard: [...channelList, youtubeButton] }
-        });
-    } else {
-        handlers.messageHandler(msg);
-    }
+    bot.sendMessage(chatID, welcomeText);
+    bot.sendMessage(chatID, `${channelListText}\n\n` + channelList.map((channel) => channel[0].text).join('\n'), {
+        reply_markup: { inline_keyboard: [...channelList, youtubeButton] }
+    });
 });
 
 bot.on('callback_query', (query) => {
@@ -282,15 +278,18 @@ bot.on('error', (error) => {
 }); 
 
 // Server
-miniWebApp.use(express.static('mini-web-app'));
+app.use(express.static('mini-web-app'));
 
-miniWebApp.listen(port, () => {
+app.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
 });
 
-/*
-// New route for mini web app
-miniWebApp.use('/mini-web-app', express.static('../mini-web-app'));
+
+// Route for mini web app
+/* miniWebApp.use('/mini-web-app', express.static('../mini-web-app')); */
+app.get('/mini-web-app', (req, res) => {
+    res.sendFile(__dirname + '/mini-web-app/index.html');
+});
 
 
 
