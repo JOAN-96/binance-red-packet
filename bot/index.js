@@ -293,16 +293,38 @@ bot.on('error', (error) => {
 // Server
 app.use(express.static('mini-web-app'));
 
+// Route for mini web app
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/mini-web-app/index.html');
+});
+
 app.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
 });
 
 
-// Route for mini web app
-/* miniWebApp.use('/mini-web-app', express.static('../mini-web-app')); */
-app.get('/mini-web-app', (req, res) => {
-    res.sendFile(__dirname + '/mini-web-app/index.html');
+// Telegram Web App 
+bot.onText(/\/webapp/, (msg) => {
+    const chatID = msg.chat.id;
+    const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'; // Replace with your Heroku app URL
+
+    bot.sendMessage(chatID, 'Open Web App', {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Open',
+                        web_app: {
+                            url: webAppURL
+                        }
+                    }
+                ]
+            ]
+        }
+    });
 });
+
+
 
 
 
