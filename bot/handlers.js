@@ -2,7 +2,7 @@ const keyboards = require('./keyboards');
 const utils = require('./utils');
 const bot = require('./index').bot;
 
-module.exports = (bot, keyboards, utils) => {
+/* module.exports = (bot, keyboards, utils) => {
     return {
         messageHandler: async (msg) => {
             try {
@@ -12,17 +12,6 @@ module.exports = (bot, keyboards, utils) => {
                 if (text === '/start') {
                     await utils.sendWelcomeMessage(bot, chatID);
                 }
-    
-                /*const combinedKeyboards = [...keyboards.mainKeyboard, keyboards.webButton];
-                utils.sendKeyboard(chatID, combinedKeyboards);*/
-    
-                // Check membership
-                /*const isMember = await utils.checkMembership(chatID);
-                if (isMember) {
-                    utils.sendKeyboard(chatID, keyboards.mainKeyboard);
-                } else {
-                    utils.showChannels(chatID);
-                }*/
             } catch (error) {
                 console.error(`Error handling message: ${error}`);
             }
@@ -72,6 +61,35 @@ module.exports = (bot, keyboards, utils) => {
             } catch (error) {
                 console.error(`Error handling callback query: ${error}`);
             }
+        }
+    };
+}; */
+
+module.exports = (bot, keyboards, utils) => {
+    return {
+        messageHandler: async (msg) => {
+            try {
+                const chatID = msg.chat.id;
+                const text = msg.text;
+    
+                if (text === '/start') {
+                    await utils.sendWelcomeMessage(bot, chatID);
+                }
+            } catch (error) {
+                console.error(`Error handling message: ${error}`);
+            }
+        },
+        callbackQueryHandler: (query) => {
+            const chatId = query.message.chat.id;
+            const data = query.data;
+
+            if (data === 'start') {
+                bot.sendMessage(chatId, 'Welcome! You have clicked the start button.');
+            } else {
+                bot.sendMessage(chatId, 'Unknown command.');
+            }
+
+            bot.answerCallbackQuery(query.id);
         }
     };
 };
