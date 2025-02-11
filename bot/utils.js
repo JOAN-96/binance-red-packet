@@ -1,3 +1,4 @@
+const keyboards = require('./keyboards');
 const channels = require('./channels');
 /*const keyboards = require('./keyboards');*/
 
@@ -19,9 +20,9 @@ module.exports = {
                     }
                 ]
             ];
-        
-            const combinedKeyboard = [...telegramChannels, youtubeButton];
-            console.log('Combined Keyboard:', combinedKeyboard);
+            
+            const mainKeyboard = keyboards.mainKeyboard; //Import keyboards and use mainKeyboard
+            const combinedKeyboard = [...telegramChannels, youtubeButton, mainKeyboard]; //Combine mainKeyboard with other keyboards
         
             await bot.sendMessage(chatID, 'Join our Telegram channels and subscribe to the YouTube channels:', {
                 reply_markup: {

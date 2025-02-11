@@ -12,32 +12,15 @@ const keyboards = require('./keyboards') (bot, {}, require('./utils'));
 const utils = require('./utils');
 const handlers = require('./handlers') (bot, keyboards, utils);
 
-
 bot.on('message', (msg) => {
     console.log('Received message:', msg);
-    if (msg.text === '/start') {
-        console.log('Received /start command from chatID:', msg.chat.id);
-        utils.sendWelcomeMessage(bot, msg.chat.id)
-        .then (() => {
-            console.log('Welcome message sent successfully to chatID:', msg.chat.id);
-        })
-        .catch((error) => {
-            console.error('Error sending welcome message to chatID:', msg.chat.id, error);
-        });
-    } else {
-        console.log('Calling handlers.messsageHandler(msg)');
-        try {
-            handlers.messageHandler(msg);
-        } catch (error) {
-            console.error('Error handling message:', error);
-        }
-    }
+    handlers.messageHandler(msg);
 });
+
 bot.on('callback_query', (query) => {
     console.log('Received callback query:', query);
-    console.log('Calling handlers.callbackQueryHandler(query)');
     handlers.callbackQueryHandler(query);
-  });
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
