@@ -239,42 +239,51 @@ const handlers = {
     }
 }); */
 
-bot.command('start', (ctx) => {
-    const chatID = ctx.chat.id;
+bot.onText(/\/start/, (msg) => {
+    const chatID = msg.chat.id;
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+
+    bot.sendMessage(chatID, welcomeText);
+
+    // Telegram Channels
     const channelListText = 'Join our Telegram channels:\n\n';
     
-
-    // Channels
     const channelList = [
-        [{ text: 'Queen Tech', url: 'https://t.me/Queenteac' }],
-        [{ text: 'Crypto Levy', url: 'https://t.me/Cryptolevychannel' }],
-        [{ text: 'Cash Megan', url: 'https://t.me/Cashmegan' }],
-        [{ text: 'Red Packet', url: 'https://t.me/BinanceredpacketBott' }],
+        'Queen Tech: https://t.me/Queenteac',
+        'Crypto Levy: https://t.me/Cryptolevychannel',
+        'Cash Megan: https://t.me/Cashmegan',
+        'Red Packet: https://t.me/BinanceredpacketBott'
     ];
 
-    const youtubeButton = [
-        [
-            {
-                text: 'Subscribe to our YouTube channels',
-                callback_data: 'youtube_channels'
-            }
-        ]
-    ];
+    bot.sendMessage(chatID, `${channelListText}${channelList.join('\n')}`);
 
-    const text = `${welcomeText}\n\n${channelListText}${channelList.map((channel) => channel[0].text).join('\n')}`;
-    ctx.reply(text, {
-        reply_markup: { 
+    //YouTube channels
+    const youtubeButtonText = 'Subscribe to our YouTube channels';
+    bot.sendMessage(chatID, youtubeButtonText, {
+        reply_markup: {
             inline_keyboard: [
-                ...channelList, [youtubeButton]
-            ] 
+                [
+                    {
+                        text: youtubeButtonText,
+                        callback_data: 'youtube_channels'
+                    }
+                ]
+            ]
         }
     });
 });
 
+
 bot.on('callback_query', (query) => {
-    console.log('Received callback query:', query);
-    handlers.callbackQueryHandler(query);
+    if (query.data === 'youtube_channels') {
+        const youtubeChannelList = [
+            'Queen Tech: https://www.youtube.com/watch?v=hmSSQv4AyGU',
+            'Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu',
+            'Mega Cash: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
+        ];
+
+        bot.sendMessage(query.message.chat.id, `Here are our YouTube channels:\n\n${youtubeChannelList.join('\n')}`);
+    }
 });
 
 bot.on('error', (error) => {
