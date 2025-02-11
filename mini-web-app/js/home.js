@@ -1,18 +1,3 @@
-// Telegram Authentication
-const express = require('express');
-const app = express();
-const verifyTelegramAuth = require('./js/auth');
-
-app.get('/', (req, res) => {
-  const telegramAuth = req.query['telegram-auth'];
-  if (verifyTelegramAuth(telegramAuth)) {
-    // Provide the necessary web app functionality
-    res.render('home');
-  } else {
-    res.status(401).send('Unauthorized');
-  }
-});
-
 // Check if the device is a mobile device
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -45,6 +30,8 @@ videoButtons.forEach((button) => {
     iframe.addEventListener('load', () => {
       const doneButton = document.createElement('button');
       doneButton.textContent = 'Done';
+      doneButton.style.backgroundColor = 'green'; // Change the button color
+      doneButton.style.color = 'white'; // Change the button text color
       iframe.parentNode.appendChild(doneButton);
     });
 
