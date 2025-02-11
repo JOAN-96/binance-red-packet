@@ -9,34 +9,34 @@ require('dotenv').config();
 /* const token = process.env.Telegram_Token; */
 const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc'; 
 
-const bot = new TelegramBot(token, {polling:true});
+const bot = new TelegramBot(token, { polling: true });
 
 
 // Channels
 const channelLinks = {
     CHANNEL_QUEEN_TECH: 'https://t.me/Queenteac',
-CHANNEL_CRYPTO_LEVY: 'https://t.me/Cryptolevychannel',
-CHANNEL_CASH_MEGAN: 'https://t.me/Cashmegan',
-CHANNEL_RED_PACKET: 'https://t.me/BinanceredpacketBott',
+    CHANNEL_CRYPTO_LEVY: 'https://t.me/Cryptolevychannel',
+    CHANNEL_CASH_MEGAN: 'https://t.me/Cashmegan',
+    CHANNEL_RED_PACKET: 'https://t.me/BinanceredpacketBott',
 }
 
 const requiredChannels = [
     {
         name: 'Queen Tech',
-        link: CHANNEL_QUEEN_TECH
+        link: channelLinks.CHANNEL_QUEEN_TECH
     },
     {
         name: 'Crypto Levy',
-        link: CHANNEL_CRYPTO_LEVY
+        link: channelLinks.CHANNEL_CRYPTO_LEVY
     },
     {
         name: 'Cash Megan',
-        link: CHANNEL_CASH_MEGAN
+        link: channelLinks.CHANNEL_CASH_MEGAN
     },
     {
         name: 'Red Packet',
-        link: CHANNEL_RED_PACKET
-    }
+        link: channelLinks.CHANNEL_RED_PACKET
+    },
 ];
 
 
@@ -47,22 +47,22 @@ const keyboards = {
             {
                 text: 'Channels',
                 callback_data: 'channels'
-            }
+            },
         ],
         [
             {
                 text: 'Start',
                 callback_data: 'start'
-            }
+            },
         ],
         [
             {
                 text: 'Open web',
                 web_app: {
                     url: `http://localhost:${port}/mini-web-app`
-                }
-            }
-        ]
+                },
+            },
+        ],
     ],
     youtubeKeyboard: [
         [
@@ -96,8 +96,8 @@ const utils = {
                     {
                         text: 'Subscribe to our YouTube channels',
                         callback_data: 'youtube_channels'
-                    }
-                ]
+                    },
+                ],
             ];
 
             const mainKeyboard = keyboards.mainKeyboard;
@@ -188,7 +188,7 @@ const handlers = {
                     break;
     
                 case 'channels':
-                    utils.showChannels(chatID);
+                    await utils.showChannels(chatID);
                     break;
     
                 case 'youtube_channels':
@@ -197,20 +197,20 @@ const handlers = {
                             {
                                 text: 'Queen Tech',
                                 url: 'https://www.youtube.com/watch?v=hmSSQv4AyGU'
-                            }
+                            },
                         ],
                         [
                             {
                                 text: 'Crypto Levy',
                                 url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
-                            }
+                            },
                         ],
                         [
                             {
                                 text: 'Mega Cash',
                                 url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
-                            }
-                        ]
+                            },
+                        ],
                     ];
     
                     await bot.sendMessage(chatID, 'Subscribe to our YouTube channels:', {
