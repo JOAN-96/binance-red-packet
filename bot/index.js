@@ -230,12 +230,43 @@ const handlers = {
 
 
 // Events Listener
-bot.on('message', (msg) => {
+/* bot.on('message', (msg) => {
     if (msg.text === '/start') {
         const chatID = msg.chat.id;
         utils.sendWelcomeMessage(chatID);
     } else {
         handlers.messageHandler(msg);
+    }
+}); */
+
+bot.on('message', (msg) => {
+    if (msg.text === '/start') {
+        const chatID = msg.chat.id;
+        const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+        const channelListText = 'Join our Telegram channels:';
+        const youtubeButtonText = 'Subscribe to our YouTube channels';
+
+        // Channels
+        const channelList = [
+            [{ text: 'Queen Tech', url: 'https://t.me/Queenteac' }],
+            [{ text: 'Crypto Levy', url: 'https://t.me/Cryptolevychannel' }],
+            [{ text: 'Cash Megan', url: 'https://t.me/Cashmegan' }],
+            [{ text: 'Red Packet', url: 'https://t.me/BinanceredpacketBott' }],
+        ];
+
+        const youtubeButton = [
+            [
+                {
+                    text: youtubeButtonText,
+                    callback_data: 'youtube_channels'
+                }
+            ]
+        ];
+
+        bot.sendMessage(chatID, welcomeText);
+        bot.sendMessage(chatID, `${channelListText}\n\n` + channelList.map((channel) => channel[0].text).join('\n'), {
+            reply_markup: { inline_keyboard: [...channelList, youtubeButton] }
+        });
     }
 });
 
