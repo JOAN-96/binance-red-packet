@@ -1,8 +1,8 @@
-const keyboards = require('./keyboards');
+/* const keyboards = require('./keyboards');
 const utils = require('./utils');
 const bot = require('./index').bot;
 
-/* module.exports = (bot, keyboards, utils) => {
+module.exports = (bot, keyboards, utils) => {
     return {
         messageHandler: async (msg) => {
             try {
@@ -63,7 +63,12 @@ const bot = require('./index').bot;
             }
         }
     };
-}; */
+}; 
+*/
+
+const keyboards = require('./keyboards');
+const utils = require('./utils');
+const bot = require('./index').bot;
 
 module.exports = (bot, keyboards, utils) => {
     return {
@@ -71,7 +76,7 @@ module.exports = (bot, keyboards, utils) => {
             try {
                 const chatID = msg.chat.id;
                 const text = msg.text;
-    
+
                 if (text === '/start') {
                     await utils.sendWelcomeMessage(bot, chatID);
                 }
@@ -79,6 +84,7 @@ module.exports = (bot, keyboards, utils) => {
                 console.error(`Error handling message: ${error}`);
             }
         },
+
         callbackQueryHandler: (query) => {
             const chatId = query.message.chat.id;
             const data = query.data;
@@ -86,7 +92,7 @@ module.exports = (bot, keyboards, utils) => {
             if (data === 'start') {
                 bot.sendMessage(chatId, 'Welcome! You have clicked the start button.');
             } else {
-                bot.sendMessage(chatId, 'Unknown command.');
+                console.log(`Unknown command data: ${data}`);
             }
 
             bot.answerCallbackQuery(query.id);
