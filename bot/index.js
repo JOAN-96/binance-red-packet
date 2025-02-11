@@ -231,8 +231,12 @@ const handlers = {
 
 // Events Listener
 bot.on('message', (msg) => {
-    console.log('Received message:', msg);
-    handlers.messageHandler(msg);
+    if (msg.text === '/start') {
+        const chatID = msg.chat.id;
+        utils.sendWelcomeMessage(chatID);
+    } else {
+        handlers.messageHandler(msg);
+    }
 });
 
 bot.on('callback_query', (query) => {
