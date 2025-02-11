@@ -22,9 +22,8 @@ bot.setMyCommands([
         command: 'webapp',
         description: 'Open the web app',
         /* web_app: {
-            url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/' // Replace with your Heroku app URL
-        } */
-    }
+            url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'  // Replace with your Heroku app URL */
+        } 
 ]);
 
 
@@ -148,36 +147,22 @@ bot.onText(/\/start/, (msg) => {
     const chatID = msg.chat.id;
 
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
-   /*  bot.sendMessage(chatID, welcomeText, {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    {
-                        text: 'Open Web App',
-                        web_app: {
-                            url: webAppURL
-                        }
-                    }
-                ]
-            ]
-        }
-    }); */
+
     bot.sendMessage(chatID, welcomeText);
 
     // Telegram Channels
-    const telegramChannelsText = '*Telegram Channels List:*';
+    const telegramChannelsText = 'Telegram Channels List:';
     const telegramChannels = [
         'Queen Tech: https://t.me/Queenteac',
         'Crypto Levy: https://t.me/Cryptolevychannel',
         'Cash Megan: https://t.me/Cashmegan',
         'Red Packet: https://t.me/BinanceredpacketBott'
     ];
-    bot.sendMessage(chatID, `${telegramChannelsText}\n\n${telegramChannels.join('\n')}`);
+    bot.sendMessage(chatID, `${telegramChannels.join('\n')}`);
 
     //YouTube channels
-    const youtubeChannelsText = '*YouTube Channels List:*';
     const youtubeButtonText = 'Subscribe to our YouTube channels';
-    bot.sendMessage(chatID, youtubeChannelsText, {
+    bot.sendMessage(chatID, youtubeButtonText, {
         reply_markup: {
             inline_keyboard: [
                 [
@@ -189,8 +174,6 @@ bot.onText(/\/start/, (msg) => {
             ]
         }
     });
-    // Send YouTube Channels List
-    /* sendYouTubeChannelsList(chatID); */
 });
 
 
@@ -221,7 +204,20 @@ app.listen(port, () => {
 bot.onText(/\/webapp/, (msg) => {
     const chatID = msg.chat.id;
     const webAppURL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
-    bot.sendMessage(chatID, webAppURL);
+    bot.sendMessage(chatID, 'Open Web App', {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Open Web App',
+                        web_app: {
+                            url: webAppURL
+                        }
+                    }
+                ]
+            ]
+        }
+    });
 });
 
 
