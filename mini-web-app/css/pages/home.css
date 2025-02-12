@@ -21,22 +21,19 @@ body {
 
 /* Wallet */
 .wallet-balance {
-    display: flex;
-    flex: 1;
-    align-content: center;
-    /*height: 88px;*/
     min-width: 343px;
     border-radius: 8px;
     border-width: 0.5px;
     border-style: solid;
     border-color: #FEE9E9;
     margin-inline: 16px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .wallet-balance .details {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .wallet-balance .details .top {
