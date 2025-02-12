@@ -183,6 +183,7 @@ bot.onText(/\/start/, (msg) => {
 });
 
 bot.on('message', async (msg) => {
+    console.log(`Received message from ${msg.from.username}: ${msg.text}`);
     const chatId = msg.chat.id;
     const telegramUsername = msg.from.username;
 
@@ -216,6 +217,7 @@ wss.on('connection', (ws) => {
 });
 
 bot.on('callback_query', (query) => {
+    console.log(`Received callback query from ${query.from.username}: ${query.data}`);
     if (query.data === 'youtube_channels') {
         utils.sendYouTubeChannelsList(query.message.chat.id);
     }
