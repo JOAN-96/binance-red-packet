@@ -6,6 +6,10 @@ const verifyTelegramAuth = require('./auth'); // Import the verifyTelegramAuth f
 
 // Authentication middleware
 const authenticate = (req, res, next) => {
+  if (req.url === '/' || req.url.startsWith('/static/')) {
+    return next();
+  }
+
   const telegramAuth = req.query['telegram-auth'];
   if (verifyTelegramAuth(telegramAuth)) {
     next();
@@ -14,11 +18,17 @@ const authenticate = (req, res, next) => {
   }
 };
 
-// Use authentication middleware for all routes
-app.use(authenticate);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../mini-web-app/index.html'));
+});
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
+
+// Use authentication middleware for all routes
+app.use(authenticate);
+
+
 
 // Serve index.html
 /*
@@ -35,9 +45,6 @@ app.get('/', (req, res) => {
   }
 }); 
 */
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../mini-web-app/index.html'));
-});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
