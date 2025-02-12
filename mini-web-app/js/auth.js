@@ -1,7 +1,10 @@
+
 function verifyTelegramAuth(telegramAuth) {
-    // Implement your authentication logic here
-    // For example, you can use the Telegram Bot API to verify the user's identity
-    return true; // Replace with your actual authentication logic
-  }
-  
-  module.exports = verifyTelegramAuth;
+  const telegramAuthHash = crypto.createHash('sha256');
+  telegramAuthHash.update(process.env.TELEGRAM_AUTH_HASH_SECRET);
+  const hash = telegramAuthHash.digest('hex');
+
+  return hash === telegramAuth;
+}
+
+module.exports = verifyTelegramAuth;
