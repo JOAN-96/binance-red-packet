@@ -4,7 +4,8 @@ const app = express();
 const path = require('path');
 const verifyTelegramAuth = require('./auth'); // Import the verifyTelegramAuth function
 
-app.use(express.static(path.join(__dirname, '../mini-web-app')));
+/* app.use(express.static(path.join(__dirname, '../mini-web-app'))); */
+app.use(express.static(path.join(__dirname, '../')));
 
 app.get('/', (req, res) => {
   const telegramAuth = req.query['telegram-auth'];
