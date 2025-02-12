@@ -2,10 +2,13 @@
 const expressSession = require('express-session');
 
 const sessionConfig = {
-    secret: 'your_secret_key',
+    name: 'session',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-};
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    }
+  };
 
 module.exports = sessionConfig;
