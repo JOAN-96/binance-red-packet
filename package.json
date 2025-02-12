@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bot/index.js",
-    "web": "node mini-web-app/js/server.js"
+    "start": "node bot/index.js"
   },
   "repository": {
     "type": "git",

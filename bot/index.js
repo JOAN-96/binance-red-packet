@@ -1,8 +1,8 @@
+const path = require('path');
 const TelegramBot = require('node-telegram-bot-api');
 const axios =require('axios');
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
 require('dotenv').config();
 
 //Token gotten from BotFather
@@ -189,33 +189,32 @@ bot.on('error', (error) => {
 }); 
 
 // Server
+const port = process.env.PORT || 3000;
 app.use(express.static('../mini-web-app'));
 
 // Route for mini web app
 app.get('/', (req, res) => {
-    app.get('/', (req, res) => {
-        const startParam = req.query.start;
-        if (startParam) {
-          // Authenticate the user with Telegram's API
-          axios.post(`https://api.telegram.org/bot${token}/getUpdates`, {
-            start: startParam,
-          })
-            .then((response) => {
-              const userId = response.data.result[0].message.from.id;
-              // Store the user ID securely
-              req.session.userId = userId;
-              res.sendFile(__dirname + '/../mini-web-app/index.html');
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(401).send('Unauthorized');
-            });
-        } else {
+    const startParam = req.query.start;
+    if (startParam) {
+      // Authenticate the user with Telegram's API
+      axios.post(`https://api.telegram.org/bot${token}/getUpdates`, {
+        start: startParam,
+      })
+        .then((response) => {
+          const userId = response.data.result[0].message.from.id;
+          // Store the user ID securely
+          req.session.userId = userId;
           res.sendFile(__dirname + '/../mini-web-app/index.html');
-        }
-      });
-});
-
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(401).send('Unauthorized');
+        });
+    } else {
+      res.sendFile(__dirname + '/../mini-web-app/index.html');
+    }
+  });
+  
 app.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
 });

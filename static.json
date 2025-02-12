@@ -1,6 +1,0 @@
-{
-    "root": "mini-web-app",
-    "routes": {
-      "/": "mini-web-app/index.html"
-    }
-  }
