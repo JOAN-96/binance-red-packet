@@ -1,46 +1,49 @@
-// Check if the device is a mobile device
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+// Get the video buttons and wallet balance element
+const videoButtons = document.querySelectorAll('.video button');
+const walletBalanceElement = document.querySelector('.balance .BTTC');
 
-if (!isMobile) {
-  // If not a mobile device, display an error message
-  document.body.innerHTML = '<h1>Error: This web app is only accessible on mobile devices.</h1>';
+// Initialize an object to store the video watch status
+const videoWatchStatus = {
+  video1: false,
+  video2: false,
+  video3: false,
+};
+
+// Function to update the button text and color
+function updateButton(button, watched) {
+  if (watched) {
+    button.textContent = 'Done';
+    button.style.backgroundColor = 'green';
+    button.disabled = true;
+  }
 }
 
-// Get all video buttons
-const videoButtons = document.querySelectorAll('.video button');
+// Function to update the wallet balance
+function updateWalletBalance(amount) {
+  const currentBalance = parseFloat(walletBalanceElement.textContent.replace('BTTC', ''));
+  
+  // Update this line to correctly format the new balance
+  walletBalanceElement.textContent = `${(currentBalance + amount).toFixed(2)} BTTC`;
+}
 
-// Add event listener to each video button
-videoButtons.forEach((button) => {
-  button.addEventListener('click', (e) => {
-    // Get the video URL from the button's parent element
-    const videoUrl = e.target.parentNode.getAttribute('href');
+// Add event listeners to the video buttons
+videoButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    // Update the video watch status
+    videoWatchStatus[`video${index + 1}`] = true;
 
-    // Create a new iframe element to play the video
-    const iframe = document.createElement('iframe');
-    iframe.src = videoUrl;
-    iframe.width = '100%';
-    iframe.height = '300';
-    iframe.frameBorder = '0';
-    iframe.allowFullScreen = true;
-
-    // Replace the button with the iframe
-    e.target.parentNode.innerHTML = ''; // Clear the parent element's content
-    e.target.parentNode.appendChild(iframe); // Append the iframe
-
-    // Update the button text to "Done" after the video has finished playing
-    iframe.addEventListener('load', () => { // Use contentWindow instead of iframe
-      iframe.contentWindow.addEventListener('ended', () => { // Add event listener for the video end
-        const doneButton = document.createElement('button');
-      doneButton.textContent = 'Done';
-      doneButton.style.backgroundColor = 'green'; // Change the button color
-      doneButton.style.color = 'white'; // Change the button text color
-      iframe.parentNode.appendChild(doneButton);})
-    });
+    // Update the button text and color
+    updateButton(button, true);
 
     // Update the wallet balance
-    const walletBalance = document.querySelector('.wallet-balance .balance');
-    const currentBalance = parseInt(walletBalance.textContent.split(' ')[0]);
-    const newBalance = currentBalance + 1000; // Reward amount
-    walletBalance.textContent = `${newBalance} BTTC`;
+    updateWalletBalance(1000);
   });
+});
+
+// Check if the user has watched the videos and update the buttons accordingly
+Object.keys(videoWatchStatus).forEach((video) => {
+  if (videoWatchStatus[video]) {
+    const button = document.querySelector(`#${video} button`);
+    updateButton(button, true);
+  }
 });

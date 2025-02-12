@@ -193,7 +193,27 @@ app.use(express.static('../mini-web-app'));
 
 // Route for mini web app
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/../mini-web-app/index.html');
+    app.get('/', (req, res) => {
+        const startParam = req.query.start;
+        if (startParam) {
+          // Authenticate the user with Telegram's API
+          axios.post(`https://api.telegram.org/bot${token}/getUpdates`, {
+            start: startParam,
+          })
+            .then((response) => {
+              const userId = response.data.result[0].message.from.id;
+              // Store the user ID securely
+              req.session.userId = userId;
+              res.sendFile(__dirname + '/../mini-web-app/index.html');
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(401).send('Unauthorized');
+            });
+        } else {
+          res.sendFile(__dirname + '/../mini-web-app/index.html');
+        }
+      });
 });
 
 app.listen(port, () => {
