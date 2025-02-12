@@ -1,9 +1,14 @@
 const path = require('path');
-const TelegramBot = require('node-telegram-bot-api');
-const axios =require('axios');
 const express = require('express');
 const app = express();
+const TelegramBot = require('node-telegram-bot-api');
+const axios =require('axios');
 require('dotenv').config();
+const User = require('./database');
+const sessionConfig = require('./session');
+const WebSocket = require('ws');
+
+app.use(expressSession(sessionConfig));
 
 //Token gotten from BotFather
 /* const token = process.env.Telegram_Token; */
@@ -177,6 +182,38 @@ bot.onText(/\/start/, (msg) => {
     });
 });
 
+bot.on('message', async (msg) => {
+    const chatId = msg.chat.id;
+    const telegramUsername = msg.from.username;
+
+    // Authenticate user and store their Telegram username in the database
+    const user = await getUser(telegramUsername);
+    if (!user) {
+        // Create a new user
+        await createUser(telegramUsername);
+    }
+});
+
+const server = require('http').createServer(app);
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+    // Handle WebSocket connection
+    ws.on('message', async (message) => {
+        // Handle incoming message
+        const userData = JSON.parse(message);
+        const userId = userData.userId;
+        const amount = userData.amount;
+
+        // Update user data in the database
+        await updateUserAmount(userId, amount);
+
+        // Broadcast updated user data to all connected clients
+        wss.clients.forEach((client) => {
+            client.send(JSON.stringify({ userId, amount }));
+        });
+    });
+});
 
 bot.on('callback_query', (query) => {
     if (query.data === 'youtube_channels') {
@@ -223,8 +260,11 @@ app.get('/', (req, res) => {
       res.sendFile(__dirname + '/../mini-web-app/index.html');
     }
   });
-
+/*
 app.listen(port, () => {
+    console.log(`Mini web app listening on port ${port}`);
+// }); */
+server.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
 });
 
