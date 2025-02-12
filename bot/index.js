@@ -189,11 +189,11 @@ bot.on('error', (error) => {
 }); 
 
 // Server
-app.use(express.static('mini-web-app'));
+app.use(express.static('../mini-web-app'));
 
 // Route for mini web app
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/mini-web-app/index.html');
+    res.sendFile(__dirname + '/../mini-web-app/index.html');
 });
 
 app.listen(port, () => {
