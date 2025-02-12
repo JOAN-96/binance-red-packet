@@ -19,6 +19,8 @@ app.use(authenticate);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
+
+// Serve index.html
 /*
 app.get('/', (req, res) => {
   console.log('Request query:', req.query);
@@ -33,6 +35,10 @@ app.get('/', (req, res) => {
   }
 }); 
 */
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../mini-web-app/index.html'));
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log('Server listening on port 3000');
