@@ -190,7 +190,16 @@ bot.on('error', (error) => {
 
 // Server
 const port = process.env.PORT || 3000;
-app.use(express.static('../mini-web-app'));
+app.use(express.static(path.join(__dirname, '../mini-web-app')));
+
+app.use((req, res, next) => {
+    res.status(404).send('Not Found');
+});
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+});
 
 // Route for mini web app
 app.get('/', (req, res) => {
@@ -214,7 +223,7 @@ app.get('/', (req, res) => {
       res.sendFile(__dirname + '/../mini-web-app/index.html');
     }
   });
-  
+
 app.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
 });
