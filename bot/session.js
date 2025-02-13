@@ -8,6 +8,10 @@ const redisClient = redis.createClient({
   legacyMode: true,
 });
 
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
+});
+
 const sessionConfig = {
   name: 'session',
   secret: process.env.SESSION_SECRET,

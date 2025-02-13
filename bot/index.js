@@ -81,7 +81,7 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error(err);
+    console.error('Error:', err);
     res.status(500).send('Internal Server Error');
 });
 
