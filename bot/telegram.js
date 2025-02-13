@@ -14,7 +14,7 @@ const utils = {
     sendWelcomeMessage: async (chatID) => {
         try {
             const telegramChannels = requiredChannels.map((channel) => [
-                { text: channel.name, url: channel.link },
+                { text: channel.name /* url: channel.link */ },
             ]);
 
             const youtubeButton = [
@@ -52,8 +52,8 @@ const utils = {
         try {
             const telegramChannels = requiredChannels.map((channel) => [
                 {
-                    text: channel.name,
-                    url: channel.link
+                    text: channel.name
+                    /* url: channel.link */
                 }
             ]);
 
@@ -128,19 +128,19 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(chatID, `${telegramChannels.join('\n')}`);
 
     //YouTube channels
-    const youtubeButtonText = 'Subscribe to our YouTube channels';
-    bot.sendMessage(chatID, youtubeButtonText, {
+    const youtubeButton = {
         reply_markup: {
             inline_keyboard: [
                 [
                     {
-                        text: youtubeButtonText,
+                        text: 'Subscribe to our YouTube channels',
                         callback_data: 'youtube_channels'
                     }
                 ]
             ]
         }
-    });
+    };
+    bot.sendMessage(chatID, ' ', youtubeButton);
 });
 
 bot.on('message', async (msg) => {
