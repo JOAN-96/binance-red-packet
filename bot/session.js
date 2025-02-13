@@ -1,17 +1,18 @@
 const expressSession = require('express-session');
 const connectRedis = require('connect-redis');
-const RedisStore = connectRedis(expressSession);
-const redis = require('redis');
+const { createClient } = require('redis');
 
 const redisUrl = process.env.REDISCLOUD_URL;
-const redisClient = redis.createClient({
-  url: redisUrl, // Fix: Use the redisUrl variable
+const redisClient = createClient({
+  url: redisUrl,
   legacyMode: true,
 });
 
 redisClient.on('error', (err) => {
   console.error('Redis error:', err);
 });
+
+const RedisStore = connectRedis(expressSession);
 
 const sessionConfig = {
   name: 'session',
