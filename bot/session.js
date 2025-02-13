@@ -1,6 +1,6 @@
 const expressSession = require('express-session');
-const RedisStore = require('connect-redis')(expressSession);
 const { createClient } = require('redis');
+const RedisStore = require('connect-redis')(expressSession);
 
 const redisUrl = process.env.REDISCLOUD_URL;
 const redisClient = createClient({
@@ -17,7 +17,7 @@ const sessionConfig = {
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: new RedisStore({ client: redisClient }),
+  store: new RedisStore({ client: redisClient, disableTouch: true }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 7, 
     secure: true, 
