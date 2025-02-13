@@ -107,10 +107,10 @@ app.get('/', (req, res) => {
       res.sendFile(__dirname + '/../mini-web-app/index.html');
     }
   });
-/*
+
 app.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
-// }); */
-server.listen(port, () => {
+}); 
+/* server.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
-});
+}); */

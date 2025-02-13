@@ -9,6 +9,8 @@ const token = process.env.Telegram_Token;
 
 const bot = new TelegramBot(token, { polling: true });
 
+const debug = true;
+
 // Utils
 const utils = {
     sendWelcomeMessage: async (chatID) => {
@@ -113,6 +115,7 @@ bot.setMyCommands([
 // Events Listener
 bot.onText(/\/start/, (msg) => {
     const chatID = msg.chat.id;
+    if (debug) console.log(`Received /start command from ${chatID}`);
 
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
     bot.sendMessage(chatID, welcomeText);
@@ -164,8 +167,10 @@ bot.on('callback_query', (query) => {
 });
 
 bot.on('error', (error) => {
-    console.error(error);
-}); 
+    console.error('Telegram Bot Error:', error);
+    // Send an error message to the user
+    bot.sendMessage(chatID, 'An error occurred. Please try again later.');
+  });
 
 // Telegram Web App 
 bot.onText(/\/webapp/, (msg) => {
