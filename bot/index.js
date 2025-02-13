@@ -45,27 +45,32 @@ const requiredChannels = [
 
 
 wss.on('connection', (ws) => {
-    // Handle WebSocket connection
     ws.on('message', async (message) => {
-        // Handle incoming message
-        const userData = JSON.parse(message);
-        const userId = userData.userId;
-        const amount = userData.amount;
-
-        // Update user data in the database
-        await updateUserAmount(userId, amount);
-
-        // Broadcast updated user data to all connected clients
-        wss.clients.forEach((client) => {
+        try {
+          const userData = JSON.parse(message);
+      
+          if (!userData || !userData.userId || !userData.amount) {
+            console.error('Invalid WebSocket message:', message);
+            return;
+          }
+      
+          const userId = userData.userId;
+          const amount = userData.amount;
+      
+          await updateUserAmount(userId, amount);
+      
+          wss.clients.forEach((client) => {
             client.send(JSON.stringify({ userId, amount }));
-        });
-    });
-});
-
-wss.on('error', (error) => {
+          });
+        } catch (error) {
+          console.error('Error handling WebSocket message:', error);
+        }
+      });
+  });
+  
+  wss.on('error', (error) => {
     console.error('WebSocket error:', error);
   });
-
 
 // Server
 const port = process.env.PORT || 3000;
@@ -95,8 +100,8 @@ app.get('/', (req, res) => {
           res.sendFile(__dirname + '/../mini-web-app/index.html');
         })
         .catch((error) => {
-          console.error(error);
-          res.status(401).send('Unauthorized');
+          console.error('Error authenticating with Telegram:', error);
+          res.status(500).send('Internal Server Error');
         });
     } else {
       res.sendFile(__dirname + '/../mini-web-app/index.html');
