@@ -1,9 +1,15 @@
 const expressSession = require('express-session');
-const { createClient } = require('redis');
+const Redis = require('ioredis');
 const ConnectRedis = require('connect-redis');
 
 const redisUrl = process.env.REDISCLOUD_URL;
-const redisClient = createClient({
+const sessionSecret = process.env.SESSION_SECRET;
+
+if (!redisUrl || !sessionSecret) {
+  throw new Error('Missing required environment variables');
+}
+
+const redisClient = new Redis({
   url: redisUrl,
   legacyMode: true,
 });
@@ -19,7 +25,7 @@ redisClient.ping((err, res) => {
 redisClient.on('error', (err) => {
   console.error('Redis error:', err);
 });
-
+/*
 const RedisStore = ConnectRedis(expressSession);
 
 const sessionConfig = {
@@ -35,4 +41,24 @@ const sessionConfig = {
   },
 };
 
-module.exports = sessionConfig;
+module.exports = sessionConfig; */
+
+try {
+  const RedisStore = ConnectRedis(expressSession);
+  const sessionConfig = {
+    name: 'session',
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: new RedisStore({ client: redisClient, disableTouch: true }),
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, 
+      secure: true, 
+      httpOnly: true,
+    },
+  };
+  module.exports = sessionConfig;
+} catch (error) {
+  console.error('Error configuring session:', error);
+  process.exit(1);
+}
