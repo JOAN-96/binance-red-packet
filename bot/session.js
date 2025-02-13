@@ -1,5 +1,6 @@
 const expressSession = require('express-session');
-const RedisStore = require('connect-redis')(expressSession);
+const connectRedis = require('connect-redis');
+const RedisStore = connectRedis(expressSession);
 const redis = require('redis');
 
 const redisUrl = process.env.REDISCLOUD_URL;
