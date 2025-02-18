@@ -122,10 +122,6 @@ bot.onText(/\/start/, async (msg) => {
         await createUser(telegramUsername);
     }
 
-    // Send a welcome message to the user
-    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
-    bot.sendMessage(chatID, welcomeText);
-
     // Telegram Channels
     const telegramChannelsText = 'Telegram Channels List:';
     const telegramChannelsKeyboard = [
@@ -145,7 +141,10 @@ bot.onText(/\/start/, async (msg) => {
         ]
     ];
 
-    await bot.sendMessage(chatID, telegramChannelsText, {
+    // Send a welcome message to the user
+    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+
+    await bot.sendMessage(chatID, welcomeText, {
         reply_markup: {
             inline_keyboard: telegramChannelsKeyboard
         }
@@ -161,15 +160,14 @@ bot.onText(/\/start/, async (msg) => {
         ]
     ];
 
-    const combinedKeyboard = [...telegramChannels, youtubeButton];
-
-    await bot.sendMessage(chatID, '', {
-            reply_markup: {
-            inline_keyboard: youtubeButton
-            }
-        });
+    await bot.sendMessage(chatID, 'Subscribe to our YouTube channels', {
+        reply_markup: {
+        inline_keyboard: youtubeButton
+        }
     });
+});
 
+    
 /*
     bot.sendMessage(chatID, `${telegramChannels.join('\n')}`);
 
