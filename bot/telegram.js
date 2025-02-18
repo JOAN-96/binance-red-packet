@@ -97,13 +97,14 @@ const utils = {
 
 // Set bot commands
 bot.setMyCommands([
-    {
+   /*  {
         command: 'start',
         description: 'Start the bot'
-    }, 
+    }, */
     {
         command: 'webapp',
-        description: 'Open the web app',
+        description: 'Launch',
+        type: 'default',
         web_app: {
             url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'  // Replace with your Heroku app URL 
         } 
