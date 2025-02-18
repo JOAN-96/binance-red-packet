@@ -11,6 +11,9 @@ const videoWatchStatus = {
   video3: false,
 };
 
+// Initialize the user's balance
+let userBalance = 0;
+
 // Function to open the video popup
 function openVideoPopup(videoUrl) {
   const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
@@ -23,65 +26,36 @@ function openVideoPopup(videoUrl) {
   };
 }
 
-// Function to update the wallet balance
+// Function to update the user's balance
 function updateWalletBalance(amount) {
-  const walletBalanceElement = document.querySelector('.balance .BTTC');
-  const currentBalance = parseFloat(walletBalanceElement.textContent.replace('BTTC', ''));
-  
-  // Update this line to correctly format the new balance
-  walletBalanceElement.textContent = `${(currentBalance + amount).toFixed(2)} BTTC`;
+  userBalance += amount;
+  walletBalanceElement.textContent = `${userBalance} BTTC`;
+
+  // Send the updated balance to the server
+  const userId = 'USER_ID_HERE'; // Replace with the actual user ID
+  socket.send(JSON.stringify({ userId, amount }));
 }
 
 // Add event listeners to the video buttons
-/* videoButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    // Update the video watch status
-    videoWatchStatus[`video${index + 1}`] = true;
-
-    // Update the button text and color
-    updateButton(button, true);
-
-    // Update the wallet balance
-    updateWalletBalance(1000);
-
-    // Send the updated video watch status and wallet balance to the server
-    fetch('/update-user-data', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        videoWatchStatus,
-        walletBalance: parseFloat(walletBalanceElement.textContent.replace('BTTC', ''))
-      })
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
-  });
-}); */
-
 videoButtons.forEach((button, index) => {
   button.addEventListener('click', () => {
-      const videoUrls = [
-          'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
-          'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
-          'https://youtu.be/azxTB53RkRY'
-      ];
+    const videoUrls = [
+      'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
+      'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
+      'https://youtu.be/azxTB53RkRY'
+    ];
 
-      // Check if the video has already been watched
-    if (videoWatchStatus[`video${index + 1}`]) {
-      // If the video has been watched, do nothing
-      return;
-    }
+    // Open the YouTube video in the YouTube app
+    window.open(videoUrls[index], '_blank');
 
-      openVideoPopup(videoUrls[index]);
+    // Set a timer to check if the user has returned to your web app
+    let videoWatchTimeout = setTimeout(() => {
+      // Update the wallet balance
+      updateWalletBalance(1000);
 
-      // Update the video watch status
-    videoWatchStatus[`video${index + 1}`] = true;
-
-    // Update the button text and disable the button
-    updateButton(button, true);
+      // Update the button text and disable the button
+      updateButton(button, true);
+    }, 600000); // 60 seconds
   });
 });
 
@@ -110,7 +84,8 @@ fetch('/get-user-data')
     videoWatchStatus.video1 = data.videoWatchStatus.video1;
     videoWatchStatus.video2 = data.videoWatchStatus.video2;
     videoWatchStatus.video3 = data.videoWatchStatus.video3;
-    walletBalanceElement.textContent = `${data.walletBalance} BTTC`;
+    userBalance = data.walletBalance;
+    walletBalanceElement.textContent = `${userBalance} BTTC`;
 
     // Update the button text and color based on the user's video watch status
     Object.keys(videoWatchStatus).forEach((video) => {
@@ -122,16 +97,18 @@ fetch('/get-user-data')
   })
   .catch((error) => console.error(error));
 
-  socket.onmessage = (event) => {
+// Handle incoming messages from the server
+socket.onmessage = (event) => {
+  try {
     const userData = JSON.parse(event.data);
     const amount = userData.amount;
 
-    // Update the wallet balance element
-    document.querySelector('.balance .BTTC').textContent = `${amount} BTTC`;
-};
+    // Update the user's balance
+    userBalance = amount;
 
-// Send user data to the server when the user's amount changes
-function updateWalletBalance(amount) {
-  const userId = 'USER_ID_HERE'; // Replace with the actual user ID
-  socket.send(JSON.stringify({ userId, amount }));
-}
+    // Update the wallet balance element
+    walletBalanceElement.textContent = `${userBalance} BTTC`;
+  } catch (error) {
+    console.error(error);
+  }
+};
