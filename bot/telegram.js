@@ -113,10 +113,20 @@ bot.setMyCommands([
 
 
 // Events Listener
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/start/, async (msg) => {
     const chatID = msg.chat.id;
-    if (debug) console.log(`Received /start command from ${chatID}`);
+    const telegramUsername = msg.from.username;
 
+    // Authenticate users and store their  Telegram username in the database
+    const user = await getUser(telegramUsername);
+    if (!user) {
+        // Create a new user
+        await createUser(telegramUsername);
+    }
+
+   /* if (debug) console.log(`Received /start command from ${chatID}`); */
+
+    // Send a welcome message to the user
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
     bot.sendMessage(chatID, welcomeText);
 
@@ -168,8 +178,6 @@ bot.on('callback_query', (query) => {
 
 bot.on('error', (error) => {
     console.error('Telegram Bot Error:', error);
-    // Send an error message to the user
-    bot.sendMessage(chatID, 'An error occurred. Please try again later.');
   });
 
 // Telegram Web App 

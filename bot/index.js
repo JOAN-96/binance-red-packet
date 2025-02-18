@@ -86,7 +86,7 @@ app.use((err, req, res, next) => {
 });
 
 // Route for mini web app
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
     const startParam = req.query.start;
     if (startParam) {
       // Authenticate the user with Telegram's API
@@ -106,11 +106,24 @@ app.get('/', (req, res) => {
     } else {
       res.sendFile(__dirname + '/../mini-web-app/index.html');
     }
-  });
+  }); */
 
-app.listen(port, () => {
-    console.log(`Mini web app listening on port ${port}`);
-}); 
-/* server.listen(port, () => {
+
+app.get('/', (req, res) => {
+  const startParam = req.query.start;
+  if (startParam) {
+    // Start the bot and handle authentication
+    bot.start(startParam);
+    res.sendFile(__dirname + '/../mini-web-app/index.html');
+  } else {
+    res.sendFile(__dirname + '/../mini-web-app/index.html');
+  }
+});
+
+
+/* app.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
 }); */
+server.listen(port, () => {
+    console.log(`Mini web app listening on port ${port}`);
+}); 
