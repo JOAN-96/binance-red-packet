@@ -63,7 +63,7 @@ function updateWalletBalance(amount) {
 }); */
 
 
-videoButtons.forEach((button, index) => {
+/* videoButtons.forEach((button, index) => {
   button.addEventListener('click', () => {
     const videoUrls = [
       'https://www.youtube.com/embed/1fO37crxJMY',
@@ -95,8 +95,33 @@ videoButtons.forEach((button, index) => {
       videoContainer.removeChild(iframe);
     }, 600000); // 60 seconds
   });
-});
+}); */
 
+
+videoButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    const videoUrls = [
+      'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
+      'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
+      'https://youtu.be/azxTB53RkRY'
+    ];
+
+    // Open the YouTube video in the YouTube app
+    window.open(videoUrls[index], '_blank');
+
+    // Set a timer for 60 seconds
+    videoWatchTimeout = setTimeout(() => {
+      // Update the user's balance and display the reward
+      updateWalletBalance(1000);
+    }, 60000); // 60 seconds
+
+    // Use the document.addEventListener('focus', ...) event to detect when the user returns to your web app
+    document.addEventListener('focus', () => {
+      // Update the button text and disable the button
+      updateButton(button, true);
+    }, { once: true });
+  });
+});
 
 // Function to update the button text and color
 function updateButton(button, watched) {
