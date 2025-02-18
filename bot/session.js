@@ -1,6 +1,5 @@
 const expressSession = require('express-session');
 const Redis = require('ioredis');
-const ConnectRedis = require('connect-redis');
 
 const redisUrl = process.env.REDISCLOUD_URL;
 const sessionSecret = process.env.SESSION_SECRET;
@@ -44,13 +43,12 @@ const sessionConfig = {
 module.exports = sessionConfig; */
 
 try {
-  const RedisStore = ConnectRedis(expressSession);
   const sessionConfig = {
     name: 'session',
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
-    store: new RedisStore({ client: redisClient, disableTouch: true }),
+    store: new expressSession.Store({ client: redisClient, }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, 
       secure: true, 
