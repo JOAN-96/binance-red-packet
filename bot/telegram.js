@@ -5,7 +5,6 @@ require('dotenv').config();
 
 //Token gotten from BotFather
 const token = process.env.Telegram_Token; 
-/* const token = '8109321488:AAH5bd7bxVTSz6__HugRn0F02BlODujC9Pc'; */
 
 const bot = new TelegramBot(token, { polling: true });
 
@@ -111,7 +110,6 @@ bot.setMyCommands([
     }
 ]);
 
-
 // Events Listener
 bot.onText(/\/start/, async (msg) => {
     const chatID = msg.chat.id;
@@ -124,37 +122,60 @@ bot.onText(/\/start/, async (msg) => {
         await createUser(telegramUsername);
     }
 
-   /* if (debug) console.log(`Received /start command from ${chatID}`); */
-
     // Send a welcome message to the user
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
     bot.sendMessage(chatID, welcomeText);
 
     // Telegram Channels
     const telegramChannelsText = 'Telegram Channels List:';
-    const telegramChannels = [
+    const telegramChannelsKeyboard = [
+        [
+            {
+                text: 'Queen Tech',
+                callback_data: 'channel_queentech'
+            },
+            {
+                text: 'Crypto Levy',
+                callback_data: 'channel_cryptolevy'
+            },
+            {
+                text: 'Cash Megan',
+                callback_data: 'channel_cashmegan'
+            }
+        ]
+    ];
+
+    await bot.sendMessage(chatID, telegramChannelsText, {
+        reply_markup: {
+            inline_keyboard: telegramChannelsKeyboard
+        }
+    });
+
+    // YouTube Channels Button
+    const youtubeButton = [
+        [
+            {
+                text: 'Subscribe to our YouTube channels',
+                callback_data: 'youtube_channels'
+            }
+        ]
+    ];
+
+    await bot.sendMessage(chatID, '', {
+            reply_markup: {
+            inline_keyboard: youtubeButton
+            }
+        });
+    });
+
+/*
+    bot.sendMessage(chatID, `${telegramChannels.join('\n')}`);
+
         'Queen Tech: https://t.me/Queenteac',
         'Crypto Levy: https://t.me/Cryptolevychannel',
         'Cash Megan: https://t.me/Cashmegan',
         'Red Packet: https://t.me/BinanceredpacketBott'
-    ];
-    bot.sendMessage(chatID, `${telegramChannels.join('\n')}`);
-
-    //YouTube channels
-    const youtubeButton = {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    {
-                        text: 'Subscribe to our YouTube channels',
-                        callback_data: 'youtube_channels'
-                    }
-                ]
-            ]
-        }
-    };
-    bot.sendMessage(chatID, ' ', youtubeButton);
-});
+*/
 
 bot.on('message', async (msg) => {
     console.log(`Received message from ${msg.from.username}: ${msg.text}`);
@@ -171,7 +192,15 @@ bot.on('message', async (msg) => {
 
 bot.on('callback_query', (query) => {
     console.log(`Received callback query from ${query.from.username}: ${query.data}`);
-    if (query.data === 'youtube_channels') {
+    const callbackData = query.data;
+
+    if (callbackData === 'channel_queentech') {
+        bot.answerCallbackQuery(query.id, { url: 'https://t.me/Queenteac' });
+    } else if (callbackData === 'channel_cryptolevy') {
+        bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cryptolevychannel' });
+    } else if (callbackData === 'channel_cashmegan') {
+        bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cashmegan' });
+    } else if (callbackData === 'youtube_channels') {
         utils.sendYouTubeChannelsList(query.message.chat.id);
     }
 });
