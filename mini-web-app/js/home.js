@@ -14,6 +14,9 @@ const videoWatchStatus = {
 // Initialize the user's balance
 let userBalance = 0;
 
+// Declare videoWatchTimeout globally
+let videoWatchTimeout;
+
 // Function to open the video popup
 function openVideoPopup(videoUrl) {
   const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
@@ -26,17 +29,7 @@ function openVideoPopup(videoUrl) {
   };
 }
 
-
 // Function to update the user's balance
-function updateUserBalance(amount) {
-  userBalance += amount;
-  walletBalanceElement.textContent = `${userBalance} BTTC`;
-
-  // Send the updated balance to the server
-  sendUserBalanceUpdate();
-}
-
-// Function to send the user's balance update to the server
 function updateWalletBalance(amount) {
   userBalance += amount;
   walletBalanceElement.textContent = `${userBalance} BTTC`;
@@ -47,7 +40,7 @@ function updateWalletBalance(amount) {
 }
 
 // Add event listeners to the video buttons
-videoButtons.forEach((button, index) => {
+/* videoButtons.forEach((button, index) => {
   button.addEventListener('click', () => {
     const videoUrls = [
       'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
@@ -59,7 +52,39 @@ videoButtons.forEach((button, index) => {
     window.open(videoUrls[index], '_blank');
 
     // Set a timer to check if the user has returned to your web app
-    let videoWatchTimeout = setTimeout(() => {
+    videoWatchTimeout = setTimeout(() => {
+      // Update the wallet balance
+      updateWalletBalance(1000);
+
+      // Update the button text and disable the button
+      updateButton(button, true);
+    }, 600000); // 60 seconds
+  });
+}); */
+
+
+videoButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    const videoUrls = [
+      'https://www.youtube.com/embed/1fO37crxJMY',
+      'https://www.youtube.com/embed/euOlwdnO8KA',
+      'https://www.youtube.com/embed/azxTB53RkRY'
+    ];
+
+    // Create an iframe to embed the YouTube video
+    const iframe = document.createElement('iframe');
+    iframe.src = videoUrls[index];
+    iframe.frameBorder = '0';
+    iframe.allowFullScreen = true;
+    iframe.width = '100%';
+    iframe.height = '500';
+
+    // Add the iframe to the page
+    const videoContainer = document.querySelector('.video-container');
+    videoContainer.appendChild(iframe);
+
+    // Set a timer to check if the user has returned to your web app
+    videoWatchTimeout = setTimeout(() => {
       // Update the wallet balance
       updateWalletBalance(1000);
 
@@ -68,6 +93,7 @@ videoButtons.forEach((button, index) => {
     }, 600000); // 60 seconds
   });
 });
+
 
 // Function to update the button text and color
 function updateButton(button, watched) {
@@ -107,33 +133,18 @@ fetch('/get-user-data')
   })
   .catch((error) => console.error(error));
 
-  // Handle incoming messages from the server
-  socket.onmessage = (event) => {
-    try {
-      const userData = JSON.parse(event.data);
+// Handle incoming messages from the server
+socket.onmessage = (event) => {
+  try {
+    const userData = JSON.parse(event.data);
     const amount = userData.amount;
 
-    // Update teh user's balance
+    // Update the user's balance
     userBalance = amount;
 
     // Update the wallet balance element
-    
     walletBalanceElement.textContent = `${userBalance} BTTC`;
-    } catch (error) {
-      console.error(error);
-    }
+  } catch (error) {
+    console.error(error);
+  }
 };
-
-
-// Add event listeners to the video links
-/* const videoLinks = document.querySelectorAll('.video a');
-
-videoLinks.forEach((link, index) => {
-  link.addEventListener('click', () => {
-    // Update the wallet balance
-    updateWalletBalance(1000);
-
-    // Update the button text and disable the button
-    updateButton(link.querySelector('button'), true);
-  });
-}); */
