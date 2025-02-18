@@ -14,9 +14,6 @@ const videoWatchStatus = {
 // Initialize the user's balance
 let userBalance = 0;
 
-// Declare videoWatchTimeout globally
-let videoWatchTimeout;
-
 // Function to open the video popup
 function openVideoPopup(videoUrl) {
   const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
@@ -29,7 +26,17 @@ function openVideoPopup(videoUrl) {
   };
 }
 
+
 // Function to update the user's balance
+function updateUserBalance(amount) {
+  userBalance += amount;
+  walletBalanceElement.textContent = `${userBalance} BTTC`;
+
+  // Send the updated balance to the server
+  sendUserBalanceUpdate();
+}
+
+// Function to send the user's balance update to the server
 function updateWalletBalance(amount) {
   userBalance += amount;
   walletBalanceElement.textContent = `${userBalance} BTTC`;
@@ -52,7 +59,7 @@ videoButtons.forEach((button, index) => {
     window.open(videoUrls[index], '_blank');
 
     // Set a timer to check if the user has returned to your web app
-    videoWatchTimeout = setTimeout(() => {
+    let videoWatchTimeout = setTimeout(() => {
       // Update the wallet balance
       updateWalletBalance(1000);
 
@@ -100,18 +107,33 @@ fetch('/get-user-data')
   })
   .catch((error) => console.error(error));
 
-// Handle incoming messages from the server
-socket.onmessage = (event) => {
-  try {
-    const userData = JSON.parse(event.data);
+  // Handle incoming messages from the server
+  socket.onmessage = (event) => {
+    try {
+      const userData = JSON.parse(event.data);
     const amount = userData.amount;
 
-    // Update the user's balance
+    // Update teh user's balance
     userBalance = amount;
 
     // Update the wallet balance element
+    
     walletBalanceElement.textContent = `${userBalance} BTTC`;
-  } catch (error) {
-    console.error(error);
-  }
+    } catch (error) {
+      console.error(error);
+    }
 };
+
+
+// Add event listeners to the video links
+/* const videoLinks = document.querySelectorAll('.video a');
+
+videoLinks.forEach((link, index) => {
+  link.addEventListener('click', () => {
+    // Update the wallet balance
+    updateWalletBalance(1000);
+
+    // Update the button text and disable the button
+    updateButton(link.querySelector('button'), true);
+  });
+}); */
