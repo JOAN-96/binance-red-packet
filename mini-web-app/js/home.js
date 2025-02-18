@@ -14,6 +14,9 @@ const videoWatchStatus = {
 // Initialize the user's balance
 let userBalance = 0;
 
+// Declare videoWatchTimeout globally
+let videoWatchTimeout;
+
 // Function to open the video popup
 function openVideoPopup(videoUrl) {
   const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
@@ -49,7 +52,7 @@ videoButtons.forEach((button, index) => {
     window.open(videoUrls[index], '_blank');
 
     // Set a timer to check if the user has returned to your web app
-    let videoWatchTimeout = setTimeout(() => {
+    videoWatchTimeout = setTimeout(() => {
       // Update the wallet balance
       updateWalletBalance(1000);
 
