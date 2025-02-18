@@ -161,6 +161,8 @@ bot.onText(/\/start/, async (msg) => {
         ]
     ];
 
+    const combinedKeyboard = [...telegramChannels, youtubeButton];
+
     await bot.sendMessage(chatID, '', {
             reply_markup: {
             inline_keyboard: youtubeButton
