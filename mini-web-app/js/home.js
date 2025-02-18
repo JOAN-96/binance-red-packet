@@ -90,6 +90,9 @@ videoButtons.forEach((button, index) => {
 
       // Update the button text and disable the button
       updateButton(button, true);
+
+      // Remove the iframe
+      videoContainer.removeChild(iframe);
     }, 600000); // 60 seconds
   });
 });
