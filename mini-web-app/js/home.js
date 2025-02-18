@@ -11,17 +11,21 @@ const videoWatchStatus = {
   video3: false,
 };
 
-// Function to update the button text and color
-function updateButton(button, watched) {
-  if (watched) {
-    button.textContent = 'Done';
-    button.style.backgroundColor = 'green';
-    button.disabled = true;
-  }
+// Function to open the video popup
+function openVideoPopup(videoUrl) {
+  const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
+  popup.focus();
+
+  // Detext when the user has watched the video
+  popup.onclose = function() {
+    // Update the user's wallet balance with the reward
+    updateWalletBalance(1000);
+  };
 }
 
 // Function to update the wallet balance
 function updateWalletBalance(amount) {
+  const walletBalanceElement = document.querySelector('.balance .BTTC');
   const currentBalance = parseFloat(walletBalanceElement.textContent.replace('BTTC', ''));
   
   // Update this line to correctly format the new balance
@@ -29,7 +33,7 @@ function updateWalletBalance(amount) {
 }
 
 // Add event listeners to the video buttons
-videoButtons.forEach((button, index) => {
+/* videoButtons.forEach((button, index) => {
   button.addEventListener('click', () => {
     // Update the video watch status
     videoWatchStatus[`video${index + 1}`] = true;
@@ -55,7 +59,41 @@ videoButtons.forEach((button, index) => {
       .then((data) => console.log(data))
       .catch((error) => console.error(error));
   });
+}); */
+
+videoButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+      const videoUrls = [
+          'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
+          'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
+          'https://youtu.be/azxTB53RkRY'
+      ];
+
+      // Check if the video has already been watched
+    if (videoWatchStatus[`video${index + 1}`]) {
+      // If the video has been watched, do nothing
+      return;
+    }
+
+      openVideoPopup(videoUrls[index]);
+
+      // Update the video watch status
+    videoWatchStatus[`video${index + 1}`] = true;
+
+    // Update the button text and disable the button
+    updateButton(button, true);
+  });
 });
+
+// Function to update the button text and color
+function updateButton(button, watched) {
+  if (watched) {
+    button.textContent = 'Done';
+    button.style.backgroundColor = '#640D0F';
+    button.style.color = '#FEE9E9';
+    button.disabled = true;
+  }
+}
 
 // Check if the user has watched the videos and update the buttons accordingly
 Object.keys(videoWatchStatus).forEach((video) => {
