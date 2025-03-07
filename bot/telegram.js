@@ -34,10 +34,15 @@ async function handleStartCommand(msg) {
     const telegramUsername = msg.from.username;
 
     // Authenticate users and store their  Telegram username in the database
-    const user = await getUser(telegramUsername);
+    const user = await getUser({ username: telegramUsername });
     if (!user) {
         // Create a new user
-        await createUser(telegramUsername);
+        await createUser({ 
+            id: msg.from.id,
+            username: telegramUsername,
+            first_name: msg.from.first_name,
+            last_name: msg.from.last_name 
+        });
     }
 
     // Telegram Channels

@@ -40,9 +40,14 @@ async function createUser(telegramUser) {
   }
 }
 
-// Function to get a user document based on Telegram user ID
-async function getUser(telegramId) {
-  return User.findOne({ telegramId });
+// Function to get a user document based on Telegram user ID or username
+async function getUser(query) {
+  if (query.telegramId) {
+    return User.findOne({ telegramId: query.telegramId });
+  } else if (query.username) {
+    return User.findOne({ username: query.username });
+  }
+  return null;
 }
 
 // Function to update the wallet balance of a user

@@ -64,15 +64,17 @@
 
   // Route for mini web app
 app.get('/', (req, res) => {
-  const startParam = req.query.start;
-  if (startParam) {
-    try {
-      // Start the bot and handle authentication
-      bot.setWebhook(`https://binance-red-packet.replit.app/`);
-      bot.start(startParam);
-    } catch (error) {
-      console.error('Error starting bot:', error);
-    }
-  }
-  // The index.html file will be served automatically by express.statci
+  // The index.html file will be served automatically by express.static
+  res.sendFile(path.join(__dirname, '../mini-web-app/index.html'));
 });
+
+// Create a webhook endpoint for telegram
+app.post(`/bot${token}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
+
+// Set webhook only in production
+if (process.env.NODE_ENV === 'production') {
+  bot.setWebHook(`https://binance-red-packet.replit.app/bot${token}`);
+}
