@@ -9,41 +9,31 @@
   const sessionConfig = require('./session');
   const bot = require('./telegram')
   const token = bot.token // Access the token variable from the telegram module
-  const axios = require('axios');
   require('dotenv').config();
 
+  // Serve static files from the 'mini-web-app' directory
+  const port = process.env.PORT || 3000; // Server Port
+  server.listen(port, '0.0.0.0', () => {
+    console.log(`Mini web app listening on port ${port}`);
+  }).on('error', (error) => {
+    console.error('Error starting server:', error);
+  });
 
+  // Set up session middleware
   app.use(session(sessionConfig));
+  app.use(express.static(path.join(__dirname, '../mini-web-app')));
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
+  app.use((req, res, next) => {
+      res.status(404).send('Not Found');
+  });
+  app.use((err, req, res, next) => {
+      console.error('Error:', err);
+      res.status(500).send('Internal Server Error');
+  });
 
-  // Channels
-  const channelLinks = {
-      CHANNEL_QUEEN_TECH: 'https://t.me/Queenteac',
-      CHANNEL_CRYPTO_LEVY: 'https://t.me/Cryptolevychannel',
-      CHANNEL_CASH_MEGAN: 'https://t.me/Cashmegan',
-      CHANNEL_RED_PACKET: 'https://t.me/BinanceredpacketBott',
-  }
-
-  const requiredChannels = [
-      {
-          name: 'Queen Tech',
-          link: channelLinks.CHANNEL_QUEEN_TECH
-      },
-      {
-          name: 'Crypto Levy',
-          link: channelLinks.CHANNEL_CRYPTO_LEVY
-      },
-      {
-          name: 'Cash Megan',
-          link: channelLinks.CHANNEL_CASH_MEGAN
-      },
-      {
-          name: 'Red Packet',
-          link: channelLinks.CHANNEL_RED_PACKET
-      },
-  ];
-
-
+  // WebSocket event listener
   wss.on('connection', (ws) => {
       ws.on('message', async (message) => {
           try {
@@ -68,63 +58,21 @@
         });
     });
 
-    wss.on('error', (error) => {
+  wss.on('error', (error) => {
       console.error('WebSocket error:', error);
     });
 
-  // Server
-  const port = process.env.PORT || 3000;
-  server.listen(port, '0.0.0.0', () => {
-      console.log(`Mini web app listening on port ${port}`);
-  }); 
-
-  /* app.listen(port, () => {
-      console.log(`Mini web app listening on port ${port}`);
-  }); */
-
-  app.use(express.static(path.join(__dirname, '../mini-web-app')));
-
-  app.use((req, res, next) => {
-      res.status(404).send('Not Found');
-  });
-
-  app.use((err, req, res, next) => {
-      console.error('Error:', err);
-      res.status(500).send('Internal Server Error');
-  });
-
   // Route for mini web app
-  /* app.get('/', (req, res) => {
-      const startParam = req.query.start;
-      if (startParam) {
-        // Authenticate the user with Telegram's API
-        axios.post(`https://api.telegram.org/bot${token}/getUpdates`, {
-          start: startParam,
-        })
-          .then((response) => {
-            const userId = response.data.result[0].message.from.id;
-            // Store the user ID securely
-            req.session.userId = userId;
-            res.sendFile(__dirname + '/../mini-web-app/index.html');
-          })
-          .catch((error) => {
-            console.error('Error authenticating with Telegram:', error);
-            res.status(500).send('Internal Server Error');
-          });
-      } else {
-        res.sendFile(__dirname + '/../mini-web-app/index.html');
-      }
-    }); */
-
-
-  app.get('/', (req, res) => {
-    const startParam = req.query.start;
-    if (startParam) {
+app.get('/', (req, res) => {
+  const startParam = req.query.start;
+  if (startParam) {
+    try {
       // Start the bot and handle authentication
       bot.setWebhook(`https://binance-red-packet.replit.app/`);
       bot.start(startParam);
-      res.sendFile(__dirname + '/../mini-web-app/index.html');
-    } else {
-      res.sendFile(__dirname + '/../mini-web-app/index.html');
+    } catch (error) {
+      console.error('Error starting bot:', error);
     }
-  });
+  }
+  // The index.html file will be served automatically by express.statci
+});

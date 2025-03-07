@@ -1,53 +1,62 @@
 // database.js
-const { Pool } = require('pg');
+const mongoose = require('mongoose');
 
-const dbUrl = process.env.DATABASE_URL;
-const pool = new Pool({
-  connectionString: dbUrl,
-  ssl: {
-    rejectUnauthorized: false
-  }
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-const createUserTable = async () => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        telegram_username VARCHAR(255) UNIQUE,
-        amount INTEGER DEFAULT 0
-      );
-    `);
-  } catch (error) {
-    console.error(error);
+// Define the User schema
+const userSchema = new mongoose.Schema({
+  telegramId: Number,
+  username: String,
+  firstName: String,
+  lastName: String,
+  walletBalance: {type: Number, default: 0},
+});
+
+// Create a User model
+const User = mongoose.model('User', userSchema);
+
+// Function to create a new user based on Telegram user info
+async function createUser(telegramUser) {
+  const existingUser = await User.findOne({ telegramId: telegramUser.id });
+  if (existingUser) {
+    // Return the existing user document
+    return existingUser;
+  } else {
+    // Create a new user document
+    const newUser = new User({
+      telegramId: telegramUser.id,
+      username: telegramUser.username,
+      firstName: telegramUser.first_name,
+      lastName: telegramUser.last_name,
+      walletBalance: 0, // Initialize wallet balance to 0
+    });
+    await newUser.save();
+    return newUser;
   }
-};
+}
 
-createUserTable();
+// Function to get a user document based on Telegram user ID
+async function getUser(telegramId) {
+  return User.findOne({ telegramId });
+}
 
-const getUser = async (telegramUsername) => {
+// Function to update the wallet balance of a user
+async function updateUserAmount(userId, amount) {
   try {
-    const result = await pool.query('SELECT * FROM users WHERE telegram_username = $1', [telegramUsername]);
-    return result.rows[0];
+    const user = await getUser(userId);
+    if (user) {
+      user.walletBalance = amount; // Update walletBalance instead of amount
+      await user.save();
+    } else {
+      console.error(`User with ID ${userId} not found`);
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Error updating user amount:', error);
   }
-};
+}
 
-const createUser = async (telegramUsername) => {
-  try {
-    await pool.query('INSERT INTO users (telegram_username) VALUES ($1)', [telegramUsername]);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const updateUserAmount = async (telegramUsername, amount) => {
-  try {
-    await pool.query('UPDATE users SET amount = $1 WHERE telegram_username = $2', [amount, telegramUsername]);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-module.exports = { getUser, createUser, updateUserAmount };
+module.exports = { User, createUser, getUser, updateUserAmount };
