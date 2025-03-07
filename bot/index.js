@@ -7,7 +7,7 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
 const { User, getUser, createUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
-const bot = require('./bot/telegram')
+const bot = require('./telegram')
 const token = bot.token // Access the token variable from the telegram module
 require('dotenv').config();
 
@@ -26,11 +26,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use((req, res, next) => {
-    res.status(404).send('Not Found');
+  res.status(404).send('Not Found');
 });
 app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(500).send('Internal Server Error');
+  console.error('Error:', err);
+  res.status(500).send('Internal Server Error');
 });
 
 // WebSocket event listener
@@ -71,7 +71,7 @@ wss.on('connection', (ws) => {
 });
 
 
-  wss.on('error', (error) => {
+wss.on('error', (error) => {
   console.error('WebSocket error:', error);
 });
 

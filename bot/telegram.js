@@ -1,12 +1,11 @@
 const WEB_APP_URL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
 const TelegramBot = require('node-telegram-bot-api');
-const axios =require('axios');
 const { getUser, createUser } = require('./database');
 const { text } = require('express');
 require('dotenv').config();
 
 //Token gotten from BotFather
-const token = process.env.Telegram_Token; 
+const token = process.env.Telegram_Token;
 
 const bot = new TelegramBot(token, { polling: true });
 
@@ -14,17 +13,17 @@ const debug = true;
 
 // Bot commands
 bot.setMyCommands([
-   /*  {
-        command: 'start',
-        description: 'Start the bot'
-    }, */
+    /*  {
+         command: 'start',
+         description: 'Start the bot'
+     }, */
     {
         command: 'webapp',
         description: 'Launch',
         type: 'web_app',
         web_app: {
             url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'  // Replace with your Heroku app URL 
-        } 
+        }
     }
 ]);
 
@@ -87,60 +86,60 @@ async function handleStartCommand(msg) {
 }
 
 bot.onText(/\/start/, async (msg) => {
-  try {
-      console.log(`User ${msg.from.username} started the bot`);
-    await handleStartCommand(msg);
-  } catch (error) {
-    console.error(`Error handling /start command: ${error}`);
-    await bot.sendMessage(msg.chat.id, 'Sorry, an error occurred. Please try again later!');
-  }
+    try {
+        console.log(`User ${msg.from.username} started the bot`);
+        await handleStartCommand(msg);
+    } catch (error) {
+        console.error(`Error handling /start command: ${error}`);
+        await bot.sendMessage(msg.chat.id, 'Sorry, an error occurred. Please try again later!');
+    }
 });
 
 bot.on('message', async (msg) => {
-  console.log(`Received message from ${msg.from.username}: ${msg.text}`);
-  const chatId = msg.chat.id;
-  const telegramId = msg.from.id;
-  const telegramUsername = msg.from.username;
+    console.log(`Received message from ${msg.from.username}: ${msg.text}`);
+    const chatId = msg.chat.id;
+    const telegramId = msg.from.id;
+    const telegramUsername = msg.from.username;
 
-  try {
-    // Authenticate user and store their Telegram username in the database
-    const user = await getUser(telegramId);
-    if (!user) {
-      // Create a new user
-      await createUser(telegramId, telegramUsername);
+    try {
+        // Authenticate user and store their Telegram username in the database
+        const user = await getUser(telegramId);
+        if (!user) {
+            // Create a new user
+            await createUser(telegramId, telegramUsername);
+        }
+    } catch (error) {
+        console.error(`Error creating or getting user: ${error}`);
+        await bot.sendMessage(chatId, 'Sorry, an error occurred. Please try again later!');
     }
-  } catch (error) {
-    console.error(`Error creating or getting user: ${error}`);
-    await bot.sendMessage(chatId, 'Sorry, an error occurred. Please try again later!');
-  }
 });
 
 bot.on('callback_query', async (query) => {
-  try {
-    console.log(`Received callback query from ${query.from.username}: ${query.data}`);
-    const callbackData = query.data;
+    try {
+        console.log(`Received callback query from ${query.from.username}: ${query.data}`);
+        const callbackData = query.data;
 
-    if (callbackData === 'channel_cryptolevy') {
-      await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy channel..." });
-      await bot.sendMessage(query.message.chat.id, "Join Crypto Levy: https://t.me/Cryptolevychannel");
-    } else if (callbackData === 'channel_cashmegan') {
-      await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan channel..." });
-      await bot.sendMessage(query.message.chat.id, "Join Cash Megan: https://t.me/Cashmegan");
-    } else if (callbackData === 'youtube_cryptolevy') {
-      await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy YouTube..." });
-      await bot.sendMessage(query.message.chat.id, "Subscribe to Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu");
-    } else if (callbackData === 'youtube_cashmegan') {
-      await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan YouTube..." });
-      await bot.sendMessage(query.message.chat.id, "Subscribe to Cash Megan: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY");
+        if (callbackData === 'channel_cryptolevy') {
+            await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy channel..." });
+            await bot.sendMessage(query.message.chat.id, "Join Crypto Levy: https://t.me/Cryptolevychannel");
+        } else if (callbackData === 'channel_cashmegan') {
+            await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan channel..." });
+            await bot.sendMessage(query.message.chat.id, "Join Cash Megan: https://t.me/Cashmegan");
+        } else if (callbackData === 'youtube_cryptolevy') {
+            await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy YouTube..." });
+            await bot.sendMessage(query.message.chat.id, "Subscribe to Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu");
+        } else if (callbackData === 'youtube_cashmegan') {
+            await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan YouTube..." });
+            await bot.sendMessage(query.message.chat.id, "Subscribe to Cash Megan: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY");
+        }
+    } catch (error) {
+        console.error(`Error handling callback query: ${error}`);
     }
-  } catch (error) {
-    console.error(`Error handling callback query: ${error}`);
-  }
 });
 
 bot.on('error', (error) => {
     console.error('Telegram Bot Error:', error);
-  });
+});
 
 // Telegram Web App 
 bot.onText(/\/webapp/, (msg) => {

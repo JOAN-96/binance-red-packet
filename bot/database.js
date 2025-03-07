@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   firstName: String,
   lastName: String,
-  walletBalance: {type: Number, default: 0},
+  walletBalance: { type: Number, default: 0 },
 });
 
 // Create a User model
