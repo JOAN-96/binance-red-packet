@@ -13,10 +13,12 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, 
-    secure: true, // Set to false if you're not using HTTPS
+    // Set max age to 7 days
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    // Set secure to true if using HTTPS, false otherwise
+    secure: process.env.NODE_ENV === 'production', // Set to false if you're not using HTTPS
     httpOnly: true,
   },
 };
 
-module.exports = sessionConfig; 
+module.exports = sessionConfig;

@@ -38,7 +38,7 @@ async function handleStartCommand(msg) {
     const user = await getUser(telegramId);
     if (!user) {
         // Create a new user
-        await createUser(telegrmaId, telegramUsername);
+        await createUser(telegramId, telegramUsername);
     }
 
     // Telegram Channels
@@ -88,6 +88,7 @@ async function handleStartCommand(msg) {
 
 bot.onText(/\/start/, async (msg) => {
   try {
+      console.log(`User ${msg.from.username} started the bot`);
     await handleStartCommand(msg);
   } catch (error) {
     console.error(`Error handling /start command: ${error}`);
@@ -96,31 +97,41 @@ bot.onText(/\/start/, async (msg) => {
 });
 
 bot.on('message', async (msg) => {
-    console.log(`Received message from ${msg.from.username}: ${msg.text}`);
-    const chatId = msg.chat.id;
-    const telegramUsername = msg.from.username;
+  console.log(`Received message from ${msg.from.username}: ${msg.text}`);
+  const chatId = msg.chat.id;
+  const telegramId = msg.from.id;
+  const telegramUsername = msg.from.username;
 
+  try {
     // Authenticate user and store their Telegram username in the database
-    const user = await getUser(telegramUsername);
+    const user = await getUser(telegramId);
     if (!user) {
-        // Create a new user
-        await createUser(telegramUsername);
+      // Create a new user
+      await createUser(telegramId, telegramUsername);
     }
+  } catch (error) {
+    console.error(`Error creating or getting user: ${error}`);
+    await bot.sendMessage(chatId, 'Sorry, an error occurred. Please try again later!');
+  }
 });
 
-bot.on('callback_query', (query) => {
+bot.on('callback_query', async (query) => {
+  try {
     console.log(`Received callback query from ${query.from.username}: ${query.data}`);
     const callbackData = query.data;
 
     if (callbackData === 'channel_cryptolevy') {
-        bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cryptolevychannel' });
+      bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cryptolevychannel' });
     } else if (callbackData === 'channel_cashmegan') {
-        bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cashmegan' });
+      bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cashmegan' });
     } else if (callbackData === 'youtube_cryptolevy') {
-        bot.answerCallbackQuery(query.id, { url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu' });
+      bot.answerCallbackQuery(query.id, { url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu' });
     } else if (callbackData === 'youtube_cashmegan') {
-        bot.answerCallbackQuery(query.id, { url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY' });
+      bot.answerCallbackQuery(query.id, { url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY' });
     }
+  } catch (error) {
+    console.error(`Error handling callback query: ${error}`);
+  }
 });
 
 bot.on('error', (error) => {

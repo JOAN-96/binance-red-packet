@@ -34,29 +34,42 @@
   });
 
   // WebSocket event listener
-  wss.on('connection', (ws) => {
-      ws.on('message', async (message) => {
-          try {
-            const userData = JSON.parse(message);
+wss.on('connection', (ws) => {
+  console.log('Client connected to WebSocket');
 
-            if (!userData || !userData.userId || !userData.amount) {
-              console.error('Invalid WebSocket message:', message);
-              return;
-            }
+  ws.on('message', async (message) => {
+    try {
+      const userData = JSON.parse(message);
 
-            const userId = userData.userId;
-            const amount = userData.amount;
+      if (!userData || !userData.userId || !userData.amount) {
+        console.error('Invalid WebSocket message:', message);
+        return;
+      }
 
-            await updateUserAmount(userId, amount);
+      const userId = userData.userId;
+      const amount = userData.amount;
 
-            wss.clients.forEach((client) => {
-              client.send(JSON.stringify({ userId, amount }));
-            });
-          } catch (error) {
-            console.error('Error handling WebSocket message:', error);
-          }
-        });
-    });
+      // Validate userId and amount
+      if (typeof userId !== 'number' || typeof amount !== 'number') {
+        console.error('Invalid userId or amount:', userId, amount);
+        return;
+      }
+
+      await updateUserAmount(userId, amount);
+
+      wss.clients.forEach((client) => {
+        client.send(JSON.stringify({ userId, amount }));
+      });
+    } catch (error) {
+      console.error('Error handling WebSocket message:', error);
+    }
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected from WebSocket');
+  });
+});
+
 
   wss.on('error', (error) => {
       console.error('WebSocket error:', error);
