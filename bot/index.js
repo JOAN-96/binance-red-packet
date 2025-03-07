@@ -5,8 +5,8 @@ const app = express();
 const server = require('http').createServer(app);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
-const { User, getUser, createUser, updateUserAmount } = require('./bot/database');
-const sessionConfig = require('./bot/session');
+const { User, getUser, createUser, updateUserAmount } = require('./database');
+const sessionConfig = require('./session');
 const bot = require('./bot/telegram')
 const token = bot.token // Access the token variable from the telegram module
 require('dotenv').config();
@@ -72,8 +72,8 @@ wss.on('connection', (ws) => {
 
 
   wss.on('error', (error) => {
-      console.error('WebSocket error:', error);
-    });
+  console.error('WebSocket error:', error);
+});
 
 // Route for mini web app
 app.get('/', (req, res) => {
