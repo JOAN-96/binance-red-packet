@@ -5,7 +5,7 @@
   const server = require('http').createServer(app);
   const WebSocket = require('ws');
   const wss = new WebSocket.Server({ server });
-  const User = require('./database');
+  const { User, getUser, createUser, updateUserAmount } = require('./database');
   const sessionConfig = require('./session');
   const bot = require('./telegram')
   const token = bot.token // Access the token variable from the telegram module

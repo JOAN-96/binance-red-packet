@@ -1,7 +1,9 @@
 const expressSession = require('express-session');
+require('dotenv').config();
 const sessionSecret = process.env.SESSION_SECRET;
 
 if (!sessionSecret) {
+  console.error('SESSION_SECRET environment variable is missing');
   throw new Error('Missing required environment variables');
 }
 
