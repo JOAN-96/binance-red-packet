@@ -74,6 +74,14 @@ wss.on('connection', (ws) => {
 
 // Server
 const port = process.env.PORT || 3000;
+server.listen(port, '0.0.0.0', () => {
+    console.log(`Mini web app listening on port ${port}`);
+}); 
+
+/* app.listen(port, () => {
+    console.log(`Mini web app listening on port ${port}`);
+}); */
+
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
 
 app.use((req, res, next) => {
@@ -113,17 +121,10 @@ app.get('/', (req, res) => {
   const startParam = req.query.start;
   if (startParam) {
     // Start the bot and handle authentication
+    bot.setWebhook(`https://binance-red-packet.replit.app/`);
     bot.start(startParam);
     res.sendFile(__dirname + '/../mini-web-app/index.html');
   } else {
     res.sendFile(__dirname + '/../mini-web-app/index.html');
   }
 });
-
-
-/* app.listen(port, () => {
-    console.log(`Mini web app listening on port ${port}`);
-}); */
-server.listen(port, () => {
-    console.log(`Mini web app listening on port ${port}`);
-}); 

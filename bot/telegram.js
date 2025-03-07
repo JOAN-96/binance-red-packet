@@ -95,7 +95,7 @@ const utils = {
     }
 };
 
-// Set bot commands
+// Bot commands
 bot.setMyCommands([
    /*  {
         command: 'start',
