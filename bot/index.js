@@ -5,7 +5,7 @@ const app = express();
 const server = require('http').createServer(app);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
-const User = require('./database');
+const { getUser, createUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
 const bot = require('./telegram')
 const token = bot.token // Access the token variable from the telegram module
@@ -126,4 +126,4 @@ app.get('/', (req, res) => {
 }); */
 server.listen(port, () => {
     console.log(`Mini web app listening on port ${port}`);
-}); 
+});
