@@ -1,7 +1,7 @@
 const WEB_APP_URL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
 const TelegramBot = require('node-telegram-bot-api');
 const axios =require('axios');
-const { getUser, createUser } = require('./database');
+const { getUser, createUser } = require('./bot/database');
 const { text } = require('express');
 require('dotenv').config();
 
@@ -32,17 +32,13 @@ bot.setMyCommands([
 async function handleStartCommand(msg) {
     const chatID = msg.chat.id;
     const telegramUsername = msg.from.username;
+    const telegramId = msg.from.id;
 
     // Authenticate users and store their  Telegram username in the database
-    const user = await getUser({ username: telegramUsername });
+    const user = await getUser(telegramId);
     if (!user) {
         // Create a new user
-        await createUser({ 
-            id: msg.from.id,
-            username: telegramUsername,
-            first_name: msg.from.first_name,
-            last_name: msg.from.last_name 
-        });
+        await createUser(telegrmaId, telegramUsername);
     }
 
     // Telegram Channels

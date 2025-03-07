@@ -21,18 +21,18 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // Function to create a new user based on Telegram user info
-async function createUser(telegramUser) {
-  const existingUser = await User.findOne({ telegramId: telegramUser.id });
+async function createUser(telegramId, telegramUsername) {
+  const existingUser = await User.findOne({ telegramId });
   if (existingUser) {
     // Return the existing user document
     return existingUser;
   } else {
     // Create a new user document
     const newUser = new User({
-      telegramId: telegramUser.id,
-      username: telegramUser.username,
-      firstName: telegramUser.first_name,
-      lastName: telegramUser.last_name,
+      telegramId,
+      username: telegramUsername,
+      firstName: '',
+      lastName: '',
       walletBalance: 0, // Initialize wallet balance to 0
     });
     await newUser.save();
@@ -41,13 +41,12 @@ async function createUser(telegramUser) {
 }
 
 // Function to get a user document based on Telegram user ID or username
-async function getUser(query) {
-  if (query.telegramId) {
-    return User.findOne({ telegramId: query.telegramId });
-  } else if (query.username) {
-    return User.findOne({ username: query.username });
+async function getUser(telegramIdOrUsername) {
+  if (typeof telegramIdOrUsername === 'number') {
+    return User.findOne({ telegramId: telegramIdOrUsername });
+  } else {
+    return User.findOne({ username: telegramIdOrUsername });
   }
-  return null;
 }
 
 // Function to update the wallet balance of a user
