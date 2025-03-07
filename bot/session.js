@@ -34,13 +34,13 @@ const sessionConfig = {
   saveUninitialized: false,
   /* store: new RedisStore({ client: redisClient, disableTouch: true }), */
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-    secure: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, 
+    secure: true, 
     httpOnly: true,
   },
 };
 
-module.exports = sessionConfig;
+module.exports = sessionConfig; 
 /*
 try {
   const sessionConfig = {

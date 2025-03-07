@@ -1,0 +1,39 @@
+/* Splash Screen CSS File */
+
+body {
+    margin: 0;
+    background-color: #080808;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 70%;
+}
+
+.wrapper fieldset {
+    border: none;
+    padding: none;
+    width: 160px;
+    display: grid;
+    grid-template-rows: 78.44px 1fr;
+    row-gap: 8px;
+    justify-content: center;
+    align-content: center;
+}
+
+.wrapper fieldset img {
+    border: 0;
+    width: fit-content;
+    align-items: center;
+    border-image-repeat: none;
+}
+
+.wrapper fieldset label {
+    font-family: 'Lato';
+    color: #4F4F4F;
+    font-size: 12px;
+    font-weight: 400px;
+    text-align: center;
+    margin: 0;
+}

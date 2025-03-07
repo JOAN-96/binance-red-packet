@@ -1,0 +1,62 @@
+/* Hide desktop layout by default */
+.desktop-layout {
+    display: none;
+  }
+  
+  /* Show mobile layout only */
+  @media only screen and (max-width: 768px) {
+    .desktop-layout {
+      display: block;
+    }
+  }
+
+
+body {
+    font-family: 'Lato';
+    margin: 0;
+    background-color: #080808;
+    padding: 0;
+    box-sizing: border-box;
+    margin-block: 40px;
+}
+
+/* Wallet */
+.wallet-balance {
+    border-radius: 8px;
+    border-width: 0.5px;
+    border-style: solid;
+    border-color: #FEE9E9;
+    margin-inline: 16px;
+}
+
+.wallet-balance .details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wallet-balance .details .top {
+    display: flex;
+    flex: 16px 1;
+    gap: 8px;
+    margin-inline: 16px;
+    margin-bottom: 4px;
+}
+
+.wallet-balance .details figcaption {
+    color: #848484;
+    /*font-size: 12px;*/
+}
+
+.wallet-balance .details .balance {
+    color: #EDEDED;
+    margin-inline: 16px;
+}
+
+.wallet-balance .details .balance p {
+    font-size: 22px;
+}
+
+.wallet-balance .details .balance p span {
+    font-size: 14px;
+}

@@ -1,0 +1,171 @@
+<!--home screen html file-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+    <!-- Wallet -->
+    <div class="wallet-balance">
+        <div class="details">
+            <figure class="top">
+                <img src="assets/images/wallet-01.svg" alt="wallet-icon">
+                <figcaption>
+                    Wallet Balance
+                </figcaption>
+            </figure>
+            <div class="balance">
+                <p class="BTTC" id="bttc-balance">0 <span>BTTC</span></p> <!-- <p>0.00 <span>USDT</span></p> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Red Packet Code -->
+     <div class="red-packet-container">
+        <p>
+            Coming Soon
+        </p>
+
+        <div class="red-packet-code">
+            <input type="text" placeholder="100 USDT Red Packet" name="red-packet-code">
+            <button>Claim</button>
+         </div>
+     </div>
+
+     <!-- Red Packet Body -->
+      <div class="red-packet-body">
+        <div class="details">
+            
+            <!-- Referral Link -->
+            <div class="top">
+                <div class="top-details">
+                    <figure>
+                        <img src="assets/images/friend-referral.svg" alt="refer friend icon">
+                        <figcaption>
+                            Refer your friends
+                        </figcaption>
+                    </figure>
+                    <div class="user-link">
+                        <div class="link">
+                            <p class="link-text">
+                                Referral Link (coming soon)
+                            </p>
+                        </div>
+                        <button>Copy</button>
+                     </div>
+                </div>
+            </div>
+            
+            <!-- User Task -->
+             <div class="to-do">
+                <p class="header-text">
+                    To Do
+                </p>
+                <div class="to-do-details">
+                    <div class="to-do-list">
+                        <!-- Video 1 -->
+                        <div class="video" id="video-1">
+                            <div class="top">
+                                <figure>
+                                    <img src="assets/images/video-play.svg" alt="video-play-icon">
+                                    <figcaption>
+                                        Video 1
+                                    </figcaption>
+                                </figure>
+                                <a href="https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA">
+                                    <button type="button">
+                                        Watch
+                                    </button>
+                                </a>
+                            </div>
+                            <p class="description">
+                                Watch the video and get 1,000 BTTC
+                            </p>
+                        </div>
+
+                        <!-- Video 2-->
+                        <div class="video" id="video-2">
+                            <div class="top">
+                                <figure>
+                                    <img src="assets/images/video-play.svg" alt="video-play-icon">
+                                    <figcaption>
+                                        Video 2
+                                    </figcaption>
+                                </figure>
+                                <a href="https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc">
+                                    <button type="button">
+                                        Watch
+                                    </button>
+                                </a>
+                            </div>
+                            <p class="description">
+                                Watch the video and get 1,000 BTTC
+                            </p>
+                        </div>
+
+                        <!-- Video 3 -->
+                        <div class="video" id="video-3">
+                            <div class="top">
+                                <figure>
+                                    <img src="assets/images/video-play.svg" alt="video-play-icon">
+                                    <figcaption>
+                                        Video 3
+                                    </figcaption>
+                                </figure>
+                                <a href="https://youtu.be/azxTB53RkRY">
+                                    <button type="button">
+                                        Watch
+                                    </button>
+                                </a>
+                            </div>
+                            <p class="description">
+                                Watch the video and get 1,000 BTTC
+                            </p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav>
+        <ul>
+            <ol class="home">
+                <figure>
+                    <img src="assets/images/home-active.svg"/>
+                    <figcaption class="home-text">Home</figcaption>
+                </figure>
+            </ol>
+    
+            <ol class="wallet">
+                <figure>
+                    <img src="assets/images/wallet-01.svg"/>
+                    <figcaption class="wallet-text">Wallet</figcaption>
+                </figure>
+            </ol>
+    
+            <ol class="account">
+                <figure>
+                    <img src="assets/images/user-inactive.svg"/>
+                    <figcaption class="account-text">Account</figcaption>
+                </figure>
+            </ol>
+    
+            <ol class="task">
+                <figure>
+                    <img src="assets/images/check-list-inactive.svg"/>
+                    <figcaption class="task-text">Tasks</figcaption>
+                </figure>
+            </ol>
+        </ul>
+      </nav>
+
+      <!-- Javascript Link -->
+      <script src="home.js"></script>
+</body>
+</html>
