@@ -1,7 +1,7 @@
 const WEB_APP_URL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
 const TelegramBot = require('node-telegram-bot-api');
 const axios =require('axios');
-const { getUser, createUser } = require('./bot/database');
+const { getUser, createUser } = require('./database');
 const { text } = require('express');
 require('dotenv').config();
 
@@ -121,13 +121,17 @@ bot.on('callback_query', async (query) => {
     const callbackData = query.data;
 
     if (callbackData === 'channel_cryptolevy') {
-      bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cryptolevychannel' });
+      await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy channel..." });
+      await bot.sendMessage(query.message.chat.id, "Join Crypto Levy: https://t.me/Cryptolevychannel");
     } else if (callbackData === 'channel_cashmegan') {
-      bot.answerCallbackQuery(query.id, { url: 'https://t.me/Cashmegan' });
+      await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan channel..." });
+      await bot.sendMessage(query.message.chat.id, "Join Cash Megan: https://t.me/Cashmegan");
     } else if (callbackData === 'youtube_cryptolevy') {
-      bot.answerCallbackQuery(query.id, { url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu' });
+      await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy YouTube..." });
+      await bot.sendMessage(query.message.chat.id, "Subscribe to Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu");
     } else if (callbackData === 'youtube_cashmegan') {
-      bot.answerCallbackQuery(query.id, { url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY' });
+      await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan YouTube..." });
+      await bot.sendMessage(query.message.chat.id, "Subscribe to Cash Megan: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY");
     }
   } catch (error) {
     console.error(`Error handling callback query: ${error}`);
@@ -158,3 +162,5 @@ bot.onText(/\/webapp/, (msg) => {
 });
 
 module.exports = bot;
+// Make token available for other modules
+bot.token = token;
