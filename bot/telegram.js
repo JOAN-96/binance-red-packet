@@ -41,24 +41,24 @@ async function handleStartCommand(msg) {
     }
 
     // Telegram Channels
-    const telegramChanelsText = 'Telegram Channels: \n';
+    /* const telegramChanelsText = 'Telegram Channels: \n';
     const telegramChanels = [
         '• Crypto Levy: https://t.me/Cryptolevychannel\n',
         '• Cash Megan: https://t.me/Cashmegan\n'
-    ];
+    ]; */
 
     // YouTube Channels
-    const youtubeChanelsText = 'YouTube Channels: \n';
+    /* const youtubeChanelsText = 'YouTube Channels: \n';
     const youtubeChanels = [
         '• Crypto Levy YouTube: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu\n',
         '• Cash Megan YouTube: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY\n'
-    ];
+    ]; */
 
     // Welcome Message
     const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
 
     // Telegram Channels Keyboard
-    const telegramChannelsText = 'Telegram Channels List:';
+    const telegramChannelsText = 'Telegram Channels:';
     const telegramChannelsKeyboard = [
         [
             {
@@ -73,7 +73,7 @@ async function handleStartCommand(msg) {
     ];
 
     // YouTube Channels Keyboard
-    const youtubeChannelsText = 'YouTube Channels List:';
+    const youtubeChannelsText = 'YouTube Channels:';
     const youtubeChannelsKeyboard = [
         [
             {
@@ -87,18 +87,34 @@ async function handleStartCommand(msg) {
         ]
     ];
 
+    // Send the wecome message
+    await bot.sendMessage(chatID, welcomeText,);
 
-    const combinedKeyboard = [
+    // Send the Telegram Channels Message
+    await bot.sendMessage(chatID, telegramChannelsText, {
+        reply_markup: {
+            inline_keyboard: telegramChannelsKeyboard
+        }
+    });
+
+    // Send the YouTube Channels Message
+    await bot.sendMessage(chatID, youtubeChannelsText, {
+        reply_markup: {
+            inline_keyboard: youtubeChannelsKeyboard
+        }
+    });
+
+    /* const combinedKeyboard = [
         ...telegramChannelsKeyboard,
         ...youtubeChannelsKeyboard
-    ];
+    ]; */
 
     // Send the welcome message with the combined keyboard
-    await bot.sendMessage(chatID, welcomeText, {
+    /* await bot.sendMessage(chatID, welcomeText, {
         reply_markup: {
             inline_keyboard: combinedKeyboard
         }
-    });
+    }); */
 }
 
 bot.onText(/\/start/, async (msg) => {
