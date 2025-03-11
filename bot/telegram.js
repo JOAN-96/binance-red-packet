@@ -77,7 +77,7 @@ async function handleStartCommand(msg) {
     const combinedKeyboard = [
         [{ text: telegramChannelsText }],
         ...telegramChannelsKeyboard,
-        [{ text: '\n' + youtubeChannelsText }],
+        [{ text: youtubeChannelsText }],
         ...youtubeChannelsKeyboard
     ];
 
