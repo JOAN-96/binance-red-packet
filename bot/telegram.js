@@ -49,11 +49,13 @@ async function handleStartCommand(msg) {
         [
             {
                 text: 'Crypto Levy',
-                callback_data: 'channel_cryptolevy'
+                /* callback_data: 'channel_cryptolevy' */
+                url: 'https://t.me/Cryptolevychannel'
             },
             {
                 text: 'Cash Megan',
-                callback_data: 'channel_cashmegan'
+                /* callback_data: 'channel_cashmegan' */
+                url: 'https://t.me/Cashmegan'
             }
         ]
     ];
@@ -64,11 +66,13 @@ async function handleStartCommand(msg) {
         [
             {
                 text: 'Crypto Levy YouTube',
-                callback_data: 'youtube_cryptolevy'
+                /* callback_data: 'youtube_cryptolevy' */
+                url: 'https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu'
             },
             {
                 text: 'Cash Megan YouTube',
-                callback_data: 'youtube_cashmegan'
+                /* callback_data: 'youtube_cashmegan' */
+                url: 'https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY'
             }
         ]
     ];
@@ -124,20 +128,20 @@ bot.on('callback_query', async (query) => {
     try {
         console.log(`Received callback query from ${query.from.username}: ${query.data}`);
         const callbackData = query.data;
-
-        if (callbackData === 'channel_cryptolevy') {
-            await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy channel..." });
-            await bot.sendMessage(query.message.chat.id, "Join Crypto Levy: https://t.me/Cryptolevychannel");
-        } else if (callbackData === 'channel_cashmegan') {
-            await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan channel..." });
-            await bot.sendMessage(query.message.chat.id, "Join Cash Megan: https://t.me/Cashmegan");
-        } else if (callbackData === 'youtube_cryptolevy') {
-            await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy YouTube..." });
-            await bot.sendMessage(query.message.chat.id, "Subscribe to Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu");
-        } else if (callbackData === 'youtube_cashmegan') {
-            await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan YouTube..." });
-            await bot.sendMessage(query.message.chat.id, "Subscribe to Cash Megan: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY");
-        }
+        /*
+                if (callbackData === 'channel_cryptolevy') {
+                    await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy channel..." });
+                    await bot.sendMessage(query.message.chat.id, "Join Crypto Levy: https://t.me/Cryptolevychannel");
+                } else if (callbackData === 'channel_cashmegan') {
+                    await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan channel..." });
+                    await bot.sendMessage(query.message.chat.id, "Join Cash Megan: https://t.me/Cashmegan");
+                } else if (callbackData === 'youtube_cryptolevy') {
+                    await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy YouTube..." });
+                    await bot.sendMessage(query.message.chat.id, "Subscribe to Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu");
+                } else if (callbackData === 'youtube_cashmegan') {
+                    await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan YouTube..." });
+                    await bot.sendMessage(query.message.chat.id, "Subscribe to Cash Megan: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY");
+                } */
     } catch (error) {
         console.error(`Error handling callback query: ${error}`);
     }
