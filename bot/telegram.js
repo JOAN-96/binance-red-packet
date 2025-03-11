@@ -41,6 +41,23 @@ async function handleStartCommand(msg) {
     }
 
     // Telegram Channels
+    const telegramChanelsText = 'Telegram Channels: \n';
+    const telegramChanels = [
+        '• Crypto Levy: https://t.me/Cryptolevychannel\n',
+        '• Cash Megan: https://t.me/Cashmegan\n'
+    ];
+
+    // YouTube Channels
+    const youtubeChanelsText = 'YouTube Channels: \n';
+    const youtubeChanels = [
+        '• Crypto Levy YouTube: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu\n',
+        '• Cash Megan YouTube: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY\n'
+    ];
+
+    // Welcome Message
+    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
+
+    // Telegram Channels Keyboard
     const telegramChannelsText = 'Telegram Channels List:';
     const telegramChannelsKeyboard = [
         [
@@ -55,7 +72,7 @@ async function handleStartCommand(msg) {
         ]
     ];
 
-    // YouTube Channels
+    // YouTube Channels Keyboard
     const youtubeChannelsText = 'YouTube Channels List:';
     const youtubeChannelsKeyboard = [
         [
@@ -70,14 +87,13 @@ async function handleStartCommand(msg) {
         ]
     ];
 
+
     const combinedKeyboard = [
         ...telegramChannelsKeyboard,
         ...youtubeChannelsKeyboard
     ];
 
-    // Send a welcome message to the user
-    const welcomeText = 'Join all the Telegram channels and subscribe to our YouTube channels to get the latest updates and get the best use of the bot!';
-
+    // Send the welcome message with the combined keyboard
     await bot.sendMessage(chatID, welcomeText, {
         reply_markup: {
             inline_keyboard: combinedKeyboard
