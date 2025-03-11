@@ -73,21 +73,7 @@ async function handleStartCommand(msg) {
         ]
     ];
 
-    // Combine the text and keyboards
-    const combinedKeyboard = [
-        [{ text: telegramChannelsText }],
-        ...telegramChannelsKeyboard,
-        [{ text: youtubeChannelsText }],
-        ...youtubeChannelsKeyboard
-    ];
-
     // Send the wecome message
-    await bot.sendMessage(chatID, `${welcomeText}\n\n${telegramChannelsText}\n${youtubeChannelsText}`, {
-        reply_markup: {
-            inline_keyboard: combinedKeyboard
-        }
-    });
-    /*
     await bot.sendMessage(chatID, welcomeText,);
 
     // Send the Telegram Channels Message
@@ -102,7 +88,7 @@ async function handleStartCommand(msg) {
         reply_markup: {
             inline_keyboard: youtubeChannelsKeyboard
         }
-    }); */
+    });
 }
 
 bot.onText(/\/start/, async (msg) => {
