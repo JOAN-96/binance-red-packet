@@ -11,7 +11,7 @@
     <div class="wallet-balance">
         <div class="details">
             <figure class="top">
-                <img src="assets/images/wallet-01.svg" alt="wallet-icon">
+                <img src="../assets/images/wallet-01.svg" alt="wallet-icon">
                 <figcaption>
                     Wallet Balance
                 </figcaption>
@@ -23,46 +23,61 @@
     </div>
 
     <!-- Wallet Body -->
-     <div class="container">
-        <p class="upper-text">
-            Empty
-        </p>
-        <p class="lower-text">
-            Coming <S></S>oon
-        </p>
+     <div class="wallet-body">
+        <div class="details">
+           
+            <!--Wallet Body Top-->
+            <fieldset class="top">
+                <legend>Transaction Details</legend>
+            </fieldset>
+
+            <!--Wallet Body Details-->
+            <fieldset class="transaction-details">
+                <div class="non-details">
+                    <p>Empty</p>
+                </div>
+            </fieldset>
+
+            
+        </div>
      </div>
+
+
 
       <!-- Navigation -->
       <nav>
         <ul>
             <ol class="home">
                 <figure>
-                    <img src="assets/images/home-active"/>
+                    <img src="../assets/images/home-inactive.svg"/>
                     <figcaption class="home-text">Home</figcaption>
                 </figure>
             </ol>
     
             <ol class="wallet">
                 <figure>
-                    <img src="assets/images/wallet-01.svg"/>
+                    <img src="../assets/images/wallet-active.svg"/>
                     <figcaption class="wallet-text">Wallet</figcaption>
                 </figure>
             </ol>
     
             <ol class="account">
                 <figure>
-                    <img src="assets/images/user-inactive.svg"/>
+                    <img src="../assets/images/user-inactive.svg"/>
                     <figcaption class="account-text">Account</figcaption>
                 </figure>
             </ol>
     
             <ol class="task">
                 <figure>
-                    <img src="assets/images/check-list-inactive.svg"/>
+                    <img src="../assets/images/check-list-inactive.svg"/>
                     <figcaption class="task-text">Tasks</figcaption>
                 </figure>
             </ol>
         </ul>
       </nav>
+
+      <!-- Javascript Link -->
+      <script src="wallet.js"></script>
 </body>
 </html>

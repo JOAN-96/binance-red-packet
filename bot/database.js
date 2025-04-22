@@ -1,53 +1,76 @@
-// database.js
-const { Pool } = require('pg');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-const dbUrl = process.env.DATABASE_URL;
-const pool = new Pool({
-  connectionString: dbUrl,
-  ssl: {
-    rejectUnauthorized: false
-  }
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-const createUserTable = async () => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        telegram_username VARCHAR(255) UNIQUE,
-        amount INTEGER DEFAULT 0
-      );
-    `);
-  } catch (error) {
-    console.error(error);
+const db = mongoose.connection;
+
+db.on('error', (error) => {
+  console.error('Error connecting to MongoDB:', error);
+});
+
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Define the User schema
+const userSchema = new mongoose.Schema({
+  telegramId: Number,
+  username: String,
+  firstName: String,
+  lastName: String,
+  walletBalance: { type: Number, default: 0 },
+});
+
+// Create a User model
+const User = mongoose.model('User', userSchema);
+
+// Function to create a new user based on Telegram user info
+async function createUser(telegramId, telegramUsername) {
+  const existingUser = await User.findOne({ telegramId });
+  if (existingUser) {
+    // Return the existing user document
+    return existingUser;
+  } else {
+    // Create a new user document
+    const newUser = new User({
+      telegramId,
+      username: telegramUsername,
+      firstName: '',
+      lastName: '',
+      walletBalance: 0, // Initialize wallet balance to 0
+    });
+    await newUser.save();
+    return newUser;
   }
-};
+}
 
-createUserTable();
-
-const getUser = async (telegramUsername) => {
-  try {
-    const result = await pool.query('SELECT * FROM users WHERE telegram_username = $1', [telegramUsername]);
-    return result.rows[0];
-  } catch (error) {
-    console.error(error);
+// Function to get a user document based on Telegram user ID or username
+async function getUser(telegramIdOrUsername) {
+  if (typeof telegramIdOrUsername === 'number') {
+    return User.findOne({ telegramId: telegramIdOrUsername });
+  } else {
+    return User.findOne({ username: telegramIdOrUsername });
   }
-};
+}
 
-const createUser = async (telegramUsername) => {
+// Function to update the wallet balance of a user
+async function updateUserAmount(userId, amount) {
   try {
-    await pool.query('INSERT INTO users (telegram_username) VALUES ($1)', [telegramUsername]);
+    const user = await getUser(userId);
+    if (user) {
+      user.walletBalance = amount; // Update walletBalance instead of amount
+      await user.save();
+    } else {
+      console.error(`User with ID ${userId} not found`);
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Error updating user amount:', error);
   }
-};
+}
 
-const updateUserAmount = async (telegramUsername, amount) => {
-  try {
-    await pool.query('UPDATE users SET amount = $1 WHERE telegram_username = $2', [amount, telegramUsername]);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-module.exports = { getUser, createUser, updateUserAmount };
+module.exports = { User, createUser, getUser, updateUserAmount };

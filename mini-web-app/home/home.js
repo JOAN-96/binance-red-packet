@@ -176,3 +176,37 @@ socket.onmessage = (event) => {
     console.error(error);
   }
 };
+
+
+// NAVIGATION
+
+// Get the wallet button
+const walletButton = document.querySelector('.wallet');
+
+// Add an event listener to the home button
+walletButton.addEventListener('click', () => {
+  // Add the fade-out effect to the body
+  document.body.style.opacity = 0;
+
+  // Navigate to the home page after the transition
+  setTimeout(() => {
+    window.location.href = '../wallet/wallet.html';
+  }, 300); // Match the transition duration
+});
+
+
+
+
+// Get the task button
+const taskButton = document.querySelector('.task');
+
+// Add an event listener to the task button
+taskButton.addEventListener('click', () => {
+  // Add the fade-out effect to the body
+  document.body.style.opacity = 0;
+
+  // Navigate to the home page after the transition
+  setTimeout(() => {
+    window.location.href = '../task/task.html';
+  }, 300); // Match the transition duration
+});

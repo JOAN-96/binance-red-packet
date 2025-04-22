@@ -1,0 +1,193 @@
+/* GLOBAL CSS STYLES */
+@import url(../css/styles.css);
+
+/* Hide desktop layout by default */
+.desktop-layout {
+    display: none;
+  }
+  
+  /* Show mobile layout only */
+  @media only screen and (max-width: 768px) {
+    .desktop-layout {
+      display: block;
+    }
+  }
+
+
+
+body {
+    font-family: 'Lato';
+    font-weight: 400;
+    margin: 0;
+    background-color: #080808;
+    padding: 0;
+    margin-block: 40px;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Header */
+@layer header {
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-block: 16px;
+        gap: 8px;
+    }
+
+    .header h1 {
+        color: #EDEDED;
+        font-size: 24px;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .header p {
+        color: #EDEDED;
+        font-size: 14px;
+        font-weight: 300;
+        margin: 0;
+    }
+}
+
+/* Task */
+@layer task {
+    .task-details {
+        margin-top: 28px;
+        border-top-left-radius: 40px;
+        border-top-right-radius: 40px;
+        border: 1px solid #FEE9E9;
+        border-bottom: none;
+        border-inline: none;
+        padding-top: 18px;
+        margin-bottom: 120px;
+    }
+    
+    .task-details .task {
+        margin-inline: 16px;
+        display: flex;
+        flex-direction: column;
+        flex: 1 1;
+    }
+    
+    /* Red Packet Video Tasks */
+    .task-details .task .to-do {
+        margin-top: 20px;
+    }
+    
+    .task-details .task .to-do .header-text {
+        color: #B9B9B9;
+        font-size: 14px;
+        margin: 0;
+        padding-bottom: 4px;
+    }
+    
+    .task-details .task .to-do .to-do-details {
+        display: flex;
+    }
+    
+    .task-details .task .to-do .to-do-details .to-do-list {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 40px;
+    }
+    
+    /* Videos */
+    .task-details .task .to-do .to-do-details .to-do-list .video {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        height: 64px;
+    }
+    
+    .task-details .task .to-do .to-do-details .to-do-list .video .top {
+        display: flex;
+        flex: 1 60px;
+        justify-content: flex-start;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .task-details .task .to-do .to-do-details .to-do-list .video .top figure {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex: 20px 1;
+        gap: 8px;
+        margin-inline-start: 0;
+    }
+    
+    .task-details .task .to-do .to-do-details .to-do-list .video .top figcaption {
+        color: #EDEDED;
+        font-size: 16px;
+    }
+    
+    .task-details .task .to-do .to-do-details .to-do-list .video .top button {
+        height: 40px;
+        border-radius: 8px;
+        background-color: #F92126;
+        color: #FEE9E9;
+        font-size: 16px;
+        border: none;
+        padding-block: 12px;
+        padding-inline: 8px;
+        align-items: center;
+    }
+    
+    .task-details .task .to-do .to-do-details .to-do-list .video .description {
+        color: #848484;
+        font-size: 12px;
+        margin: 0;
+    }
+}
+
+/* Navigation */
+@layer navigation {
+    nav {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 500;
+        width: 100%;
+        height: 80px;
+        background-color: #080808;
+        padding: 0 auto;
+        backdrop-filter: blur(40px);
+        box-shadow: 0 -8px 20px #080808;
+    } 
+    
+    nav ul {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        list-style: none;
+        padding-inline: 0px; 
+        gap: 20px;
+        
+    }
+    
+    
+    nav ul ol figure {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        gap: 4px; 
+        margin: 0;
+        padding: 0;
+    } 
+    
+    nav ul ol figure img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    nav ul ol figure figcaption {
+        color: #4F4F4F;
+        font-size: 12px;
+    }
+    
+    nav ul ol figure .task-text {
+        color: #F92126;
+    }
+}
