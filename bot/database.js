@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+
 // Check if the connection was successful
-mongoose.connection.once('open', () => {
+/*mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
 }).on('error', (error) => {
   console.error('Error connecting to MongoDB:', error);
-});
+}); */
 
 // Check if the connection was successful
 if (!process.env.MONGODB_URI) {
@@ -14,22 +15,27 @@ if (!process.env.MONGODB_URI) {
   throw new Error('Missing required environment variables');
 }
 
-// Connect to MongoDB
-/*mongoose.connect(process.env.MONGODB_URI, {
+// Connect to MongoDB using the connection string from environment variables
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});*/
-mongoose.connect(process.env.MONGODB_URI);
+})
+.then(() => {
+  console.log("Successfully connected to MongoDB");
+})
+.catch((err) => {
+  console.error("Error connecting to MongoDB:", err);
+});
 
 const db = mongoose.connection;
 
-db.on('error', (error) => {
+/*db.on('error', (error) => {
   console.error('Error connecting to MongoDB:', error);
 });
 
 db.once('open', () => {
   console.log('Connected to MongoDB');
-});
+}); */
 
 // Define the User schema
 const userSchema = new mongoose.Schema({
@@ -38,7 +44,7 @@ const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   walletBalance: { type: Number, default: 0 },
-});
+}, {timestamps: true}); // Add timestamps to the schema
 
 // Create a User model
 const User = mongoose.model('User', userSchema);
@@ -82,6 +88,7 @@ async function updateUserAmount(userId, amount) {
     if (user) {
       user.walletBalance = amount; // Update walletBalance instead of amount
       await user.save();
+      console.log(`Updated wallet balance for ${user.username}: ${amount}`);
     } else {
       console.error(`User with ID ${userId} not found`);
     }

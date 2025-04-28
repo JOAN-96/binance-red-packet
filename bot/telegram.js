@@ -1,15 +1,16 @@
-const WEB_APP_URL = 'https://vast-caverns-06591.herokuapp.com/'; // Heroku app URL
 const TelegramBot = require('node-telegram-bot-api');
 const { getUser, createUser } = require('./database');
 require('dotenv').config();
 
 //Token gotten from BotFather
 const token = process.env.TELEGRAM_TOKEN;
-
 /* const bot = new TelegramBot(token, { polling: true }); */
+
 
 // Initialize the bot (not using polling)
 const bot = new TelegramBot(token);
+
+const WEB_APP_URL = 'https://vast-caverns-06591.herokuapp.com/'; // Heroku app URL
 
 const debug = true;
 
@@ -30,6 +31,8 @@ bot.setMyCommands([
 ]);
 
 // Events Listener
+
+// Function to handle the /start command
 async function handleStartCommand(msg) {
     const chatID = msg.chat.id;
     const telegramUsername = msg.from.username;
@@ -97,6 +100,24 @@ async function handleStartCommand(msg) {
     });
 }
 
+// Function to log wallet update 
+async function logWalletUpdate(userId, incrementValue = 1000) {
+    try {
+      const user = await getUser(userId);
+      if (user) {
+        console.log(`User ${user.username}'s wallet balance: ${user.walletBalance}`);
+        // Example of a wallet update action (adjust this based on your app logic)
+        const newBalance = user.walletBalance + incrementValue; // For example, adding 1000 to the balance
+        await updateUserAmount(userId, newBalance);
+        console.log(`Updated wallet balance for ${user.username}: ${newBalance}`);
+      }
+    } catch (error) {
+      console.error('Error updating wallet balance:', error);
+    }
+  }
+  
+
+
 bot.onText(/\/start/, async (msg) => {
     try {
         console.log(`User ${msg.from.username} started the bot`);
@@ -158,6 +179,14 @@ bot.onText(/\/webapp/, (msg) => {
     });
 });
 
-module.exports = bot;
+// Export bot and helper functions
+module.exports = {
+    bot,
+    handleStartCommand,
+    handleWebappCommand,
+    logWalletUpdate,
+    setWebHook: bot.setWebHook.bind(bot), // Make setWebHook available for index.js
+    token
+  };
 // Make token available for other modules
 bot.token = token;

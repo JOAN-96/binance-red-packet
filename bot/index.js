@@ -9,7 +9,7 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server });
 const { User, getUser, createUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
-const bot = require('./telegram')
+const { bot, setWebHook} = require('./telegram')
 const token = bot.token // Access the token variable from the telegram module
 
 // Serve static files from the 'mini-web-app' directory
@@ -26,20 +26,58 @@ app.use(express.static(path.join(__dirname, '../mini-web-app')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 // === Telegram webhook endpoint ===
-app.post(`/bot${process.env.TELEGRAM_TOKEN}`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
+app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
+  const message = req.body.message;
+  if (message) {
+    const { chat, text } = message;
+    const userId = chat.id;
+    const userUsername = chat.username;
+
+    // Log the message
+    console.log(`Received message from ${userUsername}: ${text}`);
+
+    // Handle the user commands by delegating to telegram.js
+    try {
+      if (text === '/start') {
+        const responseText = await bot.handleStartCommand(userId, userUsername); // Handle /start
+        res.send({
+          method: 'sendMessage',
+          chat_id: userId,
+          text: responseText
+        });
+      } else if (text === '/webapp') {
+        const responseText = await bot.handleWebappCommand(userId); // Handle /webapp
+        res.send({
+          method: 'sendMessage',
+          chat_id: userId,
+          text: responseText
+        });
+      } else {
+        res.send('Unknown command');
+      }
+    } catch (error) {
+      console.error('Error handling command:', error);
+      res.send('Sorry, something went wrong.');
+    }
+  } else {
+    res.send('No message received');
+  }
 });
 
 
+// 404 handler
 app.use((req, res, next) => {
   res.status(404).send('Not Found');
 });
+
+// Globlal error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).send('Internal Server Error');
 });
+
 
 // WebSocket event listener
 wss.on('connection', (ws) => {
@@ -65,11 +103,13 @@ wss.on('connection', (ws) => {
 
       await updateUserAmount(userId, amount);
 
+      // Broadcast the updated wallet amount to all connected clients
       wss.clients.forEach((client) => {
         client.send(JSON.stringify({ userId, amount }));
       });
     } catch (error) {
       console.error('Error handling WebSocket message:', error);
+      ws.send(JSON.stringify({ error: 'Invalid message format' }));
     }
   });
 
@@ -78,10 +118,11 @@ wss.on('connection', (ws) => {
   });
 });
 
-
 wss.on('error', (error) => {
   console.error('WebSocket error:', error);
 });
+
+
 
 // Route for mini web app
 app.get('/', (req, res) => {
@@ -92,5 +133,5 @@ app.get('/', (req, res) => {
 
 // Set webhook only in production
 if (process.env.NODE_ENV === 'production') {
-  bot.setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
+  setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
 }
