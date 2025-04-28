@@ -1,29 +1,31 @@
-const WEB_APP_URL = 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/';
+const WEB_APP_URL = 'https://vast-caverns-06591.herokuapp.com/'; // Heroku app URL
 const TelegramBot = require('node-telegram-bot-api');
 const { getUser, createUser } = require('./database');
-const { text } = require('express');
 require('dotenv').config();
 
 //Token gotten from BotFather
-const token = process.env.Telegram_Token;
+const token = process.env.TELEGRAM_TOKEN;
 
-const bot = new TelegramBot(token, { polling: true });
+/* const bot = new TelegramBot(token, { polling: true }); */
+
+// Initialize the bot (not using polling)
+const bot = new TelegramBot(token);
 
 const debug = true;
 
 // Bot commands
 bot.setMyCommands([
-    /*  {
+    {
          command: 'start',
          description: 'Start the bot'
-     }, */
+    }, 
     {
         command: 'webapp',
         description: 'Launch',
-        type: 'web_app',
+        /* type: 'web_app',
         web_app: {
-            url: 'https://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com/'  // Replace with your Heroku app URL 
-        }
+            url: WEB_APP_URL  // Heroku app URL 
+        } */
     }
 ]);
 
@@ -128,20 +130,6 @@ bot.on('callback_query', async (query) => {
     try {
         console.log(`Received callback query from ${query.from.username}: ${query.data}`);
         const callbackData = query.data;
-        /*
-                if (callbackData === 'channel_cryptolevy') {
-                    await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy channel..." });
-                    await bot.sendMessage(query.message.chat.id, "Join Crypto Levy: https://t.me/Cryptolevychannel");
-                } else if (callbackData === 'channel_cashmegan') {
-                    await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan channel..." });
-                    await bot.sendMessage(query.message.chat.id, "Join Cash Megan: https://t.me/Cashmegan");
-                } else if (callbackData === 'youtube_cryptolevy') {
-                    await bot.answerCallbackQuery(query.id, { text: "Opening Crypto Levy YouTube..." });
-                    await bot.sendMessage(query.message.chat.id, "Subscribe to Crypto Levy: https://www.youtube.com/@cryptolevy?si=QXQimY13s4CSMaPu");
-                } else if (callbackData === 'youtube_cashmegan') {
-                    await bot.answerCallbackQuery(query.id, { text: "Opening Cash Megan YouTube..." });
-                    await bot.sendMessage(query.message.chat.id, "Subscribe to Cash Megan: https://www.youtube.com/@cashmega?si=I7MIP1Hcpou3nAeY");
-                } */
     } catch (error) {
         console.error(`Error handling callback query: ${error}`);
     }
