@@ -131,6 +131,18 @@ app.get('/', (req, res) => {
 });
 
 
+app.get('/set-webhook', async (req, res) => {
+  try {
+    await bot.setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
+    res.send('Webhook set successfully');
+  } catch (error) {
+    console.error('Error setting webhook:', error);
+    res.status(500).send('Failed to set webhook');
+  }
+});
+
+
+
 // Set webhook only in production
 if (process.env.NODE_ENV === 'production') {
   setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
