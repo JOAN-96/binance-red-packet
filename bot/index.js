@@ -10,6 +10,7 @@ const wss = new WebSocket.Server({ server });
 const { User, getUser, createUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
 const { bot, setWebHook} = require('./telegram')
+const { handleStartCommand, handleWebappCommand } = require('./telegram');
 const token = bot.token; // Access the token variable from the telegram module
 
 // Serve static files from the 'mini-web-app' directory
@@ -77,9 +78,9 @@ app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
 
   try {
     if (text === '/start') {
-      await bot.handleStartCommand(message);
+      await handleStartCommand(message); // Direct /start handle call
     } else if (text === '/webapp') {
-      await bot.handleWebappCommand(chat.id);
+      await handleWebappCommand(chat.id); // Direct /webapp handle call
     } else {
       await bot.sendMessage(chat.id, 'Unknown command');
     }
