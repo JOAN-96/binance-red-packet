@@ -1,68 +1,38 @@
-// HEAD
+// === HEAD ===
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const app = express();
-const server = require('http').createServer(app);
+const http = require('http');
 const WebSocket = require('ws');
+
+const app = express();
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
-const { User, getUser, createUser, updateUserAmount } = require('./database');
-const sessionConfig = require('./session');
-const { bot, setWebHook} = require('./telegram')
-const { handleStartCommand, handleWebappCommand } = require('./telegram');
+
+// Import from bot folder
+const { User, getUser, createUser, updateUserAmount } = require('./bot/database');
+const sessionConfig = require('./bot/session');
+const { bot, setWebHook, logWalletUpdate, handleStartCommand, handleWebappCommand} = require('./bot/telegram')
 const token = bot.token; // Access the token variable from the telegram module
 
-// Serve static files from the 'mini-web-app' directory
-const port = process.env.PORT || 3000; // Server Port
-server.listen(port, '0.0.0.0', () => {
-  console.log(`Mini web app listening on port ${port}`);
-}).on('error', (error) => {
-  console.error('Error starting server:', error);
-});
 
-// Set up session middleware
+// === Middleware Session ===
 app.use(session(sessionConfig));
-app.use(express.static(path.join(__dirname, '../mini-web-app')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// === Serve static files from the 'mini-web-app' directory ===
+app.use(express.static(path.join(__dirname, 'mini-web-app')));
+
+// Route for mini web app
+app.get('/', (req, res) => {
+  // The index.html file will be served automatically by express.static
+  res.sendFile(path.join(__dirname, 'mini-web-app/home/home.html'));
+});
+
 
 // === Telegram webhook endpoint ===
-/* app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
-  const message = req.body.message;
-
-  // Only exit early if there's no message
-  if (message) {
-    return res.sendStatus(200); 
-  });
-  
-    const { chat, text } = message;
-    const userId = chat.id;
-    const userUsername = chat.username;
-
-    // Log the message
-    console.log(`Received message from ${userUsername}: ${text}`);
-
-    // Handle the user commands by delegating to telegram.js
-    try {
-      if (text === '/start') {
-        const responseText = await bot.handleStartCommand(userId, userUsername); // Handle /start
-        console.log('Start command processed:', responseText);
-      } else if (text === '/webapp') {
-        const responseText = await bot.handleWebappCommand(userId); // Handle /webapp
-        await bot.sendMessage(userId, responseText);
-      } else {
-        await bot.sendMessage(userId, 'Unknown command');
-      }
-    } catch (error) {
-      console.error('Error handling command:', error);
-      await bot.sendMessage(userId, 'Sorry, something went wrong.');
-    }
-
-  res.sendStatus(200); // Always respond with 200 OK to Telegram
-}); */
-
 app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
   console.log('Received webhook update:', req.body);
 
@@ -92,19 +62,8 @@ app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
   res.sendStatus(200); // Always respond with 200 OK to Telegram
 });
 
-// 404 handler
-app.use((req, res, next) => {
-  res.status(404).send('Not Found');
-});
 
-// Globlal error handler
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).send('Internal Server Error');
-});
-
-
-// WebSocket event listener
+// === WebSocket event listener ===
 wss.on('connection', (ws) => {
   console.log('Client connected to WebSocket');
 
@@ -147,16 +106,20 @@ wss.on('error', (error) => {
   console.error('WebSocket error:', error);
 });
 
+// === Fallback + error handlers ===
+// 404 handler
+app.use((req, res, next) => {
+  res.status(404).send('Not Found');
+});
 
-
-// Route for mini web app
-app.get('/', (req, res) => {
-  // The index.html file will be served automatically by express.static
-  res.sendFile(path.join(__dirname, '../mini-web-app/home/home.html'));
+// Globlal error handler
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).send('Internal Server Error');
 });
 
 
-// Webhook setup route
+// === Webhook setup route ===
 // This route is for setting the webhook manually
 // You can call this route to set the webhook when needed
 app.get('/set-webhook', async (req, res) => {
@@ -170,8 +133,17 @@ app.get('/set-webhook', async (req, res) => {
 });
 
 
+// === Start server ===
+// Serve static files from the 'mini-web-app' directory
+const port = process.env.PORT || 3000; // Server Port
+server.listen(port, '0.0.0.0', () => {
+  console.log(`Mini web app listening on port ${port}`);
+}).on('error', (error) => {
+  console.error('Error starting server:', error);
+});
 
-// Set webhook only in production
+
+// == Set webhook automatically in production ===
 if (process.env.NODE_ENV === 'production') {
   setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
 }
