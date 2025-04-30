@@ -1,5 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { getUser, createUser } = require('./database');
+const User = require('./models/User');
 require('dotenv').config();
 
 //Token gotten from BotFather
@@ -9,9 +10,6 @@ const token = process.env.TELEGRAM_TOKEN;
 
 // Initialize the bot (not using polling)
 const bot = new TelegramBot(token, { webHook: {port: false } }); // Set polling to false for webhook mode as we use webhook-based bot
-
-// Heroku app URL
-const webAppUrl = 'https://vast-caverns-06591-d6f9772903a1.herokuapp.com/';
  
 
 const debug = true;
@@ -106,11 +104,17 @@ async function handleStartCommand(msg) {
 }
 
 // Function to handle the /webapp command
-async function handleWebappCommand(userId) {
+async function handleWebappCommand(userId, username) {
     try {
-        // This message will be returned to the webhook handler for logging (optional)
-        const messageText = 'Click the button below to open the Web App';
+        // Fallback if no username
+        const safeUsername = username || 'user';
 
+        // Heroku app URL
+        const webAppUrl = 'https://vast-caverns-06591-d6f9772903a1.herokuapp.com/';
+        
+        // This message will be returned to the webhook handler for logging (optional)
+        const messageText = 'Click the button below to open the Web App 👇';
+        
         // Send the message with the Web App button
         await bot.sendMessage(userId, messageText, {
             reply_markup: {
@@ -213,7 +217,48 @@ bot.on('error', (error) => {
     });
 }); */
 
-// Export bot and helper functions
+
+// Assuming you have already imported express, mongodb models etc.
+app.get('/get-user-data', async (req, res) => {
+    const userId = req.query.userId; // Get userId from query string
+  
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing userId' });
+    }
+  
+    try {
+      // Search for the user document by Telegram user ID
+      const user = await User.findOne({ telegramId: userId });
+  
+      if (!user) {
+        // If no user found — optionally create a new user document
+        const newUser = new User({
+          telegramId: userId,
+          walletBalance: 0,
+          videoWatchStatus: { video1: false, video2: false, video3: false }
+        });
+        await newUser.save();
+  
+        return res.json({
+          walletBalance: newUser.walletBalance,
+          videoWatchStatus: newUser.videoWatchStatus
+        });
+      }
+  
+      // Return existing user data
+      res.json({
+        walletBalance: user.walletBalance,
+        videoWatchStatus: user.videoWatchStatus
+      });
+  
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+});
+  
+
+// === Export bot and helper functions ===
 module.exports = {
     bot,
     handleStartCommand,

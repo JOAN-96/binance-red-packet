@@ -1,190 +1,146 @@
-const socket = new WebSocket('ws://cryptic-caverns-38004-f55e3bfbd857.herokuapp.com');
+const socket = new WebSocket('wss://vast-caverns-06591-d6f9772903a1.herokuapp.com');
 
-// Get the video buttons and wallet balance element
-const videoButtons = document.querySelectorAll('.video button');
-const walletBalanceElement = document.querySelector('.balance .BTTC');
+// === Initialize user data ===
+let userId = null;
+let username = null;
+let userBalance = 0; // Initialize user balance
+const videoWatchStatus = { video1: false, video2: false, video3: false };
 
-// Initialize an object to store the video watch status
-const videoWatchStatus = {
-  video1: false,
-  video2: false,
-  video3: false,
-};
+// === Access to telegram user info ===
+// Wait for the DOM to load before manipulating elements
+// Ensures everything runs after the page is fully loaded
+window.addEventListener('DOMContentLoaded', () => {
+  const tg = window.Telegram.WebApp;
+  tg.ready();
 
-// Initialize the user's balance
-let userBalance = 0;
+  const user = tg.initDataUnsafe.user;
+  userId = user?.id;
+  username = user?.username;
 
-// Declare videoWatchTimeout globally
-let videoWatchTimeout;
+  console.log('User ID:', userId, 'Username:', username);
 
-// Function to open the video popup
-function openVideoPopup(videoUrl) {
-  const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
-  popup.focus();
-
-  // Detext when the user has watched the video
-  popup.onclose = function() {
-    // Update the user's wallet balance with the reward
-    updateWalletBalance(1000);
-  };
-}
-
-// Function to update the user's balance
-function updateWalletBalance(amount) {
-  userBalance += amount;
-  walletBalanceElement.textContent = `${userBalance} BTTC`;
-
-  // Send the updated balance to the server
-  const userId = 'USER_ID_HERE'; // Replace with the actual user ID
-  socket.send(JSON.stringify({ userId, amount }));
-}
-
-// Add event listeners to the video buttons
-/* videoButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    const videoUrls = [
-      'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
-      'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
-      'https://youtu.be/azxTB53RkRY'
-    ];
-
-    // Open the YouTube video in the YouTube app
-    window.open(videoUrls[index], '_blank');
-
-    // Set a timer to check if the user has returned to your web app
-    videoWatchTimeout = setTimeout(() => {
-      // Update the wallet balance
-      updateWalletBalance(1000);
-
-      // Update the button text and disable the button
-      updateButton(button, true);
-    }, 600000); // 60 seconds
-  });
-}); */
-
-
-/* videoButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    const videoUrls = [
-      'https://www.youtube.com/embed/1fO37crxJMY',
-      'https://www.youtube.com/embed/euOlwdnO8KA',
-      'https://www.youtube.com/embed/azxTB53RkRY'
-    ];
-
-    // Create an iframe to embed the YouTube video
-    const iframe = document.createElement('iframe');
-    iframe.src = videoUrls[index];
-    iframe.frameBorder = '0';
-    iframe.allowFullScreen = true;
-    iframe.width = '100%';
-    iframe.height = '500';
-
-    // Add the iframe to the page
-    const videoContainer = document.querySelector('.video-container');
-    videoContainer.appendChild(iframe);
-
-    // Set a timer to check if the user has returned to your web app
-    videoWatchTimeout = setTimeout(() => {
-      // Update the wallet balance
-      updateWalletBalance(1000);
-
-      // Update the button text and disable the button
-      updateButton(button, true);
-
-      // Remove the iframe
-      videoContainer.removeChild(iframe);
-    }, 600000); // 60 seconds
-  });
-}); */
-
-
-videoButtons.forEach((button, index) => {
-  button.addEventListener('click', () => {
-    const videoUrls = [
-      'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
-      'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
-      'https://youtu.be/azxTB53RkRY'
-    ];
-
-    // Open the YouTube video in the YouTube app
-    window.open(videoUrls[index], '_blank');
-
-    // Set a timer for 60 seconds
-    videoWatchTimeout = setTimeout(() => {
-      // Update the user's balance and display the reward
-      updateWalletBalance(1000);
-    }, 60000); // 60 seconds
-
-    // Use the document.addEventListener('focus', ...) event to detect when the user returns to your web app
-    document.addEventListener('focus', () => {
-      // Update the button text and disable the button
-      updateButton(button, true);
-    }, { once: true });
-  });
-});
-
-// Function to update the button text and color
-function updateButton(button, watched) {
-  if (watched) {
-    button.textContent = 'Done';
-    button.style.backgroundColor = '#640D0F';
-    button.style.color = '#FEE9E9';
-    button.disabled = true;
+  const welcomeEl = document.getElementById('welcome-message');
+  if (welcomeEl && username) {
+    welcomeEl.innerText = `Welcome ${username}!`;
   }
-}
 
-// Check if the user has watched the videos and update the buttons accordingly
-Object.keys(videoWatchStatus).forEach((video) => {
-  if (videoWatchStatus[video]) {
-    const button = document.querySelector(`#${video} button`);
-    updateButton(button, true);
+  // === Wallet balance element ====
+  const walletBalanceElement = document.querySelector('.balance .BTTC');
+
+  // Function to update the user's balance
+  async function updateWalletBalance(amount) {
+    userBalance += amount;
+    if (walletBalanceElement) {
+      walletBalanceElement.textContent = `${userBalance} BTTC`;
+    }
+
+    // === Send the updated balance (/wallet-update) to Express server ====
+    try {
+      const res = await fetch('/wallet-update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, amount })
+      });
+      const data = await res.json();
+      console.log('Wallet updated on server:', data);
+    } catch (err) {
+      console.error('Failed to update wallet on server', err);
+    }
   }
-});
+  
 
-// Fetch the user's data from the server when the page loads
-fetch('/get-user-data')
-  .then((response) => response.json())
-  .then((data) => {
-    videoWatchStatus.video1 = data.videoWatchStatus.video1;
-    videoWatchStatus.video2 = data.videoWatchStatus.video2;
-    videoWatchStatus.video3 = data.videoWatchStatus.video3;
-    userBalance = data.walletBalance;
-    walletBalanceElement.textContent = `${userBalance} BTTC`;
+  // === Video reward logic ===
+  const videoButtons = document.querySelectorAll('.video button');
 
-    // Update the button text and color based on the user's video watch status
-    Object.keys(videoWatchStatus).forEach((video) => {
-      if (videoWatchStatus[video]) {
-        const button = document.querySelector(`#${video} button`);
+  // Video urls
+  const videoUrls = [
+    'https://youtu.be/1fO37crxJMY?si=BEO-UyO4bPJEA4sA',
+    'https://youtu.be/euOlwdnO8KA?si=HEZQ1vwdD5Tx-jcc',
+    'https://youtu.be/azxTB53RkRY'
+  ];
+
+  // Video button action
+  videoButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      // Open the YouTube video in the YouTube app
+      window.open(videoUrls[index], '_blank');
+
+      // Timer
+      const timeout = setTimeout(() => {
+        updateWalletBalance(1000);
+      }, 60000); // 60 seconds
+
+      document.addEventListener('focus', () => {
         updateButton(button, true);
+        // Optional: don't clear timeout so they still get reward
+        /*clearTimeout(timeout); */
+      }, { once: true });
+    });
+  });
+
+  // Function to update the button text and color
+  function updateButton(button, watched) {
+    if (watched) {
+        button.textContent = 'Done';
+      button.style.backgroundColor = '#640D0F';
+      button.style.color = '#FEE9E9';
+      button.disabled = true;
+    }
+  }
+
+  // === Load user data from server
+  fetch('/get-user-data')
+  .then(res => res.json())
+  .then(data => {
+    Object.assign(videoWatchStatus, data.videoWatchStatus);
+    userBalance = data.walletBalance;
+    if (walletBalanceElement) {
+      walletBalanceElement.textContent = `${userBalance} BTTC`;
+    }
+    
+    // === Check if the user has watched the videos and update the buttons accordingly ===
+    // Update buttons for watched videos
+    Object.keys(videoWatchStatus).forEach((video, idx) => {
+      if (videoWatchStatus[video]) {
+        updateButton(videoButtons[idx], true);
       }
     });
   })
-  .catch((error) => console.error(error));
+  .catch(console.error);
 
-// Handle incoming messages from the server
-socket.onmessage = (event) => {
-  try {
-    const userData = JSON.parse(event.data);
-    const amount = userData.amount;
+  // Handle server push wallet updates
+  socket.onmessage = (event) => {
+    try {
+      const userData = JSON.parse(event.data);
+      const amount = userData.amount;
+      userBalance = amount;
+      if (walletBalanceElement) {
+        walletBalanceElement.textContent = `${userBalance} BTTC`;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    // Update the user's balance
-    userBalance = amount;
 
-    // Update the wallet balance element
-    walletBalanceElement.textContent = `${userBalance} BTTC`;
-  } catch (error) {
-    console.error(error);
+  // === NAVIGATION ===
+  const walletButton = document.querySelector('.wallet'); // Get the wallet button
+  const taskButton = document.querySelector('.task'); // Get the task button
+
+  // Add an event listener to the home and taks buttons
+  if (walletButton) {
+    walletButton.addEventListener('click', () => navigateTo('../wallet/wallet.html'));
   }
-};
+  if (taskButton) {
+    taskButton.addEventListener('click', () => navigateTo('../task/task.html'));
+  }
 
+  // Navigation transition
+  function navigateTo(url) {
+    document.body.style.opacity = 0;
+    setTimeout(() => { window.location.href = url; }, 300);
+  }
 
-// NAVIGATION
-
-// Get the wallet button
-const walletButton = document.querySelector('.wallet');
-
-// Add an event listener to the home button
-walletButton.addEventListener('click', () => {
   // Add the fade-out effect to the body
   document.body.style.opacity = 0;
 
@@ -196,17 +152,14 @@ walletButton.addEventListener('click', () => {
 
 
 
+// Function to open the video popup
+/*function openVideoPopup(videoUrl) {
+  const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
+  popup.focus();
 
-// Get the task button
-const taskButton = document.querySelector('.task');
-
-// Add an event listener to the task button
-taskButton.addEventListener('click', () => {
-  // Add the fade-out effect to the body
-  document.body.style.opacity = 0;
-
-  // Navigate to the home page after the transition
-  setTimeout(() => {
-    window.location.href = '../task/task.html';
-  }, 300); // Match the transition duration
-});
+  // Detext when the user has watched the video
+  popup.onclose = function() {
+    // Update the user's wallet balance with the reward
+    updateWalletBalance(1000);
+  };
+} */

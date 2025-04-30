@@ -9,6 +9,11 @@
 </head>
 
 <body>
+    <!--Header-->
+    <header>
+        <h1 id="welcome-message">Welcome!</h1>
+    </header>
+    
     <!-- Wallet -->
     <div class="wallet-balance">
         <div class="details">
@@ -167,54 +172,6 @@
 
       <!-- Javascript Link -->
       <script src="home.js"></script>
-
-      <!--Access to Telegram users info-->>
-      <script>
-        window.addEventListener('DOMContentLoaded', () => {
-          const tg = window.Telegram.WebApp;
-          tg.ready();
       
-          const user = tg.initDataUnsafe.user;
-          const userId = user?.id;
-          const username = user?.username;
-      
-          // Debug user
-          console.log('User ID:', userId, 'Username:', username);
-      
-          // Example of updating wallet after clicking a video task (you can customize)
-          document.querySelectorAll('.video button').forEach((btn, index) => {
-            btn.addEventListener('click', async () => {
-              try {
-                const payload = {
-                  userId: userId,
-                  amount: 1000  // For watching a video
-                };
-      
-                // Send to your WebSocket or backend endpoint
-                const response = await fetch('/wallet-update', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(payload)
-                });
-      
-                if (response.ok) {
-                  alert('You earned 1,000 BTTC!');
-                } else {
-                  alert('Failed to update wallet.');
-                }
-              } catch (err) {
-                console.error('Error sending reward:', err);
-              }
-            });
-          });
-      
-          // Optional: Close the web app after a task
-          // tg.close();
-        });
-      </script>
-      
-
 </body>
 </html>

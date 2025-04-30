@@ -2,6 +2,8 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+const mongoose = require('mongoose');
+const User = require('../models/User'); 
 const session = require('express-session');
 const http = require('http');
 const WebSocket = require('ws');
@@ -11,9 +13,9 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 // Import from bot folder
-const { User, getUser, createUser, updateUserAmount } = require('./bot/database');
-const sessionConfig = require('./bot/session');
-const { bot, setWebHook, logWalletUpdate, handleStartCommand, handleWebappCommand} = require('./bot/telegram')
+const { User, getUser, createUser, updateUserAmount } = require('./database');
+const sessionConfig = require('./session');
+const { bot, setWebHook, logWalletUpdate, handleStartCommand, handleWebappCommand} = require('./telegram')
 const token = bot.token; // Access the token variable from the telegram module
 
 
@@ -22,13 +24,21 @@ app.use(session(sessionConfig));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
+// === Connect to MongoDB ===
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+
 // === Serve static files from the 'mini-web-app' directory ===
-app.use(express.static(path.join(__dirname, 'mini-web-app')));
+app.use(express.static(path.join(__dirname, '../mini-web-app')));
 
 // Route for mini web app
 app.get('/', (req, res) => {
   // The index.html file will be served automatically by express.static
-  res.sendFile(path.join(__dirname, 'mini-web-app/home/home.html'));
+  res.sendFile(path.join(__dirname, '../mini-web-app/home/home.html'));
 });
 
 
@@ -50,7 +60,7 @@ app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
     if (text === '/start') {
       await handleStartCommand(message); // Direct /start handle call
     } else if (text === '/webapp') {
-      await handleWebappCommand(chat.id); // Direct /webapp handle call
+      await handleWebappCommand(chat.id, chat.username); // Direct /webapp handle call
     } else {
       await bot.sendMessage(chat.id, 'Unknown command');
     }
@@ -60,6 +70,29 @@ app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
   }
 
   res.sendStatus(200); // Always respond with 200 OK to Telegram
+});
+
+
+// === Wallet update endpoint ===
+app.post('/wallet-update', async (req, res) => {
+  const { userId, amount } = req.body;
+  if (!userId || !amount) {
+    return res.status(400).json({ error: 'Missing userId or amount' });
+  }
+
+  try {
+    // Find the user OR create a new one if not found
+    const user = await User.findOneAndUpdate(
+      { telegramId: userId },
+      { $inc: { walletBalance: amount } },  // Increment balance
+      { new: true, upsert: true }           // Create user if not exist
+    );
+
+    return res.json({ success: true, walletBalance: user.walletBalance });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Server error' });
+  }
 });
 
 
