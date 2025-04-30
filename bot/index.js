@@ -23,7 +23,7 @@ server.listen(port, '0.0.0.0', () => {
 
 // Set up session middleware
 app.use(session(sessionConfig));
-app.use(express.static(path.join(__dirname, '/mini-web-app')));
+app.use(express.static(path.join(__dirname, '../mini-web-app')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -152,7 +152,7 @@ wss.on('error', (error) => {
 // Route for mini web app
 app.get('/', (req, res) => {
   // The index.html file will be served automatically by express.static
-  res.sendFile(path.join(__dirname, '/mini-web-app/home/home.html'));
+  res.sendFile(path.join(__dirname, '../mini-web-app/home/home.html'));
 });
 
 
