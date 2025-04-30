@@ -98,7 +98,37 @@ async function handleStartCommand(msg) {
             inline_keyboard: youtubeChannelsKeyboard
         }
     });
+
+    // Return a response to acknowledge the webhook handler
+    return 'Welcome message and links sent!';
 }
+
+// Function to handle the /webapp command
+async function handleWebappCommand(userId) {
+    const WEB_APP_URL = 'https://vast-caverns-06591.herokuapp.com/';
+
+    // This message will be returned to the webhook handler for logging (optional)
+    const messageText = 'Click the button below to open the Web App';
+
+    // Send the message with the Web App button
+    await bot.sendMessage(userId, messageText, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Open Web App',
+                        web_app: {
+                            url: WEB_APP_URL
+                        }
+                    }
+                ]
+            ]
+        }
+    });
+
+    return 'Web app button sent!';
+}
+
 
 // Function to log wallet update 
 async function logWalletUpdate(userId, incrementValue = 1000) {
@@ -117,7 +147,7 @@ async function logWalletUpdate(userId, incrementValue = 1000) {
   }
   
 
-
+/*
 bot.onText(/\/start/, async (msg) => {
     try {
         console.log(`User ${msg.from.username} started the bot`);
@@ -126,8 +156,8 @@ bot.onText(/\/start/, async (msg) => {
         console.error(`Error handling /start command: ${error}`);
         await bot.sendMessage(msg.chat.id, 'Sorry, an error occurred. Please try again later!');
     }
-});
-
+}); */
+/*
 bot.on('message', async (msg) => {
     console.log(`Received message from ${msg.from.username}: ${msg.text}`);
     const chatId = msg.chat.id;
@@ -145,7 +175,7 @@ bot.on('message', async (msg) => {
         console.error(`Error creating or getting user: ${error}`);
         await bot.sendMessage(chatId, 'Sorry, an error occurred. Please try again later!');
     }
-});
+}); */
 
 bot.on('callback_query', async (query) => {
     try {

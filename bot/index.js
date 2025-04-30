@@ -30,7 +30,12 @@ app.use(express.json());
 // === Telegram webhook endpoint ===
 app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
   const message = req.body.message;
+
+  // Only exit early if there's no message
   if (message) {
+    return res.sendStatus(200); 
+  }
+  
     const { chat, text } = message;
     const userId = chat.id;
     const userUsername = chat.username;
@@ -42,28 +47,19 @@ app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
     try {
       if (text === '/start') {
         const responseText = await bot.handleStartCommand(userId, userUsername); // Handle /start
-        res.send({
-          method: 'sendMessage',
-          chat_id: userId,
-          text: responseText
-        });
+        console.log('Start command processed:', responseText);
       } else if (text === '/webapp') {
         const responseText = await bot.handleWebappCommand(userId); // Handle /webapp
-        res.send({
-          method: 'sendMessage',
-          chat_id: userId,
-          text: responseText
-        });
+        await bot.sendMessage(userId, responseText);
       } else {
-        res.send('Unknown command');
+        await bot.sendMessage(userId, 'Unknown command');
       }
     } catch (error) {
       console.error('Error handling command:', error);
-      res.send('Sorry, something went wrong.');
+      await bot.sendMessage(userId, 'Sorry, something went wrong.');
     }
-  } else {
-    res.send('No message received');
-  }
+
+  res.sendStatus(200); // Always respond with 200 OK to Telegram
 });
 
 
@@ -131,6 +127,9 @@ app.get('/', (req, res) => {
 });
 
 
+// Webhook setup route
+// This route is for setting the webhook manually
+// You can call this route to set the webhook when needed
 app.get('/set-webhook', async (req, res) => {
   try {
     await bot.setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
