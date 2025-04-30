@@ -8,9 +8,11 @@ const token = process.env.TELEGRAM_TOKEN;
 
 
 // Initialize the bot (not using polling)
-const bot = new TelegramBot(token);
+const bot = new TelegramBot(token, { webHook: {port: false } }); // Set polling to false for webhook mode as we use webhook-based bot
 
-const WEB_APP_URL = 'https://vast-caverns-06591.herokuapp.com/'; // Heroku app URL
+// Heroku app URL
+const webAppUrl = 'https://vast-caverns-06591-d6f9772903a1.herokuapp.com/';
+ 
 
 const debug = true;
 
@@ -105,27 +107,29 @@ async function handleStartCommand(msg) {
 
 // Function to handle the /webapp command
 async function handleWebappCommand(userId) {
-    const WEB_APP_URL = 'https://vast-caverns-06591.herokuapp.com/';
+    try {
+        // This message will be returned to the webhook handler for logging (optional)
+        const messageText = 'Click the button below to open the Web App';
 
-    // This message will be returned to the webhook handler for logging (optional)
-    const messageText = 'Click the button below to open the Web App';
-
-    // Send the message with the Web App button
-    await bot.sendMessage(userId, messageText, {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    {
-                        text: 'Open Web App',
-                        web_app: {
-                            url: WEB_APP_URL
+        // Send the message with the Web App button
+        await bot.sendMessage(userId, messageText, {
+            reply_markup: {
+                inline_keyboard: [
+                    [
+                        {
+                            text: 'Open Web App',
+                            web_app: {
+                                url: webAppUrl // Heroku app URL
+                            }
                         }
-                    }
+                    ]
                 ]
-            ]
-        }
-    });
-
+            }
+        });
+    } catch (error) {
+        console.error('Error sending Web App button:', error);
+        await bot.sendMessage(userId, 'Sorry, an error occurred while sending the Web App button. Please try again later!');
+    }
     return 'Web app button sent!';
 }
 
