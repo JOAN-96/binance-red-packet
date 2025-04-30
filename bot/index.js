@@ -10,7 +10,7 @@ const wss = new WebSocket.Server({ server });
 const { User, getUser, createUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
 const { bot, setWebHook} = require('./telegram')
-const token = process.env.TELEGRAM_TOKEN; // Access the token variable from the telegram module
+const token = bot.token; // Access the token variable from the telegram module
 
 // Serve static files from the 'mini-web-app' directory
 const port = process.env.PORT || 3000; // Server Port
@@ -62,7 +62,9 @@ app.use(express.json());
   res.sendStatus(200); // Always respond with 200 OK to Telegram
 }); */
 
-app.post(`/bot${token}`, async (req, res) => {
+app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
+  console.log('Received webhook update:', req.body);
+
   const { message } = req.body;
 
   // Log the incoming message
