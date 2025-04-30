@@ -1,5 +1,5 @@
 /* GLOBAL CSS STYLES */
-@import url(../css/styles.css);
+@import url(/mini-web-app/css/styles.css);
 
 /* Hide desktop layout by default */
 .desktop-layout {

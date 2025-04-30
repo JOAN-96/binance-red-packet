@@ -1,5 +1,5 @@
 /* GLOBAL CSS STYLES */
-@import url(../css/styles.css);
+@import url(/mini-web-app/css/styles.css);
 
 /* Hide desktop layout by default */
 .desktop-layout {
@@ -23,6 +23,12 @@ body {
     box-sizing: border-box;
     margin-block: 40px;
     transition: opacity 0.5s ease-in-out;
+}
+
+/* Header */
+#welcome-message {
+    color: #FEE9E9;
+    text-align: center;
 }
 
 /* Wallet */
