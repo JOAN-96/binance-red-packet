@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { getUser, createUser } = require('./database');
-const User = require('./models/User');
+const User = require('./User');
 require('dotenv').config();
 
 //Token gotten from BotFather
@@ -216,46 +216,6 @@ bot.on('error', (error) => {
         }
     });
 }); */
-
-
-// Assuming you have already imported express, mongodb models etc.
-app.get('/get-user-data', async (req, res) => {
-    const userId = req.query.userId; // Get userId from query string
-  
-    if (!userId) {
-      return res.status(400).json({ error: 'Missing userId' });
-    }
-  
-    try {
-      // Search for the user document by Telegram user ID
-      const user = await User.findOne({ telegramId: userId });
-  
-      if (!user) {
-        // If no user found — optionally create a new user document
-        const newUser = new User({
-          telegramId: userId,
-          walletBalance: 0,
-          videoWatchStatus: { video1: false, video2: false, video3: false }
-        });
-        await newUser.save();
-  
-        return res.json({
-          walletBalance: newUser.walletBalance,
-          videoWatchStatus: newUser.videoWatchStatus
-        });
-      }
-  
-      // Return existing user data
-      res.json({
-        walletBalance: user.walletBalance,
-        videoWatchStatus: user.videoWatchStatus
-      });
-  
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-});
   
 
 // === Export bot and helper functions ===

@@ -1,13 +1,6 @@
 const mongoose = require('mongoose');
+const User = require('./User'); // Import the User model
 require('dotenv').config();
-
-
-// Check if the connection was successful
-/*mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
-}).on('error', (error) => {
-  console.error('Error connecting to MongoDB:', error);
-}); */
 
 // Check if the connection was successful
 if (!process.env.MONGODB_URI) {
@@ -46,36 +39,21 @@ const userSchema = new mongoose.Schema({
   walletBalance: { type: Number, default: 0 },
 }, {timestamps: true}); // Add timestamps to the schema
 
-// Create a User model
-const User = mongoose.model('User', userSchema);
-
-// Function to create a new user based on Telegram user info
-async function createUser(telegramId, telegramUsername) {
-  const existingUser = await User.findOne({ telegramId });
-  if (existingUser) {
-    // Return the existing user document
-    return existingUser;
-  } else {
-    // Create a new user document
-    const newUser = new User({
-      telegramId,
-      username: telegramUsername,
-      firstName: '',
-      lastName: '',
-      walletBalance: 0, // Initialize wallet balance to 0
-    });
-    await newUser.save();
-    return newUser;
-  }
-}
 
 // Function to get a user document based on Telegram user ID or username
-async function getUser(telegramIdOrUsername) {
-  if (typeof telegramIdOrUsername === 'number') {
-    return User.findOne({ telegramId: telegramIdOrUsername });
-  } else {
-    return User.findOne({ username: telegramIdOrUsername });
-  }
+async function getUser(userId) {
+  return await User.findOne({ telegramId: userId });
+}
+
+// Function to create a new user based on Telegram user info
+async function createUser(userId, username) {
+  const newUser = new User({
+    telegramId: userId,
+    username,
+    walletBalance: 0,
+    videoWatchStatus: { video1: false, video2: false, video3: false }
+  });
+  return await newUser.save();
 }
 
 // Function to update the wallet balance of a user
@@ -85,17 +63,19 @@ async function updateUserAmount(userId, amount) {
       throw new Error(`Invalid amount: ${amount}. Must be a number.`);
     }
     const user = await getUser(userId);
-    if (user) {
-      user.walletBalance = amount; // Update walletBalance instead of amount
-      await user.save();
-      console.log(`Updated wallet balance for ${user.username}: ${amount}`);
-    } else {
+    if (!user) {
       console.error(`User with ID ${userId} not found`);
-    }
-  } catch (error) {
+      return;
+    } 
+
+    // Update walletBalance instead of amount
+    user.walletBalance = amount; 
+    await user.save();
+    console.log(`Updated wallet balance for ${user.username}: ${amount}`);
+  } 
+  catch (error) {
     console.error('Error updating user amount:', error);
   }
 }
 
-
-module.exports = { User, createUser, getUser, updateUserAmount };
+module.exports = { getUser, createUser, updateUserAmount };

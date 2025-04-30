@@ -3,7 +3,6 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('../models/User'); 
 const session = require('express-session');
 const http = require('http');
 const WebSocket = require('ws');
@@ -13,7 +12,7 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 // Import from bot folder
-const { User, getUser, createUser, updateUserAmount } = require('./database');
+const { createUser, getUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
 const { bot, setWebHook, logWalletUpdate, handleStartCommand, handleWebappCommand} = require('./telegram')
 const token = bot.token; // Access the token variable from the telegram module
@@ -31,6 +30,48 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 });
 
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB');
+  // Now you can safely use the database
+})
+.on('error', (error) => {
+  console.error('MongoDB connection error:', error);
+});
+
+
+// Assuming you have already imported express, mongodb models etc.
+app.get('/get-user-data', async (req, res) => {
+    const userId = parseInt(req.query.userId, 10); // Get userId from query string
+  
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing userId' });
+    }
+  
+    try {
+      // Search for the user document by Telegram user ID
+      const user = await getUser(userId);
+  
+      if (!user) {
+        // If no user found - optionally create a new user document
+      await createUser(userId, 'user'); // fallback username
+  
+        return res.json({
+          walletBalance: newUser.walletBalance,
+          videoWatchStatus: { video1: false, video2: false, video3: false }
+        });
+      }
+  
+      // Return existing user data
+      res.json({
+        walletBalance: user.walletBalance,
+        videoWatchStatus: user.videoWatchStatus
+      });
+  
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // === Serve static files from the 'mini-web-app' directory ===
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
@@ -81,12 +122,14 @@ app.post('/wallet-update', async (req, res) => {
   }
 
   try {
-    // Find the user OR create a new one if not found
-    const user = await User.findOneAndUpdate(
-      { telegramId: userId },
-      { $inc: { walletBalance: amount } },  // Increment balance
-      { new: true, upsert: true }           // Create user if not exist
-    );
+    // Use the `updateUserAmount` function from database.js to update the user's wallet balance
+    await updateUserAmount(userId, amount);
+
+    // Retrieve the updated user from the database
+    const user = await getUser(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     return res.json({ success: true, walletBalance: user.walletBalance });
   } catch (err) {
@@ -179,4 +222,10 @@ server.listen(port, '0.0.0.0', () => {
 // == Set webhook automatically in production ===
 if (process.env.NODE_ENV === 'production') {
   setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
+}
+
+// == Environment variables check ==
+if (!process.env.MONGO_URI || !process.env.TELEGRAM_TOKEN) {
+  console.error('Required environment variables are missing!');
+  process.exit(1); // Stop the server if critical environment variables are missing
 }
