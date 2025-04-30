@@ -10,7 +10,7 @@ const wss = new WebSocket.Server({ server });
 const { User, getUser, createUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
 const { bot, setWebHook} = require('./telegram')
-const token = bot.token // Access the token variable from the telegram module
+const token = process.env.TELEGRAM_TOKEN; // Access the token variable from the telegram module
 
 // Serve static files from the 'mini-web-app' directory
 const port = process.env.PORT || 3000; // Server Port
@@ -28,13 +28,13 @@ app.use(express.json());
 
 
 // === Telegram webhook endpoint ===
-app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
+/* app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
   const message = req.body.message;
 
   // Only exit early if there's no message
   if (message) {
     return res.sendStatus(200); 
-  }
+  });
   
     const { chat, text } = message;
     const userId = chat.id;
@@ -60,8 +60,34 @@ app.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
     }
 
   res.sendStatus(200); // Always respond with 200 OK to Telegram
-});
+}); */
 
+app.post(`/bot${token}`, async (req, res) => {
+  const { message } = req.body;
+
+  // Log the incoming message
+  if (!message) {
+    console.warn("No 'message' field in the webhook update:", req.body);
+    return res.sendStatus(200); // Exit early if there's no message
+  }
+
+  const { chat, text } = message;
+
+  try {
+    if (text === '/start') {
+      await bot.handleStartCommand(message);
+    } else if (text === '/webapp') {
+      await bot.handleWebappCommand(chat.id);
+    } else {
+      await bot.sendMessage(chat.id, 'Unknown command');
+    }
+  } catch (error) {
+    console.error('Error handling command:', error);
+    await bot.sendMessage(chat.id, 'Sorry, something went wrong.');
+  }
+
+  res.sendStatus(200); // Always respond with 200 OK to Telegram
+});
 
 // 404 handler
 app.use((req, res, next) => {

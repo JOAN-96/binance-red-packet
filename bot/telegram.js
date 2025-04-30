@@ -191,7 +191,7 @@ bot.on('error', (error) => {
 });
 
 // Telegram Web App 
-bot.onText(/\/webapp/, (msg) => {
+/*bot.onText(/\/webapp/, (msg) => {
     const chatID = msg.chat.id;
     bot.sendMessage(chatID, 'Open Web App', {
         reply_markup: {
@@ -207,7 +207,7 @@ bot.onText(/\/webapp/, (msg) => {
             ]
         }
     });
-});
+}); */
 
 // Export bot and helper functions
 module.exports = {
