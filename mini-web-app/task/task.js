@@ -1,3 +1,18 @@
+import { initializeWebSocket } from './websocket.js';
+
+let userBalance = 0;
+
+// Call WebSocket initialization and handle messages
+initializeWebSocket((userData) => {
+  const amount = userData.amount;
+  userBalance = amount;
+  const walletBalanceElement = document.querySelector('.task-wallet-balance');
+  if (walletBalanceElement) {
+    walletBalanceElement.textContent = `${userBalance} BTTC`;
+  }
+});
+
+
 
 // NAVIGATION
 

@@ -1,4 +1,4 @@
-const socket = new WebSocket('wss://vast-caverns-06591-d6f9772903a1.herokuapp.com');
+import { initializeWebSocket } from '/mini-web-app/websocket.js'; 
 
 // === Initialize user data ===
 let userId = null;
@@ -47,7 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error('Failed to update wallet on server', err);
     }
   }
-  
+}); 
 
   // === Video reward logic ===
   const videoButtons = document.querySelectorAll('.video button');
@@ -335,8 +335,8 @@ Object.keys(videoWatchStatus).forEach((video, idx) => {
     }
   };
 
-
-  // === NAVIGATION ===
+/*
+  // === NAVIGATION ===z
   const walletButton = document.querySelector('.wallet'); // Get the wallet button
   const taskButton = document.querySelector('.task'); // Get the task button
 
@@ -353,20 +353,48 @@ Object.keys(videoWatchStatus).forEach((video, idx) => {
     document.body.style.opacity = 0;
     setTimeout(() => { window.location.href = url; }, 300);
   }
+*/
 
+// NAVIGATION
+// Go to wallet page
+const walletButton = document.querySelector('.wallet');
+
+// Add an event listener to the home button
+walletButton.addEventListener('click', () => {
   // Add the fade-out effect to the body
   document.body.style.opacity = 0;
 
-  // Navigate to the home page after the transition
+  // Navigate to the wallet page after the transition
   setTimeout(() => {
-    window.location.href = '../wallet/wallet.html';
+    window.location.href = '/mini-web-app/wallet/wallet.html';
   }, 300); // Match the transition duration
 });
 
 
+// Go to task page
+const taskButton = document.querySelector('.task');
 
+// Add an event listener to the task button
+taskButton.addEventListener('click', () => {
+  // Add the fade-out effect to the body
+  document.body.style.opacity = 0;
+
+  // Navigate to the task page after the transition
+  setTimeout(() => {
+    window.location.href = '/mini-web-app/wallet/task.html';
+  }, 300); // Match the transition duration
+});
+
+
+  // Add the fade-out effect to the body
+  document.body.style.opacity = 0;
+
+  
+
+
+/*
 // Function to open the video popup
-/*function openVideoPopup(videoUrl) {
+function openVideoPopup(videoUrl) {
   const popup = window.open(videoUrl, 'video_popup', 'width=800,height=600');
   popup.focus();
 
@@ -375,4 +403,5 @@ Object.keys(videoWatchStatus).forEach((video, idx) => {
     // Update the user's wallet balance with the reward
     updateWalletBalance(1000);
   };
-} */
+} 
+*/
