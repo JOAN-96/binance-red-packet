@@ -293,7 +293,7 @@ app.use((err, req, res, next) => {
 // You can call this route to set the webhook when needed
 app.get('/set-webhook', async (req, res) => {
   try {
-    await bot.setWebHook(`${process.en.BASE_URL}/bot${process.env.TELEGRAM_TOKEN}`);
+    await bot.setWebHook(`${process.env.BASE_URL}/bot${process.env.TELEGRAM_TOKEN}`);
     res.send('Webhook set successfully');
   } catch (error) {
     console.error('Error setting webhook:', error);
