@@ -3,17 +3,17 @@
 // It also serves a mini web app and handles WebSocket connections for real-time updates.
 // === HEAD ===
 require('dotenv').config();
-const { wss } = require('./server'); // Import WebSocket server
+const { wss } = require('./backend/server.js'); // Import WebSocket server
 const path = require('path');
 const express = require('express');
 const session = require('express-session'); 
-/* const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const http = require('http'); 
 const WebSocket = require('ws'); 
 
 const app = express(); 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server }); */
+const wss = new WebSocket.Server({ server }); 
 
 // Import from bot folder
 const { createUser, getUser, updateUserAmount } = require('./database');
@@ -28,7 +28,7 @@ app.use(session(sessionConfig));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-/*
+
 // === Connect to MongoDB ===
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -41,8 +41,8 @@ mongoose.connection.once('open', () => {
 }) .on('error', (error) => {
   console.error('MongoDB connection error:', error);
 });
-*/
-/*
+
+
 // Assuming you have already imported express, mongodb models etc.
 app.get('/get-user-data', async (req, res) => {
     const userId = parseInt(req.query.userId, 10); // Get userId from query string
@@ -76,8 +76,8 @@ app.get('/get-user-data', async (req, res) => {
       console.error('Error fetching user data:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-}); */
-/*
+}); 
+
 // === Serve static files from the 'mini-web-app' directory ===
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
 
@@ -86,7 +86,7 @@ app.get('/', (req, res) => {
   // The index.html file will be served automatically by express.static
   res.sendFile(path.join(__dirname, '../mini-web-app/home/home.html'));
 });
-*/
+
 
 // === Telegram webhook endpoint ===
 router.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
@@ -181,7 +181,7 @@ router.get('/get-user-data', async (req, res) => {
 });
 
 // === WebSocket event listener ===
-/*wss.on('connection', (ws) => {
+wss.on('connection', (ws) => {
   console.log('Client connected to WebSocket');
 
   ws.on('message', async (message) => {
@@ -221,8 +221,8 @@ router.get('/get-user-data', async (req, res) => {
 
 wss.on('error', (error) => {
   console.error('WebSocket error:', error);
-}); */
-/*
+}); 
+
 // === Fallback + error handlers ===
 // 404 handler
 app.use((req, res, next) => {
@@ -234,12 +234,12 @@ app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).send('Internal Server Error');
 });
-*/
+
 
 // === Webhook setup route ===
 // This route is for setting the webhook manually
 // You can call this route to set the webhook when needed
-/*app.get('/set-webhook', async (req, res) => {
+app.get('/set-webhook', async (req, res) => {
   try {
     await bot.setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
     res.send('Webhook set successfully');
@@ -248,8 +248,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Failed to set webhook');
   }
 });
-*/
-/*
+
+
 // === Start server ===
 // Serve static files from the 'mini-web-app' directory
 const port = process.env.PORT || 3000; // Server Port
@@ -257,9 +257,9 @@ server.listen(port, '0.0.0.0', () => {
   console.log(`Mini web app listening on port ${port}`);
 }).on('error', (error) => {
   console.error('Error starting server:', error);
-}); */
+}); 
 
-/*
+
 // == Set webhook automatically in production ===
 if (process.env.NODE_ENV === 'production') {
   setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
@@ -270,7 +270,7 @@ if (!process.env.MONGO_URI || !process.env.TELEGRAM_TOKEN) {
   console.error('Required environment variables are missing!');
   process.exit(1); // Stop the server if critical environment variables are missing
 }
-*/
+
 // == Export the bot for use in other modules (that is to start it from server.js)==
 module.exports = {
   bot,

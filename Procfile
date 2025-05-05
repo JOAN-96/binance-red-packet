@@ -1,1 +1,1 @@
-web: node backend/server.js
+web: node bot/index.js

@@ -2,11 +2,11 @@
   "name": "binance-red-packet",
   "version": "1.0.0",
   "description": "This is a vide code generator which rewards the users with crypto.",
-  "main": "backend/server.js",
+  "main": "bot/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "start": "node bot/index.js",
+    "dev": "nodemon bot/index.js"
   },
   "repository": {
     "type": "git",

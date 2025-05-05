@@ -6,7 +6,7 @@ const http = require('http');
 const WebSocket = require('ws');
 const connectDB = require('./db');
 const videoRoutes = require('./routes/videoroutes');
-const { bot, botRouter } = require('./bot/index');  // <-- bot runs here
+const { bot, botRouter } = require('../bot/index');  // <-- bot runs here
 const path = require('path');
 
 const app = express();
