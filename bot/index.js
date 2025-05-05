@@ -3,10 +3,21 @@
 // It also serves a mini web app and handles WebSocket connections for real-time updates.
 // === HEAD ===
 require('dotenv').config();
-const { wss } = require('./backend/server.js'); // Import WebSocket server
+console.log('Loaded env variables:', process.env);
+
+// === END HEAD ===
+// === Imports ===
+// Importing required modules
 const path = require('path');
 const express = require('express');
 const session = require('express-session'); 
+
+
+const sessionStore = new MongoStore({
+  mongoUrl: process.env.MONGODB_URI, // Mongo URI from your environment variable
+  collection: 'sessions',
+});
+
 const mongoose = require('mongoose');
 const http = require('http'); 
 const WebSocket = require('ws'); 
@@ -18,22 +29,49 @@ const wss = new WebSocket.Server({ server });
 // Import from bot folder
 const { createUser, getUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
-const { bot, setWebHook, logWalletUpdate, handleStartCommand, handleWebappCommand} = require('./telegram')
+const { bot, setWebHook, logWalletUpdate} = require('./telegram')
 const token = bot.token; // Access the token variable from the telegram module
 
 const router = express.Router();
 
-// === Middleware Session ===
-app.use(session(sessionConfig));
+
+// === Middleware ===
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
 // === Connect to MongoDB ===
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+    process.exit(1); // Stop server if DB connection fails
+  });
+
+  
+// === Middleware Session ===
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions',
+    ttl: 14 * 24 * 60 * 60, // 2 weeks
+  }),
+  cookie: {
+    maxAge: 14 * 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+  },
+  name: 'sessionId',
+  rolling: true,
+  unset: 'destroy',
+}));
+
 
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
@@ -89,7 +127,8 @@ app.get('/', (req, res) => {
 
 
 // === Telegram webhook endpoint ===
-router.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
+const telegramWebhookPath = `/bot${process.env.TELEGRAM_TOKEN}`;
+app.post(telegramWebhookPath, async (req, res) => {
   console.log('Received webhook update:', req.body);
 
   const { message } = req.body;
@@ -121,6 +160,8 @@ router.post(`/bot${process.env.TELEGRAM_TOKEN}`, async (req, res) => {
 
 
 // === Wallet update endpoint ===
+app.use(router);
+
 router.post('/wallet-update', async (req, res) => {
   const { userId, amount } = req.body;
   if (!userId || !amount) {
@@ -139,7 +180,7 @@ router.post('/wallet-update', async (req, res) => {
 
     // Broadcast the updated wallet amount to all connected clients
     wss.clients.forEach((client) => {
-      if (client.readyState === 1) { // Check if the client is open
+      if (client.readyState === WebSocket.OPEN) { // Check if the client is open
         client.send(JSON.stringify({ userId, amount: user.walletBalance }));
       }
     });
@@ -154,7 +195,7 @@ router.post('/wallet-update', async (req, res) => {
 });
 
 // === User data fetch endpoint ===
-router.get('/get-user-data', async (req, res) => {
+/*router.get('/get-user-data', async (req, res) => {
   const userId = parseInt(req.query.userId, 10);
   if (!userId) {
     return res.status(400).json({ error: 'Missing userId' });
@@ -178,7 +219,7 @@ router.get('/get-user-data', async (req, res) => {
     console.error('Error fetching user data:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
+}); */
 
 // === WebSocket event listener ===
 wss.on('connection', (ws) => {
@@ -204,9 +245,20 @@ wss.on('connection', (ws) => {
 
       await updateUserAmount(userId, amount);
 
+      const user = await getUser(userId);
+      if (!user) {
+        const newUser = await createUser(userId, 'user');
+        return res.json({
+          walletBalance: newUser.walletBalance,
+          videoWatchStatus: { video1: false, video2: false, video3: false }
+        });
+      }
+
       // Broadcast the updated wallet amount to all connected clients
       wss.clients.forEach((client) => {
-        client.send(JSON.stringify({ userId, amount }));
+        if (client.readyState === 1) { // Check if the client is open
+          client.send(JSON.stringify({ userId, amount: user.walletBalance }));
+        }
       });
     } catch (error) {
       console.error('Error handling WebSocket message:', error);
@@ -241,7 +293,7 @@ app.use((err, req, res, next) => {
 // You can call this route to set the webhook when needed
 app.get('/set-webhook', async (req, res) => {
   try {
-    await bot.setWebHook(`https://vast-caverns-06591-d6f9772903a1.herokuapp.com/bot${process.env.TELEGRAM_TOKEN}`);
+    await bot.setWebHook(`${process.en.BASE_URL}/bot${process.env.TELEGRAM_TOKEN}`);
     res.send('Webhook set successfully');
   } catch (error) {
     console.error('Error setting webhook:', error);
@@ -266,10 +318,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // == Environment variables check ==
-if (!process.env.MONGO_URI || !process.env.TELEGRAM_TOKEN) {
+if (!process.env.MONGODB_URI || !process.env.TELEGRAM_TOKEN) {
   console.error('Required environment variables are missing!');
   process.exit(1); // Stop the server if critical environment variables are missing
-}
+} 
 
 // == Export the bot for use in other modules (that is to start it from server.js)==
 module.exports = {
