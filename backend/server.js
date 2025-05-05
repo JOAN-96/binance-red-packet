@@ -6,7 +6,7 @@ const http = require('http');
 const WebSocket = require('ws');
 const connectDB = require('./db');
 const videoRoutes = require('./routes/videoroutes');
-const { bot, botRouter } = require('./bot');  // <-- bot runs here
+const { bot, botRouter } = require('./bot/index');  // <-- bot runs here
 const path = require('path');
 
 const app = express();
@@ -18,8 +18,12 @@ connectDB();
 // API Routes
 app.use('/api/videos', videoRoutes);
 
-// Telegram Bot Webhoot Route
+// Telegram Bot Webhook Route
 app.use(botRouter);
+
+app.get('/bot', (req, res) => {
+    res.send('Telegram bot is running!');
+});
 
 // Serve mini web app
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
@@ -71,7 +75,7 @@ app.use((err, req, res, next) => {
   
 
 // Start Web Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
