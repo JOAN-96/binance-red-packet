@@ -1,6 +1,1 @@
-echo node_modules/ > .gitignore
-.env
-.DS_Store
-build/
-logs/
-config.json/
+node_modules/
