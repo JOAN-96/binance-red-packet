@@ -28,6 +28,7 @@
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "has-symbols": "^1.1.0",
     "ioredis": "^5.5.0",
     "live-server": "^1.2.0",
     "mongodb": "^6.14.2",
@@ -39,5 +40,8 @@
   },
   "engines": {
     "node": "20.x"
+  },
+  "overrides": {
+    "has-symbols": "1.0.1"
   }
 }
