@@ -39,9 +39,7 @@
     "ws": "^8.18.0"
   },
   "engines": {
-    "node": "20.x"
-  },
-  "overrides": {
-    "has-symbols": "1.0.1"
+    "node": "20.x",
+    "npm": "10.x"
   }
 }
