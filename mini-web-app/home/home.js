@@ -49,6 +49,30 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 }); 
 
+// === Fetching Balance ===
+async function fetchBalance(telegramId) {
+  try {
+      const response = await fetch('/login-with-telegram', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ telegramId }) // Send Telegram ID
+      });
+
+      const data = await response.json();
+      if (data.balance) {
+          // Display balance on the web app
+          document.getElementById('balance').textContent = `Your balance is: ${data.balance}`;
+      } else {
+          alert('Unable to retrieve balance.');
+      }
+  } catch (error) {
+      console.error('Error fetching balance:', error);
+  }
+}
+
+
   // === Video reward logic ===
   const videoButtons = document.querySelectorAll('.video button');
 

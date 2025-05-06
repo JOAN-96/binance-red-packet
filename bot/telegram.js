@@ -27,6 +27,10 @@ bot.setMyCommands([
         web_app: {
             url: WEB_APP_URL  // Heroku app URL 
         } */
+    },
+    {
+        command: 'balance',
+        description: 'Check your wallet balance'
     }
 ]);
 
@@ -218,14 +222,38 @@ bot.on('error', (error) => {
 }); */
   
 
+
+// Function to handle the /balance command
+async function handleBalanceCommand(msg) {
+    const chatID = msg.chat.id;
+    const telegramId = msg.from.id;
+
+    try {
+        const user = await getUser(telegramId);
+        if (!user) {
+            await bot.sendMessage(chatID, 'You are not registered yet. Please use /start first.');
+            return;
+        }
+
+        await bot.sendMessage(chatID, `Your wallet balance is: ${user.walletBalance}`);
+    } catch (error) {
+        console.error(`Error handling /balance command: ${error}`);
+        await bot.sendMessage(chatID, 'Sorry, an error occurred while fetching your balance.');
+    }
+}
+
+
 // === Export bot and helper functions ===
 module.exports = {
     bot,
     handleStartCommand,
     handleWebappCommand,
+    handleBalanceCommand,
     logWalletUpdate,
     setWebHook: bot.setWebHook.bind(bot), // Make setWebHook available for index.js
     token
   };
+
+
 // Make token available for other modules
 bot.token = token;

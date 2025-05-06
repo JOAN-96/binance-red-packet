@@ -21,23 +21,13 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 const db = mongoose.connection;
-
-/*db.on('error', (error) => {
-  console.error('Error connecting to MongoDB:', error);
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('MongoDB connection opened');
 });
 
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-}); */
-
-// Define the User schema
-const userSchema = new mongoose.Schema({
-  telegramId: Number,
-  username: String,
-  firstName: String,
-  lastName: String,
-  walletBalance: { type: Number, default: 0 },
-}, {timestamps: true}); // Add timestamps to the schema
+// Define the User sONCE
+const User = mongoose.model('User', userSchema); 
 
 
 // Function to get a user document based on Telegram user ID or username
@@ -55,6 +45,13 @@ async function createUser(userId, username) {
   });
   return await newUser.save();
 }
+ 
+
+  // Function to get a user document based on Telegram user ID or username
+  async function getUser(userId) {
+    return await User.findOne({ telegramId: userId });
+  }
+
 
 // Function to update the wallet balance of a user
 async function updateUserAmount(userId, amount) {
@@ -77,5 +74,6 @@ async function updateUserAmount(userId, amount) {
     console.error('Error updating user amount:', error);
   }
 }
+
 
 module.exports = { getUser, createUser, updateUserAmount };
