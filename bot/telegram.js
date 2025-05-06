@@ -1,5 +1,5 @@
 const TelegramBot = require('node-telegram-bot-api');
-const { getUser, createUser } = require('./database');
+const { getUser, createUser, updateUserAmount } = require('./database');
 const User = require('./User');
 require('dotenv').config();
 
@@ -188,7 +188,7 @@ bot.on('message', async (msg) => {
 bot.on('callback_query', async (query) => {
     try {
         console.log(`Received callback query from ${query.from.username}: ${query.data}`);
-        const callbackData = query.data;
+        await bot.answerCallbackQuery(query.id, { text: 'Link opended!' });
     } catch (error) {
         console.error(`Error handling callback query: ${error}`);
     }

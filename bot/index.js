@@ -11,9 +11,10 @@ console.log('Loaded env variables:', process.env);
 const path = require('path');
 const express = require('express');
 const session = require('express-session'); 
+const MongoStore = require('connect-mongo'); // MongoDB session store
 
 
-const sessionStore = new MongoStore({
+const sessionStore = MongoStore.create({
   mongoUrl: process.env.MONGODB_URI, // Mongo URI from your environment variable
   collection: 'sessions',
 });
@@ -29,7 +30,7 @@ const wss = new WebSocket.Server({ server });
 // Import from bot folder
 const { createUser, getUser, updateUserAmount } = require('./database');
 const sessionConfig = require('./session');
-const { bot, setWebHook, logWalletUpdate} = require('./telegram')
+const { bot, setWebHook, handleStartCommand, handleWebappCommand, logWalletUpdate } = require('./telegram')
 const token = bot.token; // Access the token variable from the telegram module
 
 const router = express.Router();
@@ -322,9 +323,10 @@ if (!process.env.MONGODB_URI || !process.env.TELEGRAM_TOKEN) {
   console.error('Required environment variables are missing!');
   process.exit(1); // Stop the server if critical environment variables are missing
 } 
-
+/*
 // == Export the bot for use in other modules (that is to start it from server.js)==
 module.exports = {
   bot,
   botRouter: router,
 }
+*/
