@@ -3,6 +3,10 @@ const express = require('express');
 const { bot, handleStartCommand, handleWebappCommand, handleBalanceCommand, setWebHook, token } = require('./telegram');
 const server = require('./backend/server');
 
+const token = process.env.BOT_TOKEN; 
+if (!token) {
+  throw new Error('BOT_TOKEN is missing from .env file');
+}
 
 const router = express.Router();
 
@@ -27,6 +31,5 @@ router.post(`/bot${token}`, async (req, res) => {
 module.exports = {
   bot,
   botRouter: router,
-  setWebHook,
   token
 };

@@ -10,11 +10,11 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const connectDB = require('../bot/database');
-const User = require('../bot/User'); // Import User model from bot/User.js
-const videoRoutes = require('./videoroutes');
-const { bot, botRouter, setWebHook, token } = require('../bot');  // <-- bot runs here
-const sessionConfig = require('../bot/session'); // Import session configuration
+const connectDB = require('/bot/database');
+const User = require('/bot/User'); // Import User model from bot/User.js
+const videoRoutes = require('/backend/videoroutes');
+const { bot, botRouter, setWebHook, token } = require('/bot');  // <-- bot runs here
+const sessionConfig = require('/bot/session'); // Import session configuration
 
 
 
@@ -141,15 +141,15 @@ app.use((err, req, res, next) => {
 if (process.env.NODE_ENV === 'production') {
   const webhookUrl = `${process.env.BASE_URL}/bot${token}`;
   setWebHook(webhookUrl)
-    .then(() => console.log(`Telegram webhook set to ${webhookUrl}`))
-    .catch(err => console.error('Failed to set webhook:', err));
+    .then(() => console.log(`✅ Telegram webhook set to ${webhookUrl}`))
+    .catch(err => console.error('❌ Failed to set webhook:', err));
 }
 
 
-
+app.use(botRouter); // <-- Bot routes for handling Telegram bot commands and messages
 
 // === Start Web Server ===
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+server.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
 });

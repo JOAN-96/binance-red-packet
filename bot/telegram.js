@@ -1,12 +1,12 @@
 const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config();
+
 const { getUser, createUser, updateUserAmount } = require('./database');
 const User = require('./User');
-require('dotenv').config();
+
 
 //Token gotten from BotFather
 const token = process.env.TELEGRAM_TOKEN;
-/* const bot = new TelegramBot(token, { polling: true }); */
-
 
 // Initialize the bot (not using polling)
 const bot = new TelegramBot(token, { webHook: {port: false } }); // Set polling to false for webhook mode as we use webhook-based bot
