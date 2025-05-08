@@ -26,9 +26,6 @@ db.once('open', () => {
   console.log('MongoDB connection opened');
 });
 
-// Define the User sONCE
-const User = mongoose.model('User', userSchema); 
-
 
 // Function to get a user document based on Telegram user ID or username
 async function getUser(userId) {
