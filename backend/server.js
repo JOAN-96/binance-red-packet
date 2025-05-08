@@ -15,7 +15,7 @@ const User = require('../bot/User'); // Import User model from bot/User.js
 const videoRoutes = require('./videoroutes');
 const { bot, botRouter, setWebHook, token } = require('../bot');  // <-- bot runs here
 const sessionConfig = require('../bot/session'); // Import session configuration
-const { getUser, createUser, updateUserAmount } = require('../bot/database'); // Import from bot/database.js
+
 
 
 const app = express();
@@ -145,7 +145,6 @@ if (process.env.NODE_ENV === 'production') {
     .catch(err => console.error('Failed to set webhook:', err));
 }
 
-app.use(botRouter);
 
 
 

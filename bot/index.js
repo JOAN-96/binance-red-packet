@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const { bot, handleStartCommand, handleWebappCommand, handleBalanceCommand, setWebHook, token } = require('./telegram');
+const server = require('./backend/server');
+
 
 const router = express.Router();
 
