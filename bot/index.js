@@ -1,18 +1,20 @@
 require('dotenv').config();
 const express = require('express');
-const { bot, handleStartCommand, handleWebappCommand, handleBalanceCommand, setWebHook, token } = require('./telegram');
-const server = require('./backend/server');
+const { bot, handleStartCommand, handleWebappCommand, handleBalanceCommand, setWebHook } = require('./telegram');
 
-const token = process.env.BOT_TOKEN; 
+const token = process.env.TELEGRAM_TOKEN; 
 if (!token) {
-  throw new Error('BOT_TOKEN is missing from .env file');
+  throw new Error('TELEGRAM_TOKEN is missing from .env file');
 }
 
-const router = express.Router();
+const botRouter = express.Router();
 
 // === Webhook route (for Telegram webhook calls) ===
-router.post(`/bot${token}`, async (req, res) => {
+botRouter.post(`/bot${token}`, async (req, res) => {
   const message = req.body.message;
+  console.log('Incoming Telegram update:', JSON.stringify(req.body, null, 2));  // Debug log
+  
+  // Check if the message is valid
   if (message && message.text) {
     const text = message.text.trim();
 
@@ -30,6 +32,7 @@ router.post(`/bot${token}`, async (req, res) => {
 // === Export bot + botRouter ===
 module.exports = {
   bot,
-  botRouter: router,
+  botRouter,
+  setWebHook,
   token
 };

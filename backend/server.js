@@ -1,6 +1,7 @@
 // This is the entry point for the bot and the web server
 // It runs both the Express server and the Telegram bot (web API + bot logic)
 require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -10,17 +11,23 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const connectDB = require('/bot/database');
-const User = require('/bot/User'); // Import User model from bot/User.js
-const videoRoutes = require('/backend/videoroutes');
-const { bot, botRouter, setWebHook, token } = require('/bot');  // <-- bot runs here
-const sessionConfig = require('/bot/session'); // Import session configuration
+const { connectDB, getUser, createUser, updateUserAmount  } = require('../bot/database');
+const User = require('../bot/User'); // Import User model from bot/User.js
+const { bot, botRouter, setWebHook, token } = require('../bot');  // <-- bot runs here
+const sessionConfig = require('../bot/session'); // Import session configuration
 
+const videoRoutes = require('./videoroutes');
 
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) {
+  throw new Error('SESSION_SECRET is missing from .env file');
+}
+console.log('SESSION_SECRET loaded successfully');
 
 // Connect to MongoDB
 connectDB(); 
@@ -102,7 +109,7 @@ app.post('/login-with-telegram', async (req, res) => {
   }
 
   // Respond with the user's balance
-  res.status(200).json({ balance: user.balance });
+  res.status(200).json({ balance: user.walletBalance });
 }); 
 
 app.post('/api/user-balance', async (req, res) => {
@@ -145,8 +152,6 @@ if (process.env.NODE_ENV === 'production') {
     .catch(err => console.error('❌ Failed to set webhook:', err));
 }
 
-
-app.use(botRouter); // <-- Bot routes for handling Telegram bot commands and messages
 
 // === Start Web Server ===
 const PORT = process.env.PORT || 3000;

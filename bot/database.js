@@ -1,6 +1,7 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./User'); // Import the User model
-require('dotenv').config();
+
 
 // Check if the connection was successful
 if (!process.env.MONGODB_URI) {
@@ -9,16 +10,17 @@ if (!process.env.MONGODB_URI) {
 }
 
 // Connect to MongoDB using the connection string from environment variables
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log("Successfully connected to MongoDB");
-})
-.catch((err) => {
-  console.error("Error connecting to MongoDB:", err);
-});
+
+async function connectDB() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("✅ Successfully connected to MongoDB");
+  } catch (err) {
+    console.error("❌ Error connecting to MongoDB:", err);
+    throw err;
+  }
+}
+
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -44,12 +46,6 @@ async function createUser(userId, username) {
 }
  
 
-  // Function to get a user document based on Telegram user ID or username
-  async function getUser(userId) {
-    return await User.findOne({ telegramId: userId });
-  }
-
-
 // Function to update the wallet balance of a user
 async function updateUserAmount(userId, amount) {
   try {
@@ -73,4 +69,9 @@ async function updateUserAmount(userId, amount) {
 }
 
 
-module.exports = { getUser, createUser, updateUserAmount };
+module.exports = { 
+  connectDB,
+  getUser, 
+  createUser, 
+  updateUserAmount
+ };
