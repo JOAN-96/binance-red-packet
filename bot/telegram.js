@@ -1,9 +1,11 @@
 const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
+const { app } = require('../backend/server');  // Import Express app from server.js
+
 const { getUser, createUser, updateUserAmount } = require('./database');
 const User = require('./User');
-
+z
 
 //Token gotten from BotFather
 const token = process.env.TELEGRAM_TOKEN;
@@ -13,6 +15,16 @@ const bot = new TelegramBot(token, { webHook: {port: false } }); // Set polling 
  
 
 const debug = true;
+
+
+// Set webhook for Telegram bot using the BASE_URL and the token
+bot.telegram.setWebhook(`${process.env.BASE_URL}/bot${process.env.TELEGRAM_TOKEN}`);
+
+// Use the webhook callback in your Express app
+app.use(bot.webhookCallback(`/bot${process.env.TELEGRAM_TOKEN}`));
+
+
+
 
 // Bot commands
 bot.setMyCommands([
@@ -114,7 +126,7 @@ async function handleWebappCommand(userId, username) {
         const safeUsername = username || 'user';
 
         // Heroku app URL
-        const webAppUrl = 'https://vast-caverns-06591-d6f9772903a1.herokuapp.com/';
+        const webAppUrl = process.env.BASE_URL;
         
         // This message will be returned to the webhook handler for logging (optional)
         const messageText = 'Click the button below to open the Web App 👇';

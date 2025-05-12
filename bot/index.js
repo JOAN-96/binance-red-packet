@@ -7,6 +7,9 @@ if (!token) {
   throw new Error('TELEGRAM_TOKEN is missing from .env file');
 }
 
+const BASE_URL = process.env.BASE_URL
+bot.telegraam.setWebHook(`${BASE_URL}/bot${TELEGRAM_TOKEN}`)
+
 const botRouter = express.Router();
 
 // === Webhook route (for Telegram webhook calls) ===

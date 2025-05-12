@@ -57,8 +57,14 @@ app.use(session({
 
 // === API Routes ===
 app.use('/api/videos', videoRoutes);
-app.use(botRouter); // <-- Bot routes for handling Telegram bot commands and messages
 
+// Add botRouter to handle requests for the webhook
+app.use('/', botRouter); // <-- Bot routes for handling Telegram bot commands and messages
+
+// Health check route (optional but recommended)
+app.get('/', (req, res) => {
+  res.send('Telegram bot server is running!');
+});
 
 // === Serve Mini Web App ===
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
@@ -155,6 +161,6 @@ if (process.env.NODE_ENV === 'production') {
 
 // === Start Web Server ===
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
