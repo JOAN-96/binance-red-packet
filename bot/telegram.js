@@ -16,7 +16,7 @@ const bot = new TelegramBot(token, { webHook: true }); // Automatically call web
 const debug = true;
 
 // Set webhook for Telegram bot using the BASE_URL and the token
-bot.setWebHook(`${process.env.BASE_URL}/bot${token}`); 
+// bot.setWebHook(`${process.env.BASE_URL}/bot${token}`); 
 
 // Use the webhook callback in your Express app
 // app.use(bot.webhookCallback(`/bot${token}`));
@@ -214,4 +214,4 @@ module.exports = {
 
 
 // Make token available for other modules
-// bot.token = token;
+bot.token = token;
