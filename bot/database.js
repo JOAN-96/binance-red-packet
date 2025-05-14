@@ -13,7 +13,11 @@ if (!process.env.MONGODB_URI) {
 
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("Connecting to MongoDB with URI:", process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+    useUnifiedTopology: true,
+    });
     console.log("✅ Successfully connected to MongoDB");
   } catch (err) {
     console.error("❌ Error connecting to MongoDB:", err);

@@ -1,29 +1,25 @@
 const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
-const { app } = require('../backend/server');  // Import Express app from server.js
+// const { app } = require('../backend/server');  // Import Express app from server.js
 
 const { getUser, createUser, updateUserAmount } = require('./database');
 const User = require('./User');
-z
+
 
 //Token gotten from BotFather
 const token = process.env.TELEGRAM_TOKEN;
 
 // Initialize the bot (not using polling)
-const bot = new TelegramBot(token, { webHook: {port: false } }); // Set polling to false for webhook mode as we use webhook-based bot
- 
+const bot = new TelegramBot(token, { webHook: true }); // Automatically call webHook
 
 const debug = true;
 
-
 // Set webhook for Telegram bot using the BASE_URL and the token
-bot.telegram.setWebhook(`${process.env.BASE_URL}/bot${process.env.TELEGRAM_TOKEN}`);
+bot.setWebHook(`${process.env.BASE_URL}/bot${token}`); 
 
 // Use the webhook callback in your Express app
-app.use(bot.webhookCallback(`/bot${process.env.TELEGRAM_TOKEN}`));
-
-
+// app.use(bot.webhookCallback(`/bot${token}`));
 
 
 // Bot commands
@@ -46,7 +42,7 @@ bot.setMyCommands([
     }
 ]);
 
-// Events Listener
+// === Command Handlers ===
 
 // Function to handle the /start command
 async function handleStartCommand(msg) {
@@ -171,70 +167,6 @@ async function logWalletUpdate(userId, incrementValue = 1000) {
   }
   
 
-/*
-bot.onText(/\/start/, async (msg) => {
-    try {
-        console.log(`User ${msg.from.username} started the bot`);
-        await handleStartCommand(msg);
-    } catch (error) {
-        console.error(`Error handling /start command: ${error}`);
-        await bot.sendMessage(msg.chat.id, 'Sorry, an error occurred. Please try again later!');
-    }
-}); */
-/*
-bot.on('message', async (msg) => {
-    console.log(`Received message from ${msg.from.username}: ${msg.text}`);
-    const chatId = msg.chat.id;
-    const telegramId = msg.from.id;
-    const telegramUsername = msg.from.username;
-
-    try {
-        // Authenticate user and store their Telegram username in the database
-        const user = await getUser(telegramId);
-        if (!user) {
-            // Create a new user
-            await createUser(telegramId, telegramUsername);
-        }
-    } catch (error) {
-        console.error(`Error creating or getting user: ${error}`);
-        await bot.sendMessage(chatId, 'Sorry, an error occurred. Please try again later!');
-    }
-}); */
-
-bot.on('callback_query', async (query) => {
-    try {
-        console.log(`Received callback query from ${query.from.username}: ${query.data}`);
-        await bot.answerCallbackQuery(query.id, { text: 'Link opended!' });
-    } catch (error) {
-        console.error(`Error handling callback query: ${error}`);
-    }
-});
-
-bot.on('error', (error) => {
-    console.error('Telegram Bot Error:', error);
-});
-
-// Telegram Web App 
-/*bot.onText(/\/webapp/, (msg) => {
-    const chatID = msg.chat.id;
-    bot.sendMessage(chatID, 'Open Web App', {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    {
-                        text: 'Open Web App',
-                        web_app: {
-                            url: WEB_APP_URL
-                        }
-                    }
-                ]
-            ]
-        }
-    });
-}); */
-  
-
-
 // Function to handle the /balance command
 async function handleBalanceCommand(msg) {
     const chatID = msg.chat.id;
@@ -255,6 +187,20 @@ async function handleBalanceCommand(msg) {
 }
 
 
+bot.on('callback_query', async (query) => {
+    try {
+        console.log(`Received callback query from ${query.from.username}: ${query.data}`);
+        await bot.answerCallbackQuery(query.id, { text: 'Link opended!' });
+    } catch (error) {
+        console.error(`Error handling callback query: ${error}`);
+    }
+});
+
+bot.on('error', (error) => {
+    console.error('Telegram Bot Error:', error);
+});
+
+
 // === Export bot and helper functions ===
 module.exports = {
     bot,
@@ -268,4 +214,4 @@ module.exports = {
 
 
 // Make token available for other modules
-bot.token = token;
+// bot.token = token;

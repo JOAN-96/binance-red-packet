@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const http = require('http');
@@ -19,7 +20,7 @@ const sessionConfig = require('../bot/session'); // Import session configuration
 const videoRoutes = require('./videoroutes');
 
 
-const app = express();
+
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
@@ -32,12 +33,20 @@ console.log('SESSION_SECRET loaded successfully');
 // Connect to MongoDB
 connectDB(); 
 
+
 // === Middleware ===
 // Session management
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Middleware for URL-encoded data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+// Register Telegram webhook route
+// app.use(bot.webhookCallback(`/bot${token}`));
+app.post(`/bot${token}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
 
 
 app.use(session({
@@ -54,21 +63,20 @@ app.use(session({
 }));
 
 
-
 // === API Routes ===
 app.use('/api/videos', videoRoutes);
 
 // Add botRouter to handle requests for the webhook
-app.use('/', botRouter); // <-- Bot routes for handling Telegram bot commands and messages
+app.use('/bot/webhook', botRouter); // <-- Bot routes for handling Telegram bot commands and messages
 
 // Health check route (optional but recommended)
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
   res.send('Telegram bot server is running!');
 });
 
 // === Serve Mini Web App ===
 app.use(express.static(path.join(__dirname, '../mini-web-app')));
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../mini-web-app/home/home.html'));
 });
 
@@ -103,6 +111,10 @@ app.get('/api', (req, res) => {
   res.send('API is running!');
 });
 
+// Optional: test route
+app.get('/', (req, res) => {
+  res.send('Bot is running!');
+});
 
 // === Login with Telegram ID (check balance) / Balance API ===
 app.post('/login-with-telegram', async (req, res) => {
@@ -152,12 +164,17 @@ app.use((err, req, res, next) => {
 
 // === Set Webhook automatically (only in production) ===
 if (process.env.NODE_ENV === 'production') {
-  const webhookUrl = `${process.env.BASE_URL}/bot${token}`;
+  const webhookUrl = `${process.env.BASE_URL}/bot/webhook${token}`;
   setWebHook(webhookUrl)
     .then(() => console.log(`✅ Telegram webhook set to ${webhookUrl}`))
     .catch(err => console.error('❌ Failed to set webhook:', err));
 }
 
+console.log("MongoDB URI from env:", process.env.MONGODB_URI);
+
+
+// == Export the app ===
+module.exports = { app };
 
 // === Start Web Server ===
 const PORT = process.env.PORT || 3000;

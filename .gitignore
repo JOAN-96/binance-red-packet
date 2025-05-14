@@ -1,6 +1,7 @@
-echo node_modules/ > .gitignore
+// Files to not add to the server
 .env
 .DS_Store
 build/
 logs/
 config.json/
+node_modules
